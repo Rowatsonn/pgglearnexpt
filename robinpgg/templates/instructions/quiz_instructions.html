@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="main_div">
+        <h1>Part One</h1>
+
+        <hr>
+
+        <p>For this part of the study, you will be presented with a series of trivia questions along with 4 possible answers. You must select one of these answers for each question. You will only have a limited time available to answer each question, so make sure to answer quickly.</p>
+	<p>At the end of this round, each participants scores will be displayed publically.</p>
+	<p>When you are ready to proceed, click the button below.</p> 
+
+        <hr>
+
+        <div>
+            <div class="row">
+                <div class="col-xs-10"></div>
+                <div class="col-xs-2">
+                    <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('trivia');">
+                    Ready</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        dallinger.createParticipant();
+    </script>
+{% endblock %}

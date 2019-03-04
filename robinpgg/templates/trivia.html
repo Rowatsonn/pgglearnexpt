@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="main_div">
+        <h1>Trivia Questions</h1>
+
+        <hr>
+
+        <p><strong>THIS IS A PLACEHOLDER FOR THE TRIVIA HTML FILE THAT IS NOT YET DONE.</strong></p>
+
+        <hr>
+
+        <div>
+            <div class="row">
+                <div class="col-xs-10"></div>
+                <div class="col-xs-2">
+                    <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_instructions - 1');">
+                    Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        create_agent();
+    </script>
+{% endblock %}
+

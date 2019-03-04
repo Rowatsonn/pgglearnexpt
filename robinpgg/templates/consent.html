@@ -1,0 +1,24 @@
+{% extends "base/consent.html" %}
+
+        {% block consent_text %}
+            <p>This research is being conducted by Robin Watson, a postgraduate student at the University of Durham who is being supervised by Jeremy Kendal, Rachel Kendal and Julie Van-De-Vyer.</p>
+
+            <p>As part of this study, you will first be asked to answer a series of general knowledge trivia questions before taking part in a money game which will be played <strong>with other players</strong>. All personal information will be kept entirely confidential and will not be possibile to associate with your name in any way. Plese note, that during the study your answers will be associated with your MTurk worker id. Upon completion of the study, this field will be replaced with a random string of letter and numbers</p>
+
+            <p>Your participation in this research is enirely voluntary. You may decide not to take part or discontinue the study at any point during participation without penalty.</p>
+
+            <p>If you have any questions about this research, before, during or after participation please feel free to direct these to my email at <strong>robin.o.watson@durham.ac.uk</strong>.</p>
+
+            <p>By consenting to participate, you acknowledge that you are 18 years or older, have read this consent form, agree to its contents, and agree to take part in this research. If you do not wish to consent, close this page and return the HIT on Mechanical Turk.</p>
+            {% endblock consent_text %}
+            <hr>
+            <h4>If you are happy to take part, please click the button below to begin?</h4>
+            <br>
+
+{% block consent_button %}
+    <button type="button" class="btn btn-primary btn-lg" 
+    onClick="dallinger.goToPage('instructions/quiz_instructions');"
+    style="float: left;">I agree
+{% endblock %}
+
+
