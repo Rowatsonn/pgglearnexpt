@@ -66,8 +66,8 @@ class pgglearn(Experiment):
     		self.recruiter.close_recruitment()
 
     def node_post_request(self, participant, node):
-	"""Hopefully should run once the node has been created. Check to see if the node's network is 		full, if it is, then the source should transmit, if it isn't then do nothing."""
 	if node.network.full:
+		node.network.nodes(type=QuizSource)[0].transmit()
 		node.network.nodes(type=QuizSource)[0].transmit() 
 	else:
  		pass # This is actually redundant, but is here for completeness     
