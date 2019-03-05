@@ -66,8 +66,8 @@ class pgglearn(Experiment):
     		self.recruiter.close_recruitment()
 
     def node_post_request(self, participant, node):
-	if node.network.full:
-		node.network.nodes(type=QuizSource)[0].transmit()
-	else:
- 		pass # This is actually redundant, but is here for completeness     
-    	
+        if node.network.full:
+            node.network.nodes(type=QuizSource)[0].transmit()
+        else:
+            pass # This is actually redundant, but is here for completeness     
+	
