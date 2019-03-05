@@ -2,6 +2,7 @@
 from dallinger.config import get_config
 from dallinger.experiments import Experiment
 from dallinger.networks import Burst
+from dallinger.nodes import Source
 
 try:
     from bots import Bot
@@ -34,7 +35,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1
-        self.initial_recruitment_size = 1
+        self.initial_recruitment_size = 2
         if session:
             self.setup()
             
@@ -52,7 +53,7 @@ class pgglearn(Experiment):
 
     def create_network(self):
         """Return a new network."""
-        return Burst(max_size=5)
+        return Burst(max_size=3)
         
     def add_note_to_network(self, node, network):
     	"""Hopefully, this should just add a node to the network."""
@@ -67,7 +68,7 @@ class pgglearn(Experiment):
 
     def node_post_request(self, participant, node):
         if node.network.full:
-            node.network.nodes(type=QuizSource)[0].transmit()
+            node.network.nodes(type=Source)[0].transmit()
         else:
             pass # This is actually redundant, but is here for completeness     
 	
