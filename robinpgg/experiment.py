@@ -23,10 +23,12 @@ def extra_parameters():
     for key in types:
         config.register(key, types[key])
 
+def all_same(items):
+    return all(x == items[0] for x in items) # Function to help with the post_info check down the line
 
 class pgglearn(Experiment):
     """Define the structure of the experiment."""
-    num_participants = 2
+    num_participants = 1
 
     def __init__(self, session=None):
         """Call the same parent constructor, then call setup() if we have a session.
@@ -34,8 +36,8 @@ class pgglearn(Experiment):
         super(pgglearn, self).__init__(session)
         from . import models 
         self.models = models
-        self.experiment_repeats = 1
-        self.initial_recruitment_size = 2
+        self.experiment_repeats = 2
+        self.initial_recruitment_size = 1
         if session:
             self.setup()
             
@@ -53,7 +55,7 @@ class pgglearn(Experiment):
 
     def create_network(self):
         """Return a new network."""
-        return Burst(max_size=3)
+        return Burst(max_size=2)
         
     def add_note_to_network(self, node, network):
     	"""Hopefully, this should just add a node to the network."""
@@ -70,5 +72,14 @@ class pgglearn(Experiment):
         if node.network.full:
             node.network.nodes(type=Source)[0].transmit()
         else:
-            pass # This is actually redundant, but is here for completeness     
+            pass # This is actually redundant, but is here for completeness
+    
+    def info_post_request(self, node, info):
+        """Hopefully should get Mr Source to transmit once the nodes all have answered the trivia"""
+        nodes = node.network.nodes()
+        nodes = [n for n in nodes if not isinstance(n, Source)]
+        answers = [len(node.infos()) for node in nodes]
+        if all_same(answers):
+            node.network.nodes(type=Source)[0].transmit() # The QuizSource class already handels it being the next Q. 
+             
 	

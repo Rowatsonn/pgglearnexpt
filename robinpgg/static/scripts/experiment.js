@@ -108,7 +108,7 @@ var process_info = function(info) {
     parse_question(info);
     if (number == 11) {
         dallinger.allowExit();
-        dallinger.goToPage('pgg_instructions-1'); //I'll want to change this to some sort of score screen eventually. This suffices for now though
+        dallinger.goToPage('scorescreen'); //I'll want to change this to some sort of score screen eventually. This suffices for now though
     } else {
         display_question(); // This is another function call 
         }
@@ -130,35 +130,35 @@ var display_question = function() {
     $("#question").html(question_text);
     $("#question_number").html(number);
 
-var num = Math.random(); 
+    var num = Math.random(); 
   
- if (num <0.33) {
-   $("#submit-a").html(Rwer);
-   if (Math.random() <0.5 ){
-       $("#submit-b").html(Wwer1);
-       $("#submit-c").html(Wwer2);
-       } else {
+     if (num <0.33) {
+       $("#submit-a").html(Rwer);
+       if (Math.random() <0.5 ){
+           $("#submit-b").html(Wwer1);
+           $("#submit-c").html(Wwer2);
+           } else {
+             $("#submit-b").html(Wwer2);
+             $("#submit-c").html(Wwer1); 
+           }
+     } else if (num >0.33 && num <0.66 ) {
+       $("#submit-b").html(Rwer);
+       if (Math.random() <0.5 ){
+           $("#submit-a").html(Wwer1); 
+           $("#submit-c").html(Wwer2);
+           } else {
+           $("#submit-a").html(Wwer2); 
+           $("#submit-c").html(Wwer1);
+           }
+     } else {
+       $("#submit-c").html(Rwer); 
+       if (Math.random() <0.5){
+         $("#submit-a").html(Wwer1);
          $("#submit-b").html(Wwer2);
-         $("#submit-c").html(Wwer1); 
-       }
- } else if (num >0.33 && num <0.66 ) {
-   $("#submit-b").html(Rwer);
-   if (Math.random() <0.5 ){
-       $("#submit-a").html(Wwer1); 
-       $("#submit-c").html(Wwer2);
        } else {
-       $("#submit-a").html(Wwer2); 
-       $("#submit-c").html(Wwer1);
+         $("#submit-a").html(Wwer2);
+         $("#submit-b").html(Wwer1);
        }
- } else {
-   $("#submit-c").html(Rwer); 
-   if (Math.random() <0.5){
-     $("submit-a").html(Wwer1);
-     $("submit-b").html(Wwer2);
-   } else {
-     $("submit-a").html(Wwer2);
-     $("submit-b").html(Wwer1);
-   }
  }; //End of the if else statement 
     enable_answer_buttons(); //Calls another two functions below
     countdown = 10; // This can set the time they have to answer
@@ -175,10 +175,8 @@ var start_answer_timeout = function() {
             disable_answer_buttons(); // Calls another function
             $("#countdown").hide();
             $("#countdown").html("");
-            //submit_response(Wwer,
-                            //copy=undefined,
-                            //info_chosen=undefined,
-                            //human=false);
+            submit_response(Wwer1)
+            
         } else {
             start_answer_timeout();
         }
@@ -202,12 +200,18 @@ var disable_answer_buttons = function() {
     $("#submit-c").addClass('disabled');
     $("#submit-a").hide();
     $("#submit-b").hide();
-    $("#submit-c").hide(); 
+    $("#submit-c").hide();
+    $("#question").html("Waiting for the next question..."); 
 }
 
 //submit_response still needs to be defined properly
 
-var submit_response = function() {
-   console.log("Hello")
+var submit_response = function(value) {
+    console.log("Hello " + value)
+    data = {
+        "contents": value
+    }
+    dallinger.createInfo(my_node_id, data)
+    .done(get_transmissions());
 }
 

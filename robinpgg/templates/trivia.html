@@ -1,23 +1,26 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    <div class="main_div">
-        <h1>Trivia Questions</h1>
-	  <div id = "question"> 
-	      <h2 id=question_number></h2>   
-          <div>
-            <div class="row">
-                <div class="col-xs-10"></div>
-                <div class="col-xs-2">
-		    <button type="button" id="submit-a" class="disabled"></button>
-		    <button type="button" id="submit-b" class="disabled"></button>
-		    <button type="button" id="submit-c" class="disabled"></button>
-                    <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_instructions - 1');">
-                    GET ME OUT OF HERE PLS</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <center>
+    <h1 style="width: 1016px;">Part One</h1>
+    </center>
+    <div>
+      <div class="container">
+         <div class="row">
+           <div class="col-md-12 col-sm-12" style="width: 1169px;height: 20px"></div>
+	   <h2 id="question"></h2>
+         </div>
+         <div class="row text-center">
+           <div class="col-sm-4 col-md-4 col-xs-4">
+             <center>
+             <button class="disabled" id="submit-a" type="button" onClick="submit_response($('#submit-a').html());disable_answer_buttons();" style="width: 281px;height:126px;background-color: rgb(250,128,114); color:black;">A</button>
+	     <button class="disabled" id="submit-b" type="button" onClick="submit_response($('#submit-b').html());disable_answer_buttons();" style="width: 281px;height:126px;background-color: rgb(115,194,251); color:black;">B</button>
+             <button class="disabled" id="submit-c" type="button" onClick="submit_response($('#submit-c').html());disable_answer_buttons();" style="width: 281px;height:126px;background-color: rgb(152,251,152); color:black;">C</button>
+	     </cente124
+           </div>
+         </div>
+       </div>
+     </div>
 {% endblock %}
 {% block scripts %}
     <script>
