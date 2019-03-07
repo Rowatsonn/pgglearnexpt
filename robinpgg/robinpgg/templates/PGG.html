@@ -1,0 +1,33 @@
+{% extends "base/layout.html" %}
+
+{% block title -%}
+    The Evolution of Social Behaviour
+{%- endblock %}
+{% block body %}
+    <div class="main_div">
+        <h1>Money Game</h1>
+
+        <hr>
+
+        <p><strong>THIS IS A PLACEHOLDER FOR THE PGG HTML FILE THAT IS NOT YET DONE OKAY. PS the button takes you back to instructions one. So you are essentially trapped here now. sorry.</strong></p>
+
+<img src='/home/r/RobinStudy/static/images/All-cooperate.png'/>
+
+        <hr>
+
+        <div>
+            <div class="row">
+                <div class="col-xs-10"></div>
+                <div class="col-xs-2">
+                    <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('questionaire');">
+                    Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block libs %}
+    <script src="/static/scripts/store+json2.min.js" type="text/javascript"> </script>
+    {{ super() }}
+    <script src="/static/scripts/experiment.js" type="text/javascript"> </script>
+{% endblock %}
