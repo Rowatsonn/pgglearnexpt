@@ -108,7 +108,7 @@ var process_info = function(info) {
     parse_question(info);
     if (number == 11) {
         dallinger.allowExit();
-        dallinger.goToPage('scorescreen'); //I'll want to change this to some sort of score screen eventually. This suffices for now though
+        dallinger.goToPage('scorescreen');
     } else {
         display_question(); // This is another function call 
         }
@@ -161,7 +161,7 @@ var display_question = function() {
        }
  }; //End of the if else statement 
     enable_answer_buttons(); //Calls another two functions below
-    countdown = 10; // This can set the time they have to answer
+    countdown = 15; // This can set the time they have to answer
     start_answer_timeout();
 }; // End of the function
 
@@ -175,7 +175,7 @@ var start_answer_timeout = function() {
             disable_answer_buttons(); // Calls another function
             $("#countdown").hide();
             $("#countdown").html("");
-            submit_response(Wwer1)
+            submit_response(Wwer1);
             
         } else {
             start_answer_timeout();
@@ -213,5 +213,6 @@ var submit_response = function(value) {
     }
     dallinger.createInfo(my_node_id, data)
     .done(get_transmissions());
+    countdown = 10000; // This is to stop some bug where it would double submit answers. 
 }
 
