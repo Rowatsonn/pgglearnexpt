@@ -207,12 +207,13 @@ var disable_answer_buttons = function() {
 //submit_response still needs to be defined properly
 
 var submit_response = function(value) {
+    clearTimeout(answer_timeout); // This is to stop some bug where it would double submit answers. This stops the timeout.
     console.log("Hello " + value)
     data = {
         "contents": value
     }
     dallinger.createInfo(my_node_id, data)
     .done(get_transmissions());
-    countdown = 10000; // This is to stop some bug where it would double submit answers. 
+      
 }
 

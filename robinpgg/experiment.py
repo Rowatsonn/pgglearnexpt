@@ -88,16 +88,6 @@ class pgglearn(Experiment):
         answers = [len(node.infos()) for node in nodes]
         if all_same(answers):
             node.network.nodes(type=Source)[0].transmit() # The QuizSource class already handles it being the next Q.
-        if (len(node.infos()) == 10):
-            correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt","Asia","Iodine","The Comedy of Errors"]
-            for node in nodes:
-                score = 0
-                infos = str(node.infos())
-                for info in infos:
-                    if (info in correct_answers): #This function currently does not work. 
-                        score +=1 
-                        node.property1 = score
-
         
              
 	
