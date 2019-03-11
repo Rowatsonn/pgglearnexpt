@@ -60,8 +60,11 @@ class pgglearn(Experiment):
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
-        from models import ProbeNode
-        return ProbeNode(network=network, participant=participant)
+        node = self.models.ProbeNode(network=network, participant=participant)
+        node.property1 = json.dumps({
+                'score_in_quiz': 0
+            })
+        return node
         
     def add_note_to_network(self, node, network):
     	"""Hopefully, this should just add a node to the network."""
