@@ -5,6 +5,8 @@ from dallinger.networks import Burst
 from dallinger.nodes import Source
 from dallinger.nodes import Node
 
+import json
+
 try:
     from bots import Bot
     Bot = Bot
@@ -85,12 +87,20 @@ class pgglearn(Experiment):
             pass # This is actually redundant, but is here for completeness
     
     def info_post_request(self, node, info):
-        """Hopefully should get Mr Source to transmit once the nodes all have answered the trivia"""
-        nodes = node.network.nodes()
-        nodes = [n for n in nodes if not isinstance(n, Source)]
+        """Hopefully should get Mr Source to transmit once the nodes all have answered the trivia
+        Also, when the nodes have 10 infos. It also figures out their score in the quiz"""
+        nodes = node.network.nodes(type=self.models.ProbeNode)
         answers = [len(node.infos()) for node in nodes]
         if all_same(answers):
-            node.network.nodes(type=Source)[0].transmit() # The QuizSource class already handles it being the next Q.
+            node.network.nodes(type=Source)[0].transmit() #Quiz source transmits one at a time. 
+        if len(node.infos()) == 10:
+            correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt" , "Asia" , "Iodine" , "The Comedy of Errors"]
+            score = 0
+            infos = node.infos()
+            for info in infos:
+                if info.contents in correct_answers:
+                    score +=1 
+            node.score_in_quiz = score
         
              
 	

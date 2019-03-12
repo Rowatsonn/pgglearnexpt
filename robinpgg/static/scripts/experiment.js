@@ -108,7 +108,7 @@ var process_info = function(info) {
     parse_question(info);
     if (number == 11) {
         dallinger.allowExit();
-        dallinger.goToPage('scorescreen');
+        dallinger.goToPage('score');
     } else {
         display_question(); // This is another function call 
         }
@@ -204,8 +204,6 @@ var disable_answer_buttons = function() {
     $("#question").html("Waiting for the next question..."); 
 }
 
-//submit_response still needs to be defined properly
-
 var submit_response = function(value) {
     clearTimeout(answer_timeout); // This is to stop some bug where it would double submit answers. This stops the timeout.
     console.log("Hello " + value)
@@ -215,5 +213,65 @@ var submit_response = function(value) {
     dallinger.createInfo(my_node_id, data)
     .done(get_transmissions());
       
+}
+
+
+// Function to get my score on the quiz 
+var get_my_score = function(my_node_id){
+  dallinger.getInfo(my_node_id, info_id)
+  .done(function(resp) {
+    process_info2(resp.info);
+  });
+}
+
+// Extracts the relevent bits of the info
+var parse_info = function(info) {
+  info_json = JSON.parse(info.contents);
+  score = info_json.score_on_quiz;
+  console.log(score); 
+}
+
+// All this does is call the above and below function
+var process_info2 = function(info) {
+  parse_info(info)
+  display_score();
+}
+
+// Displays the info on the page
+var display_score = function() {
+  $("#participant-score").html(score);
+}
+
+var check_neighbors = function() {
+    // get your neighbors
+    dallinger.get(
+        "/node/" + 1 + "/neighbors",
+        {
+            connection: "from",
+            type: "ProbeNode",
+        }
+    ).done(function (resp) {
+        console.log("Completed dallinger.get");
+        neighbors = resp.nodes; //console logs as "undefined"
+        console.log(neighbors);
+        parse_neighbors(neighbors);
+        console.log("Completed parse_neighbors");
+    })
+}
+
+var parse_neighbors = function(neighbors){
+  for (node in neighbors){
+    node_json = JSON.parse(node)
+    score = node_json.property1.score_in_quiz;
+    console.log(score);
+    id = node_json.id;
+    console.log(id); //Both of these log as undefined 
+    display_score(score , id);
+  }
+}
+
+var display_score = function(score , id){ //This for now, if it works, will simply overwrite id 1 and score 1 only. I want a for loop that prints the scores to the rest of the table also. 
+  $("#ID-1").html(id);
+  $("#Score-1").html(score); 
 }
 

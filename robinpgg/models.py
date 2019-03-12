@@ -1,6 +1,7 @@
 from dallinger.nodes import Source
 from dallinger.models import Node 
 
+import json
 
 class QuizSource(Source):
     """A Source that reads a question and transmits it. The question is transmitted along with the 
@@ -100,6 +101,7 @@ class QuizSource(Source):
         return questions[number_transmissions]
 
 class ProbeNode(Node):
+    
 
     __mapper_args__ = {
         "polymorphic_identity": "probe_node"
@@ -107,10 +109,12 @@ class ProbeNode(Node):
 
     @property
     def score_in_quiz(self):
+        import json
         return json.loads(self.property1)["score_in_quiz"]
 
     @score_in_quiz.setter
     def score_in_quiz(self, val):
+        import json
         p1 = json.loads(self.property1)
         p1["score_in_quiz"] = val
         self.property1 = json.dumps(p1)
