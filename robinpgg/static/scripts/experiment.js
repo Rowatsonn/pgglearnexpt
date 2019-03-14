@@ -107,8 +107,9 @@ var get_info = function(info_id) {
 var process_info = function(info) {
     parse_question(info);
     if (number == 11) {
-        dallinger.allowExit();
-        dallinger.goToPage('score');
+      check_neighbors();
+        //dallinger.allowExit();
+        //dallinger.goToPage('score');
     } else {
         display_question(); // This is another function call 
         }
@@ -247,7 +248,7 @@ var check_neighbors = function() {
     dallinger.get(
         "/node/" + 1 + "/neighbors",
         {
-            connection: "from",
+            connection: "to",
             type: "ProbeNode",
         }
     ).done(function (resp) {
