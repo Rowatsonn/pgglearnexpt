@@ -68,7 +68,7 @@ class pgglearn(Experiment):
             })
         return node
         
-    def add_note_to_network(self, node, network):
+    def add_node_to_network(self, node, network):
     	"""Hopefully, this should just add a node to the network."""
     	from models import ProbeNode 
     	network.add_node(ProbeNode) 
