@@ -161,7 +161,7 @@ var display_question = function() {
        }
  }; //End of the if else statement 
     enable_answer_buttons(); //Calls another two functions below
-    countdown = 15; // This can set the time they have to answer
+    countdown = 2; // This can set the time they have to answer
     start_answer_timeout();
 }; // End of the function
 
@@ -242,8 +242,14 @@ var display_score = function() {
   $("#participant-score").html(score);
 }
 
+// Get the participants own participant_ID. Since it is forgotton upon moving pages
+var check_ID = function() {
+  ID = dallinger.identity.participantId;
+  return ID;
+}
+
+// Checks for all neighbors of node 1 (the source) with a to connection that are probenodes.
 var check_neighbors = function() {
-    // get your neighbors
     dallinger.get(
         "/node/" + 1 + "/neighbors",
         {
@@ -251,26 +257,50 @@ var check_neighbors = function() {
             type: "ProbeNode",
         }
     ).done(function (resp) {
-        console.log("Completed dallinger.get");
-        neighbors = resp.nodes; //console logs as "undefined"
-        console.log(neighbors);
+        MYID = check_ID(); // Calls check ID for use in parse_neighbors.
+        neighbors = resp.nodes;
         parse_neighbors(neighbors);
-        console.log("Completed parse_neighbors");
     })
 }
 
-var parse_neighbors = function(neighbors){
-  for (node in neighbors){
+// After getting said neighbors. This interprets them.
+var parse_neighbors = function(neighbors) {
+  neighbors.forEach(function(node) {
     score = JSON.parse(node.property1).score_in_quiz;
-    console.log(score);
-    id = node.id;
-    console.log(id); //Both of these log as undefined 
-    display_score(score , id);
-  }
+    prestige = JSON.parse(node.property2).prestige;
+    id = node.participant_id;
+    if (prestige == 1 && id == MYID) {
+      display_score_you(score, id);
+    } else if (prestige == 1) {
+      display_score(score, id);
+    }
+  });
 }
 
-var display_score = function(score , id){ //This for now, if it works, will simply overwrite id 1 and score 1 only. I want a for loop that prints the scores to the rest of the table also. 
-  $("#ID-1").html("sup");
-  $("#Score-1").html("Hello"); 
+// Displays the score when someone else is the winner
+var display_score = function(score , id){
+  console.log("Display_score has been called");
+  $("#Congratulations").show();
+  $("#id-head").removeClass("hidden");
+  $("#ID").removeClass("hidden");
+  $("#ID").html(id);
+  $("#other-win").removeClass("hidden");
+  $("#Score").removeClass("hidden");
+  $("#Score").html(score);
+  $("#out-of").removeClass("hidden"); 
 }
+
+// Displays the score when you win.
+var display_score_you = function(score , id){
+  console.log("Display_score_you has been called");
+  $("#Congratulations").show();
+  $("#id-head").removeClass("hidden");
+  $("#ID").removeClass("hidden");
+  $("#ID").html(id);
+  $("#you-win").removeClass("hidden");
+  $("#Score").removeClass("hidden");
+  $("#Score").html(score);
+  $("#out-of").removeClass("hidden"); 
+}
+
 

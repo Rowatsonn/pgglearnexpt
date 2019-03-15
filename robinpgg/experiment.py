@@ -40,7 +40,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1
-        self.initial_recruitment_size = 1
+        self.initial_recruitment_size = 2
         if session:
             self.setup()
             
@@ -58,7 +58,7 @@ class pgglearn(Experiment):
 
     def create_network(self):
         """Return a new network."""
-        return Burst(max_size=2)
+        return Burst(max_size=3)
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -67,7 +67,7 @@ class pgglearn(Experiment):
                 'score_in_quiz': 0
             })
         node.property2 = json.dumps({
-                'prestige' : "FALSE"
+                'prestige' : 0
             })
         return node
     	
@@ -102,7 +102,7 @@ class pgglearn(Experiment):
         if all_same(answers) and answers[0] == 10: #Have all nodes answered 10 questions?
             import operator 
             winner = max(nodes, key=operator.attrgetter("score_in_quiz"))
-            winner.prestige = "TRUE"
+            winner.prestige = 1
             node.network.nodes(type=Source)[0].transmit()         
     
         elif all_same(answers):
