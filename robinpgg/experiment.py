@@ -66,12 +66,10 @@ class pgglearn(Experiment):
         node.property1 = json.dumps({
                 'score_in_quiz': 0
             })
+        node.property2 = json.dumps({
+                'prestige' : "FALSE"
+            })
         return node
-        
-    def add_node_to_network(self, node, network):
-    	"""Hopefully, this should just add a node to the network."""
-    	from models import ProbeNode 
-    	network.add_node(ProbeNode) 
     	
     def recruit(self):
     	"""Hopefully should recruit one pp at a time, until the network fills."""
@@ -87,20 +85,26 @@ class pgglearn(Experiment):
             pass # This is actually redundant, but is here for completeness
     
     def info_post_request(self, node, info):
-        """Hopefully should get Mr Source to transmit once the nodes all have answered the trivia
-        Also, when the nodes have 10 infos. It also figures out their score in the quiz"""
-        nodes = node.network.nodes(type=self.models.ProbeNode)
-        answers = [len(node.infos()) for node in nodes]
-        if all_same(answers):
-            node.network.nodes(type=Source)[0].transmit() #Quiz source transmits one at a time. 
-        if len(node.infos()) == 10:
-            correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt" , "Asia" , "Iodine" , "The Comedy of Errors"]
+        """This will handle the source transmitting, calculating
+        the score in the quiz and assigning prestige to the winner."""
+        nodes = node.network.nodes(type=self.models.ProbeNode) # All nodes but the source
+        answers = [len(node.infos()) for node in nodes] # Works out how many questions each node has answered
+    
+        if len(node.infos()) == 10: # If the nodes have answered 10 questions
+            correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt" ,     "Asia" , "Iodine" , "The Comedy of Errors"]
             score = 0
             infos = node.infos()
             for info in infos:
-                if info.contents in correct_answers:
+               if info.contents in correct_answers:
                     score +=1 
             node.score_in_quiz = score
-        
-             
-	
+    
+        if all_same(answers) and answers[0] == 10: #Have all nodes answered 10 questions?
+            import operator 
+            winner = max(nodes, key=operator.attrgetter("score_in_quiz"))
+            winner.prestige = "TRUE"
+            node.network.nodes(type=Source)[0].transmit()         
+    
+        elif all_same(answers):
+            node.network.nodes(type=Source)[0].transmit() 
+         

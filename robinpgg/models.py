@@ -112,10 +112,22 @@ class ProbeNode(Node):
         import json
         return json.loads(self.property1)["score_in_quiz"]
 
+    @property
+    def prestige(self):
+        import json
+        return json.loads(self.property2)["prestige"]
+
     @score_in_quiz.setter
     def score_in_quiz(self, val):
         import json
         p1 = json.loads(self.property1)
         p1["score_in_quiz"] = val
         self.property1 = json.dumps(p1)
+
+    @prestige.setter
+    def prestige(self,val):
+        import json
+        p2 = json.loads(self.property2)
+        p2["prestige"] = val
+        self.property2 = json.dumps(p2)
 

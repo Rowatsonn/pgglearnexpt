@@ -107,9 +107,8 @@ var get_info = function(info_id) {
 var process_info = function(info) {
     parse_question(info);
     if (number == 11) {
-      check_neighbors();
-        //dallinger.allowExit();
-        //dallinger.goToPage('score');
+        dallinger.allowExit();
+        dallinger.goToPage('score');
     } else {
         display_question(); // This is another function call 
         }
@@ -262,17 +261,16 @@ var check_neighbors = function() {
 
 var parse_neighbors = function(neighbors){
   for (node in neighbors){
-    node_json = JSON.parse(node)
-    score = node_json.property1.score_in_quiz;
+    score = JSON.parse(node.property1).score_in_quiz;
     console.log(score);
-    id = node_json.id;
+    id = node.id;
     console.log(id); //Both of these log as undefined 
     display_score(score , id);
   }
 }
 
 var display_score = function(score , id){ //This for now, if it works, will simply overwrite id 1 and score 1 only. I want a for loop that prints the scores to the rest of the table also. 
-  $("#ID-1").html(id);
-  $("#Score-1").html(score); 
+  $("#ID-1").html("sup");
+  $("#Score-1").html("Hello"); 
 }
 
