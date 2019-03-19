@@ -1,33 +1,77 @@
-{% extends "base/layout.html" %}
+{% extends "layout.html" %}
 
-{% block title -%}
-    The Evolution of Social Behaviour
-{%- endblock %}
 {% block body %}
-    <div class="main_div">
-        <h1>Money Game</h1>
+   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>PGG</title>
+</head>
 
-        <hr>
-
-        <p><strong>THIS IS A PLACEHOLDER FOR THE PGG HTML FILE THAT IS NOT YET DONE OKAY. PS the button takes you back to instructions one. So you are essentially trapped here now. sorry.</strong></p>
-
-<img src='/home/r/RobinStudy/static/images/All-cooperate.png'/>
-
-        <hr>
-
-        <div>
+<body>
+    <div>
+        <div class="container">
             <div class="row">
-                <div class="col-xs-10"></div>
-                <div class="col-xs-2">
-                    <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('questionaire');">
-                    Next</button>
+                <div class="col-md-12">
+                    <h1 class="text-center" style="font-size: 53px;">Part Two</h1>
                 </div>
             </div>
         </div>
     </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="hidden" id="instructions">Please select below how many points you would like to donate to the public fund:</h1>
+                    <h1 class="hidden" id="earnings"><strong>This round </strong>you earned:</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div>
+                    <h1 class="text-center hidden" id="points" style="font-size: 86px;">0</h1>
+                    <div class="dropdown hidden" id="donation"><button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button" style="font-size: 41px;">Donation</button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a href="#">0</a></li>
+                            <li role="presentation"><a href="#">1</a></li>
+                            <li role="presentation"><a href="#">2</a></li>
+                            <li role="presentation"><a href="#">3</a></li>
+                            <li role="presentation"><a href="#">4</a></li>
+                            <li role="presentation"><a href="#">5</a></li>
+                            <li role="presentation"><a href="#">6</a></li>
+                            <li role="presentation"><a href="#">7</a></li>
+                            <li role="presentation"><a href="#">8</a></li>
+                            <li role="presentation"><a href="#">9</a></li>
+                            <li role="presentation"><a href="#">10</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="hidden" id="added">This will be added to your score</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row hidden">
+                <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-10"><button class="btn btn-success btn-lg" type="button" id="confirm" style="color: rgb(255,255,255);">Confirm</button></div>
+            </div>
+        </div>
+    </div>
+</body>
+
 {% endblock %}
-{% block libs %}
-    <script src="/static/scripts/store+json2.min.js" type="text/javascript"> </script>
-    {{ super() }}
-    <script src="/static/scripts/experiment.js" type="text/javascript"> </script>
+{% block scripts %}
+    <script>
+    </script>
 {% endblock %}
+
