@@ -103,10 +103,12 @@ var get_info = function(info_id) {
     });
 }
 
+
 // Process the info that the node receievs.
 var process_info = function(info) {
     parse_question(info);
     if (number == 11) {
+        submit_response(Wwer1); // Creates an info just to signal Q is done. To not break the network again later.
         dallinger.allowExit();
         dallinger.goToPage('score');
     } else {
@@ -161,7 +163,7 @@ var display_question = function() {
        }
  }; //End of the if else statement 
     enable_answer_buttons(); //Calls another two functions below
-    countdown = 2; // This can set the time they have to answer
+    countdown = 5; // This can set the time they have to answer
     start_answer_timeout();
 }; // End of the function
 
@@ -204,42 +206,15 @@ var disable_answer_buttons = function() {
     $("#question").html("Waiting for the next question..."); 
 }
 
+// Submit the answer for this question as an info. 
 var submit_response = function(value) {
     clearTimeout(answer_timeout); // This is to stop some bug where it would double submit answers. This stops the timeout.
-    console.log("Hello " + value)
     data = {
-        "contents": value
+       "contents": value
     }
     dallinger.createInfo(my_node_id, data)
     .done(get_transmissions());
       
-}
-
-
-// Function to get my score on the quiz 
-var get_my_score = function(my_node_id){
-  dallinger.getInfo(my_node_id, info_id)
-  .done(function(resp) {
-    process_info2(resp.info);
-  });
-}
-
-// Extracts the relevent bits of the info
-var parse_info = function(info) {
-  info_json = JSON.parse(info.contents);
-  score = info_json.score_on_quiz;
-  console.log(score); 
-}
-
-// All this does is call the above and below function
-var process_info2 = function(info) {
-  parse_info(info)
-  display_score();
-}
-
-// Displays the info on the page
-var display_score = function() {
-  $("#participant-score").html(score);
 }
 
 // Get the participants own participant_ID. Since it is forgotton upon moving pages
@@ -251,7 +226,7 @@ var check_ID = function() {
 // Checks for all neighbors of node 1 (the source) with a to connection that are probenodes.
 var check_neighbors = function() {
     dallinger.get(
-        "/node/" + 1 + "/neighbors",
+        "/node/" + 2 + "/neighbors",
         {
             connection: "to",
             type: "ProbeNode",
@@ -279,7 +254,7 @@ var parse_neighbors = function(neighbors) {
 
 // Displays the score when someone else is the winner
 var display_score = function(score , id){
-  console.log("Display_score has been called");
+  console.log("Display score was called");
   $("#Congratulations").show();
   $("#id-head").removeClass("hidden");
   $("#ID").removeClass("hidden");
@@ -287,12 +262,12 @@ var display_score = function(score , id){
   $("#other-win").removeClass("hidden");
   $("#Score").removeClass("hidden");
   $("#Score").html(score);
-  $("#out-of").removeClass("hidden"); 
+  $("#out-of").removeClass("hidden");
 }
 
 // Displays the score when you win.
 var display_score_you = function(score , id){
-  console.log("Display_score_you has been called");
+  console.log("Display score you was called");
   $("#Congratulations").show();
   $("#id-head").removeClass("hidden");
   $("#ID").removeClass("hidden");
@@ -300,7 +275,7 @@ var display_score_you = function(score , id){
   $("#you-win").removeClass("hidden");
   $("#Score").removeClass("hidden");
   $("#Score").html(score);
-  $("#out-of").removeClass("hidden"); 
+  $("#out-of").removeClass("hidden");
 }
 
 

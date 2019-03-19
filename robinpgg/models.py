@@ -1,7 +1,7 @@
 from dallinger.nodes import Source
-from dallinger.models import Node 
+from dallinger.models import Node
 
-import json
+from dallinger.networks import Burst
 
 class QuizSource(Source):
     """A Source that reads a question and transmits it. The question is transmitted along with the 
@@ -101,6 +101,7 @@ class QuizSource(Source):
         return questions[number_transmissions]
 
 class ProbeNode(Node):
+    """A custom node for use in the experiment. Has some properties changed"""
     
 
     __mapper_args__ = {
@@ -117,6 +118,11 @@ class ProbeNode(Node):
         import json
         return json.loads(self.property2)["prestige"]
 
+    @property
+    def score_in_pgg(self):
+        import json
+        return json.loads(self.property3)["score_in_pgg"]
+
     @score_in_quiz.setter
     def score_in_quiz(self, val):
         import json
@@ -125,9 +131,43 @@ class ProbeNode(Node):
         self.property1 = json.dumps(p1)
 
     @prestige.setter
-    def prestige(self,val):
+    def prestige(self, val):
         import json
         p2 = json.loads(self.property2)
         p2["prestige"] = val
         self.property2 = json.dumps(p2)
+
+    @score_in_pgg.setter
+    def score_in_pgg(self, val):
+        import json
+        p3 = json.loads(self.property3)
+        p3["score_in_pgg"] = val
+        self.property3 = json.dumps(p3)
+
+
+class PogBot(Node):
+    """The pot of greed, which will handle working out the scores for each of the participants."""
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "pot_of_greed_bot"
+    }
+
+class RNetwork(Burst):
+    """A custom form of the burst network to be used in the public goods game"""
+
+    __mapper_args__ = {
+        "polymorphic_identity": "Robin_Network"
+    }
+
+    def rearrange_network(self):
+        """This function will convert the current, regular, burst network into this"""
+        source = self.nodes(type=QuizSource)
+        for s in source:
+            s.fail()
+
+        nodes = self.nodes() # This wil connect all the nodes up, except to themselves.
+        for n in nodes:
+            for n2 in nodes:
+                if n != n2:
+                    n.connect(n2)
 

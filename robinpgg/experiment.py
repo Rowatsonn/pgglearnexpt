@@ -5,6 +5,8 @@ from dallinger.networks import Burst
 from dallinger.nodes import Source
 from dallinger.nodes import Node
 
+from . import models
+
 import json
 
 try:
@@ -48,7 +50,8 @@ class pgglearn(Experiment):
         if not self.networks():
                 super(pgglearn, self).setup()
                 for net in self.networks():
-                        self.models.QuizSource(network=net)        
+                        self.models.QuizSource(network=net)
+                        self.models.PogBot(network=net)        
            
     def configure(self):
         super(pgglearn, self).configure()
@@ -58,7 +61,8 @@ class pgglearn(Experiment):
 
     def create_network(self):
         """Return a new network."""
-        return Burst(max_size=3)
+        from . import models
+        return self.models.RNetwork(max_size=4)
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -68,6 +72,9 @@ class pgglearn(Experiment):
             })
         node.property2 = json.dumps({
                 'prestige' : 0
+            })
+        node.property3 = json.dumps({
+                'score_in_pgg' : 0
             })
         return node
     	
@@ -87,8 +94,8 @@ class pgglearn(Experiment):
     def info_post_request(self, node, info):
         """This will handle the source transmitting, calculating
         the score in the quiz and assigning prestige to the winner."""
-        nodes = node.network.nodes(type=self.models.ProbeNode) # All nodes but the source
-        answers = [len(node.infos()) for node in nodes] # Works out how many questions each node has answered
+        nodes = node.network.nodes(type=self.models.ProbeNode) # All probenodes ONLY
+        answers = [len(node.infos()) for node in nodes] # Works out how many questions (infos) each node has answered(produced)
     
         if len(node.infos()) == 10: # If the nodes have answered 10 questions
             correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt" ,     "Asia" , "Iodine" , "The Comedy of Errors"]
@@ -99,12 +106,15 @@ class pgglearn(Experiment):
                     score +=1 
             node.score_in_quiz = score
     
-        if all_same(answers) and answers[0] == 10: #Have all nodes answered 10 questions?
-            import operator 
+        if all_same(answers) and answers[0] == 10: #Have ALL nodes answered 10 questions?
+            import operator  #For operator.attrgetter
             winner = max(nodes, key=operator.attrgetter("score_in_quiz"))
             winner.prestige = 1
-            node.network.nodes(type=Source)[0].transmit()         
+            node.network.nodes(type=Source)[0].transmit()  
+       
+        elif all_same(answers) and answers[0] == 11:
+            node.network.rearrange_network() # This kills the source, its vectors and adds the POGbot     
     
-        elif all_same(answers):
+        elif all_same(answers): # Have ALL nodes answered the same number of questions
             node.network.nodes(type=Source)[0].transmit() 
-         
+      
