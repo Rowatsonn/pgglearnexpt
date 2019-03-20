@@ -209,6 +209,7 @@ var disable_answer_buttons = function() {
 // Submit the answer for this question as an info. 
 var submit_response = function(value) {
     clearTimeout(answer_timeout); // This is to stop some bug where it would double submit answers. This stops the timeout.
+    $("#countdown").hide();
     data = {
        "contents": value
     }

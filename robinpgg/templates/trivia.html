@@ -1,33 +1,44 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    <center>
-    <h1 style="width: 1016px;">Part One</h1>
-    </center>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Trivia</title>
+</head>
+
+<body>
     <div>
-      <div class="container">
-         <div class="row">
-           <div class="col-md-12 col-sm-12" style="width: 1169px;height: 20px"></div>
-	   <h2 id="question">Waiting for other participants...</h2>
-           </div>
-         </div>
-       </div>
-       <div>
-           <div class="container text-center">
-               <div class="row">
-                   <div class="col-md-4 col-sm-4 col-xs-4">
-		       <button class="disabled" id="submit-a" type="button" onClick="submit_response($('#submit-a').html());disable_answer_buttons();" style="width: 281px;height:126px;background-color: rgb(250,128,114); color:black;">A</button>
-	           </div>
-                   <div class="col-md-4 col-sm-4 col-xs-4">
-		       <button class="disabled" id="submit-b" type="button" onClick="submit_response($('#submit-b').html());disable_answer_buttons();" style="width: 281px;height:126px;background-color: rgb(115,194,251); color:black;">B</button>
-	           </div>
-                   <div class="col-md-4 col-sm-4 col-xs-4">
-		       <button class="disabled" id="submit-c" type="button" onClick="submit_response($('#submit-c').html());disable_answer_buttons();" style="width: 281px;height:126px;background-color: rgb(152,251,152); color:black;">C</button>
-                   </div>
-	       </div>
-           </div>
-       </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center">Part One</h1>
+                </div>
+            </div>
+        </div>
     </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-8 col-xs-9">
+                    <h2 class="text-center" id="question">Waiting for other participants...</h2>
+                </div>
+                <div class="col-md-3 col-sm-4 col-xs-1">
+                    <h1 class="text-center" id="countdown" style="font-size: 30px;">...</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-a').html());disable_answer_buttons();" id="submit-a" style="background-color: rgb(250,128,114);width: 281px;height: 126px;color: Black;">A</button></div>
+                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-b').html());disable_answer_buttons();" id="submit-b" style="background-color: rgb(115,194,251);width: 281px;height: 126px;color: Black;">B</button></div>
+                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-c').html());disable_answer_buttons();" id="submit-c" style="background-color: rgb(152,251,152);width: 281px;height: 126px;color: Black;">C</button></div>
+            </div>
+        </div>
+    </div>
+</body>
+
 {% endblock %}
 {% block scripts %}
     <script>
