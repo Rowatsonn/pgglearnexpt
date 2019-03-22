@@ -42,7 +42,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1
-        self.initial_recruitment_size = 2
+        self.initial_recruitment_size = 1
         if session:
             self.setup()
             
@@ -62,7 +62,7 @@ class pgglearn(Experiment):
     def create_network(self):
         """Return a new network."""
         from . import models
-        return self.models.RNetwork(max_size=4)
+        return self.models.RNetwork(max_size=3)
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -97,7 +97,7 @@ class pgglearn(Experiment):
         nodes = node.network.nodes(type=self.models.ProbeNode) # All probenodes ONLY
         answers = [len(node.infos()) for node in nodes] # Works out how many questions (infos) each node has answered(produced)
     
-        if len(node.infos()) == 10: # If the nodes have answered 10 questions
+        if len(node.infos()) == 10: # If a node has answered 10 questions
             correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt" ,     "Asia" , "Iodine" , "The Comedy of Errors"]
             score = 0
             infos = node.infos()
@@ -116,5 +116,14 @@ class pgglearn(Experiment):
             node.network.rearrange_network() # This kills the source, its vectors and adds the POGbot     
     
         elif all_same(answers): # Have ALL nodes answered the same number of questions
-            node.network.nodes(type=Source)[0].transmit() 
+            try:
+                node.network.nodes(type=Source)[0].transmit()
+            except: 
+                pass #This is to stop errors in the PGG part of the study
+
+        if len(node.infos()) > 11:
+            info = node.infos()[-1]
+            leftovers = 10 - info
+            node.score_in_pgg += leftovers # This will add whatever points the node didn't spend to its score
+            node.transmit(what=info) # This will cause the node to transmit to POG and the other ProbeNodes             
       

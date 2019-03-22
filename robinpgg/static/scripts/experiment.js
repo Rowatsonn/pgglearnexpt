@@ -57,6 +57,7 @@ var create_agent = function() {
   dallinger.createAgent()
   .done(function (resp) {
     my_node_id = resp.node.id;
+    dallinger.storage.set("my_node" , my_node_id);
     $("#submit-response").removeClass('disabled');
     get_transmissions(my_node_id); //It starts constantly checking it's transmissions
   })
@@ -73,6 +74,7 @@ var get_transmissions = function() {
     })
     .done(function (resp) {
         transmissions = resp.transmissions;
+        console.log(transmissions)
         if (transmissions.length > 0) {
             if (transmissions.length > 1) {
                 console.log("More than one transmission - unexpected!");
@@ -218,6 +220,8 @@ var submit_response = function(value) {
       
 }
 
+// Beginning of code for Scorescreen
+
 // Get the participants own participant_ID. Since it is forgotton upon moving pages
 var check_ID = function() {
   ID = dallinger.identity.participantId;
@@ -233,7 +237,10 @@ var check_neighbors = function() {
             type: "ProbeNode",
         }
     ).done(function (resp) {
+        $("blank").hide();
         MYID = check_ID(); // Calls check ID for use in parse_neighbors.
+        n_id = dallinger.storage.get("my_node");
+        console.log(n_id); 
         neighbors = resp.nodes;
         parse_neighbors(neighbors);
     })
@@ -279,4 +286,110 @@ var display_score_you = function(score , id){
   $("#out-of").removeClass("hidden");
 }
 
+// Beginning of code for the PGG page
 
+var start_experiment = function() {
+  my_node_id = dallinger.storage.get("my_node"); // Get's the participant's node and saves it
+  console.log(my_node_id);
+  show_experiment(); 
+}
+
+var show_experiment = function() {
+  $("#instructions").removeClass("hidden");
+  $("#submit-0").removeClass("hidden");
+  $("#submit-0").removeClass("disabled");
+  $("#submit-1").removeClass("hidden");
+  $("#submit-1").removeClass("disabled");
+  $("#submit-2").removeClass("hidden");
+  $("#submit-2").removeClass("disabled");
+  $("#submit-3").removeClass("hidden");
+  $("#submit-3").removeClass("disabled");
+  $("#submit-4").removeClass("hidden");
+  $("#submit-4").removeClass("disabled");
+  $("#submit-5").removeClass("hidden");
+  $("#submit-5").removeClass("disabled");
+  $("#submit-6").removeClass("hidden");
+  $("#submit-6").removeClass("disabled");
+  $("#submit-7").removeClass("hidden");
+  $("#submit-7").removeClass("disabled");
+  $("#submit-8").removeClass("hidden");
+  $("#submit-8").removeClass("disabled");
+  $("#submit-9").removeClass("hidden");
+  $("#submit-9").removeClass("disabled");
+  $("#submit-10").removeClass("hidden");
+  $("#submit-10").removeClass("disabled");
+  force_choice = Math.floor(Math.random() * 10) + 0  
+  start_experiment_timeout(); 
+}
+
+var hide_experiment = function() {
+  $("#instructions").addClass("hidden");
+  $("#submit-0").addClass("hidden");
+  $("#submit-0").addClass("disabled");
+  $("#submit-1").addClass("hidden");
+  $("#submit-1").addClass("disabled");
+  $("#submit-2").addClass("hidden");
+  $("#submit-2").addClass("disabled");
+  $("#submit-3").addClass("hidden");
+  $("#submit-3").addClass("disabled");
+  $("#submit-4").addClass("hidden");
+  $("#submit-4").addClass("disabled");
+  $("#submit-5").addClass("hidden");
+  $("#submit-5").addClass("disabled");
+  $("#submit-6").addClass("hidden");
+  $("#submit-6").addClass("disabled");
+  $("#submit-7").addClass("hidden");
+  $("#submit-7").addClass("disabled");
+  $("#submit-8").addClass("hidden");
+  $("#submit-8").addClass("disabled");
+  $("#submit-9").addClass("hidden");
+  $("#submit-9").addClass("disabled");
+  $("#submit-10").addClass("hidden");
+  $("#submit-10").addClass("disabled");
+}
+
+var start_experiment_timeout = function () {
+  countdown = 10;
+  experiment_timeout = setTimeout(function(){
+    countdown = countdown - 1;
+    if (countdown <=0) {
+      hide_experiment();
+      submit_choice(force_choice); // If a participant doesn't decide, a random number is submit
+    } else {
+      start_experiment_timeout();
+    }
+  }, 1000); 
+}
+                              
+var submit_choice = function(value) {
+    clearTimeout(experiment_timeout);
+    hide_experiment();
+    data = {
+       "contents": value
+    }
+    dallinger.createInfo(my_node_id, data)
+    .done(get_transmitresults());
+}
+
+var get_transmitresults = function() {
+  dallinger.getTransmissions(my_node_id , {
+    status: "pending"
+  })
+  .done(function (resp) {
+        transmissions = resp.transmissions;
+        if (tramsissions.length > 0) {
+          get_results(transmissions[0].info_id);
+        } else {
+          setTimeout(function(){
+            get_transmitresults();
+          }, 1000);
+        }
+        })
+}
+
+var get_results = function(info_id) {
+  dallinger.getInfo(my_node_id, info_id)
+  .done(function(resp) {
+    console.log("Get results is done, but does nothing at the minute")
+  })
+}

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-   <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>PGG</title>
@@ -32,24 +32,30 @@
             <div class="row">
                 <div>
                     <h1 class="text-center hidden" id="points" style="font-size: 86px;">0</h1>
-                    <div class="dropdown hidden" id="donation"><button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button" style="font-size: 41px;">Donation</button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a href="#">0</a></li>
-                            <li role="presentation"><a href="#">1</a></li>
-                            <li role="presentation"><a href="#">2</a></li>
-                            <li role="presentation"><a href="#">3</a></li>
-                            <li role="presentation"><a href="#">4</a></li>
-                            <li role="presentation"><a href="#">5</a></li>
-                            <li role="presentation"><a href="#">6</a></li>
-                            <li role="presentation"><a href="#">7</a></li>
-                            <li role="presentation"><a href="#">8</a></li>
-                            <li role="presentation"><a href="#">9</a></li>
-                            <li role="presentation"><a href="#">10</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <button onClick="submit_choice($('#submit-0').html())" class="btn btn-info btn-lg hidden" type="button" id="submit-0" style="width: 82px;height: 47px;">0</button>
+                    <button onClick="submit_choice($('#submit-1').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-1" style="width: 82px;height: 47px;">1</button>
+                    <button onClick="submit_choice($('#submit-2').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-2" style="width: 82px;height: 47px;">2</button>
+                    <button onClick="submit_choice($('#submit-3').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-3" style="width: 82px;height: 47px;">3</button>
+                    <button onClick="submit_choice($('#submit-4').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-4" style="width: 82px;height: 47px;">4</button>
+                </div>
+                <div class="text-center">
+                    <button onClick="submit_choice($('#submit-5').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-5" style="width: 82px;height: 47px;">5</button>
+                    <button onClick="submit_choice($('#submit-6').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-6" style="width: 82px;height: 47px;">6</button>
+                    <button onClick="submit_choice($('#submit-7').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-7" style="width: 82px;height: 47px;">7</button>
+                    <button onClick="submit_choice($('#submit-8').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-8" style="width: 82px;height: 47px;">8</button>
+                    <button onClick="submit_choice($('#submit-9').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-9" style="width: 82px;height: 47px;">9</button>
+                    <button onClick="submit_choice($('#submit-10').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-10" style="width: 82px;height: 47px;">10</button>
+            </div>
+        </div>
+    </div>
     </div>
     <div>
         <div class="container">
@@ -72,6 +78,7 @@
 {% endblock %}
 {% block scripts %}
     <script>
+start_experiment();
     </script>
 {% endblock %}
 
