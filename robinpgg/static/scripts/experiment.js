@@ -57,7 +57,7 @@ var create_agent = function() {
   dallinger.createAgent()
   .done(function (resp) {
     my_node_id = resp.node.id;
-    dallinger.storage.set("my_node" , my_node_id);
+    dallinger.storage.set("my_node" , my_node_id); //This is where we set the cookie for my node
     $("#submit-response").removeClass('disabled');
     get_transmissions(my_node_id); //It starts constantly checking it's transmissions
   })
@@ -237,10 +237,8 @@ var check_neighbors = function() {
             type: "ProbeNode",
         }
     ).done(function (resp) {
-        $("blank").hide();
+        $("blank").addClass("hidden");
         MYID = check_ID(); // Calls check ID for use in parse_neighbors.
-        n_id = dallinger.storage.get("my_node");
-        console.log(n_id); 
         neighbors = resp.nodes;
         parse_neighbors(neighbors);
     })
@@ -290,7 +288,6 @@ var display_score_you = function(score , id){
 
 var start_experiment = function() {
   my_node_id = dallinger.storage.get("my_node"); // Get's the participant's node and saves it
-  console.log(my_node_id);
   show_experiment(); 
 }
 
@@ -318,7 +315,8 @@ var show_experiment = function() {
   $("#submit-9").removeClass("disabled");
   $("#submit-10").removeClass("hidden");
   $("#submit-10").removeClass("disabled");
-  force_choice = Math.floor(Math.random() * 10) + 0  
+  force_choice = Math.floor(Math.random() * 10) + 0;
+  countdown = 10; // Set the desired countdown number here  
   start_experiment_timeout(); 
 }
 
@@ -349,9 +347,10 @@ var hide_experiment = function() {
 }
 
 var start_experiment_timeout = function () {
-  countdown = 10;
+  console.log("start experiment timeout was called")
   experiment_timeout = setTimeout(function(){
     countdown = countdown - 1;
+    console.log(countdown)
     if (countdown <=0) {
       hide_experiment();
       submit_choice(force_choice); // If a participant doesn't decide, a random number is submit
@@ -377,12 +376,12 @@ var get_transmitresults = function() {
   })
   .done(function (resp) {
         transmissions = resp.transmissions;
-        if (tramsissions.length > 0) {
+        if (transmissions.length > 0) {
           get_results(transmissions[0].info_id);
         } else {
           setTimeout(function(){
             get_transmitresults();
-          }, 1000);
+          }, 10000);
         }
         })
 }
@@ -391,5 +390,6 @@ var get_results = function(info_id) {
   dallinger.getInfo(my_node_id, info_id)
   .done(function(resp) {
     console.log("Get results is done, but does nothing at the minute")
+    console.log(resp.info);
   })
 }

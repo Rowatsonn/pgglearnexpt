@@ -1,7 +1,10 @@
 from dallinger.nodes import Source
 from dallinger.models import Node
+from dallinger.models import Info
 
 from dallinger.networks import Burst
+
+import sys
 
 class QuizSource(Source):
     """A Source that reads a question and transmits it. The question is transmitted along with the 
@@ -151,6 +154,46 @@ class PogBot(Node):
     __mapper_args__ = {
         "polymorphic_identity": "pot_of_greed_bot"
     }
+    
+    @property
+    def pot(self):
+        import json
+        return json.loads(self.property1)["pot"]
+
+    @pot.setter
+    def pot(self, val):
+        import json
+        p1 = json.loads(self.property1)
+        p1["pot"] = val
+        self.property1 = json.dumps(p1)
+
+    def update(self, infos):
+        """This will handle working out the scores. Infos end up here whenever .receieve()
+        is called in the backend"""
+        decisions = [] # Empty list ready for decisions
+        probes = self.network.size(type=ProbeNode) # Number of ProbeNodes
+        nodes = self.network.nodes(type=ProbeNode) # Objec containing the probes
+        pog = self.network.nodes(type=PogBot) # Get the Pog
+        sum = 0 # Object for PGG contributions
+        for info in infos: # Get the contents of the infos and set to integer
+            info = int(info.contents)
+            decisions.append(info)
+
+        for num in decisions: # Add up these numbers
+           sum += num
+        
+        sum = sum*2 # Double the result
+        earnings = sum/probes # Divide by the number of probes (pps) in the network
+        pog.pot = earnings
+    
+        for node in nodes:
+            node.score_in_pgg += earnings
+        
+        item = infos[0] # Takes one of the infos, doesn't matter which
+        m_item = self.mutate(item) # Calls mutate, which calls mutated_contents under info
+
+        self.transmit(what = m_item , to_whom = ProbeNode) # Should then transmit back to the Probes
+        
 
 class RNetwork(Burst):
     """A custom form of the burst network to be used in the public goods game"""
@@ -170,4 +213,13 @@ class RNetwork(Burst):
             for n2 in nodes:
                 if n != n2:
                     n.connect(n2)
+
+class RInfo(Info):
+    """Custom info class which is needed to use mutate"""
+
+    def _mutated_contents(self):
+        pog = self.node.network.nodes(type=PogBot) # Get the Pog
+        contents = pog.pot # Read the property to find the contents
+        return contents
+        
 
