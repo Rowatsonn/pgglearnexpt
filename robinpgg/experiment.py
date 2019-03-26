@@ -51,11 +51,7 @@ class pgglearn(Experiment):
                 super(pgglearn, self).setup()
                 for net in self.networks():
                         self.models.QuizSource(network=net)
-                        self.models.PogBot(network=net)
-                        pog = self.models.PogBot
-                        pog.property1 = json.dumps({
-                               'pot' : 0 
-                            })        
+                        self.models.PogBot(network=net)     
            
     def configure(self):
         super(pgglearn, self).configure()
@@ -80,6 +76,9 @@ class pgglearn(Experiment):
         node.property3 = json.dumps({
                 'score_in_pgg' : 0
             })
+        node.property4 = json.dumps({
+                'leftovers' : 0
+            })
         return node
     	
     def recruit(self):
@@ -91,6 +90,14 @@ class pgglearn(Experiment):
 
     def node_post_request(self, participant, node):
         if node.network.full:
+            import json
+            pog = node.network.nodes(type=self.models.PogBot)[0]
+            pog.property1 = json.dumps({
+                    'pot': 0 
+                })
+            pog.property1 = json.dumps({
+                    'round': 0 
+                })
             node.network.nodes(type=Source)[0].transmit() 
     
     def info_post_request(self, node, info):
@@ -99,6 +106,8 @@ class pgglearn(Experiment):
         Then finally for the PGG, it will get transmit choices to the POG
         """
         nodes = node.network.nodes(type=self.models.ProbeNode) # All probenodes ONLY
+        pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG 
+        probes = node.network.size(type=self.models.ProbeNode) # How many probes?
         answers = [len(node.infos()) for node in nodes] # Works out how many questions (infos) each node has answered(produced)
     
         if len(node.infos()) == 10: # If a node has answered 10 questions
@@ -129,16 +138,22 @@ class pgglearn(Experiment):
             info_int = int(info.contents) # This converts it to an integer. Which is good. 
             leftovers = 10 - info_int
             node.score_in_pgg += leftovers # This will add whatever points the node didn't spend to its score
-            node.transmit(what=info , to_whom=self.models.PogBot) # This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time. When it comes to the social learning condition, this may need to be changed.  
+            node.leftovers = leftovers # This will store their leftovers seperately for use in js
+            node.transmit(what=info , to_whom=self.models.PogBot)
+            pogst = node.network.transmissions(status='pending') # How many pending transmissions?
+            pendings = len(pogst) 
+            if pendings == probes:
+                pog.receive()
+# This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time. When it comes to the social learning condition, this may need to be changed.
 
 
-    def transmission_get_request(self, node, transmissions):# If the number of pending transmissions for the PoGBot currently equals the number of ProbeNodes in the network. In other words, have all participants decided what to do in the PGG
-        """This will handle calling the PogBot's get transmissions and then
-        doing what it needs to do with them"""
-        pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG
-        pogst = node.network.transmissions(status='pending') # How many pending transmissions?
-        number = len(pogst) 
-        probes = node.network.size(type=self.models.ProbeNode) # How many probes?
-        if number == probes:
-            pog.receive() # These transmissions are then passed to update (see models).          
+    #def transmission_get_request(self, node, transmissions):# If the number of pending transmissions for the PoGBot currently equals the number of ProbeNodes in the network. In other words, have all participants decided what to do in the PGG
+        #"""This will handle calling the PogBot's get transmissions and then
+       # doing what it needs to do with them"""
+        #pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG
+       # pogst = node.network.transmissions(status='pending') # How many pending transmissions?
+       # number = len(pogst) 
+       # probes = node.network.size(type=self.models.ProbeNode) # How many probes?
+       # if number == probes:
+         #   pog.receive() # These transmissions are then passed to update (see models).          
       

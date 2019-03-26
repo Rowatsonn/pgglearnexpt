@@ -288,6 +288,7 @@ var display_score_you = function(score , id){
 
 var start_experiment = function() {
   my_node_id = dallinger.storage.get("my_node"); // Get's the participant's node and saves it
+  round = 0 // Set's the round counter, this will increase after each pass
   show_experiment(); 
 }
 
@@ -316,6 +317,7 @@ var show_experiment = function() {
   $("#submit-10").removeClass("hidden");
   $("#submit-10").removeClass("disabled");
   force_choice = Math.floor(Math.random() * 10) + 0;
+  round += 1
   countdown = 10; // Set the desired countdown number here  
   start_experiment_timeout(); 
 }
@@ -353,7 +355,7 @@ var start_experiment_timeout = function () {
     console.log(countdown)
     if (countdown <=0) {
       hide_experiment();
-      submit_choice(force_choice); // If a participant doesn't decide, a random number is submit
+      submit_choice(force_choice); // If a participant doesn't decide, a random number is submitted
     } else {
       start_experiment_timeout();
     }
@@ -367,29 +369,105 @@ var submit_choice = function(value) {
        "contents": value
     }
     dallinger.createInfo(my_node_id, data)
-    .done(get_transmitresults());
+    .done(get_pog()); // It's like above, only this time it starts checking its neighbors
 }
 
-var get_transmitresults = function() {
-  dallinger.getTransmissions(my_node_id , {
-    status: "pending"
+// Get's hold of the pogbot
+var get_pog = function() {
+  dallinger.get(
+  "/node/" + my_node_id + "/neighbors",
+  {
+    connection: "to",
+    type: "PogBot",
+  }
+).done(function (resp) {
+    pog = resp.nodes;
+    parse_pog(pog);
   })
-  .done(function (resp) {
-        transmissions = resp.transmissions;
-        if (transmissions.length > 0) {
-          get_results(transmissions[0].info_id);
-        } else {
-          setTimeout(function(){
-            get_transmitresults();
-          }, 10000);
+}
+
+// Checks if the pogbots round counter matches the current round. It only will if it has 
+// receieved input from all nodes and worked out the pot.
+var parse_pog = function(pog) {
+  pog.forEach(function(node) {
+    poground = JSON.parse(node.property1).round;
+    pot = JSON.parse(node.property1).pot;
+    if (poground == round) {
+      get_results(pot)
+    } else {
+      setTimeout(function(){
+        get_pog(); // If it isnt the same round (still waiting on a node), it just calls get_pog again.
+      } , 1000);
+    }
+  })
+}
+
+// Get hold of the participants results.
+var get_results = function(pot) {
+  console.log("get results was called")
+  pot = parseInt(pot , 10)
+  dallinger.get(
+        "/node/" + 2 + "/neighbors",
+        {
+            connection: "to",
+            type: "ProbeNode",
         }
-        })
+    ).done(function (resp) {
+    neighbors = resp.nodes;
+    my_leftovers = check_nodes(neighbors); //Function call
+    my_leftovers = parseInt(my_leftovers , 10);
+    round_earnings = my_leftovers + pot;
+    console.log(round_earnings);
+    display_results(round_earnings); // function call
+  })
 }
 
-var get_results = function(info_id) {
-  dallinger.getInfo(my_node_id, info_id)
-  .done(function(resp) {
-    console.log("Get results is done, but does nothing at the minute")
-    console.log(resp.info);
+// Find the leftovers the participant had
+var check_nodes = function(neighbors) {
+  console.log("check nodes was called")
+  neighbors.forEach(function(node) {
+    node_id = node.id;
+    leftovers = JSON.parse(node.property4).leftovers;
+    if (node_id == my_node_id) {
+      return leftovers
+    }
   })
+}
+
+// Show the participant their results
+var display_results = function(round_earnings) {
+  console.log("display_results was called"); 
+  result_countdown = 10; // How long can participants view this?
+  $("#earnings").removeClass("hidden");
+  $("#points").removeClass("hidden"); 
+  $("#points").html(round_earnings);
+  $("#added").removeClass("hidden");
+  start_timer_countdown();  
+  }
+
+
+// Starts a timer for the scorescreen to keep everyone synced up
+var start_timer_countdown = function() {
+  console.log("start timer countdown was called")
+  results_timeout = setTimeout(function(){
+    result_countdown = result_countdown - 1;
+    if (result_countdown <=0) {
+      hide_results(); 
+    } else {
+      start_timer_countdown();
+    }
+  }, 1000);
+}
+
+// Hides the results and recalls show expeirment if the rounds aren't finished.
+var hide_results = function() {
+  console.log("hide results was called")
+  $("#earnings").addClass("hidden");
+  $("#points").addClass("hidden"); 
+  $("#added").addClass("hidden");
+  if(round < 6){
+    show_experiment();
+  } else {
+    console.log("It's all ogre. Now you just need to build in a submit response and its finished")
+  }
 }

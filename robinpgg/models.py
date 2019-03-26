@@ -126,6 +126,11 @@ class ProbeNode(Node):
         import json
         return json.loads(self.property3)["score_in_pgg"]
 
+    @property
+    def leftovers(self):
+        import json
+        return json.loads(self.property4)["leftovers"]
+
     @score_in_quiz.setter
     def score_in_quiz(self, val):
         import json
@@ -147,6 +152,13 @@ class ProbeNode(Node):
         p3["score_in_pgg"] = val
         self.property3 = json.dumps(p3)
 
+    @leftovers.setter
+    def leftovers(self, val):
+        import json
+        p4 = json.loads(self.property4)
+        p4["leftovers"] = val
+        self.property4 = json.dumps(p4)
+
 
 class PogBot(Node):
     """The pot of greed, which will handle working out the scores for each of the participants."""
@@ -160,6 +172,11 @@ class PogBot(Node):
         import json
         return json.loads(self.property1)["pot"]
 
+    @property
+    def round(self):
+        import json
+        return json.loads(self.property1)["round"]
+
     @pot.setter
     def pot(self, val):
         import json
@@ -167,13 +184,21 @@ class PogBot(Node):
         p1["pot"] = val
         self.property1 = json.dumps(p1)
 
+    @round.setter
+    def round(self, val):
+        import json
+        p1 = json.loads(self.property1)
+        p1["round"] = val
+        self.property1 = json.dumps(p1)
+
+
     def update(self, infos):
         """This will handle working out the scores. Infos end up here whenever .receieve()
         is called in the backend"""
         decisions = [] # Empty list ready for decisions
         probes = self.network.size(type=ProbeNode) # Number of ProbeNodes
         nodes = self.network.nodes(type=ProbeNode) # Objec containing the probes
-        pog = self.network.nodes(type=PogBot) # Get the Pog
+        pog = self.network.nodes(type=PogBot)[0] # Get the Pog
         sum = 0 # Object for PGG contributions
         for info in infos: # Get the contents of the infos and set to integer
             info = int(info.contents)
@@ -184,15 +209,11 @@ class PogBot(Node):
         
         sum = sum*2 # Double the result
         earnings = sum/probes # Divide by the number of probes (pps) in the network
-        pog.pot = earnings
+        self.pot = earnings
+        self.round += 1 # Up the round counter by one. This is a necessary cue for the front end
     
         for node in nodes:
             node.score_in_pgg += earnings
-        
-        item = infos[0] # Takes one of the infos, doesn't matter which
-        m_item = self.mutate(item) # Calls mutate, which calls mutated_contents under info
-
-        self.transmit(what = m_item , to_whom = ProbeNode) # Should then transmit back to the Probes
         
 
 class RNetwork(Burst):
@@ -214,12 +235,12 @@ class RNetwork(Burst):
                 if n != n2:
                     n.connect(n2)
 
-class RInfo(Info):
-    """Custom info class which is needed to use mutate"""
+#class Info(Info):
+    #"""Custom info class which is needed to use mutate"""
 
-    def _mutated_contents(self):
-        pog = self.node.network.nodes(type=PogBot) # Get the Pog
-        contents = pog.pot # Read the property to find the contents
-        return contents
+    #def _mutated_contents(self):
+       # pog = self.node.network.nodes(type=PogBot) # Get the Pog
+        #contents = pog.pot # Read the property to find the contents
+       # return contents
         
 
