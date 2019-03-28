@@ -53,6 +53,7 @@ $(document).ready(function() {
 // Create the agent.
 var create_agent = function() {
   // Setup participant and get node id
+  console.log("Create agent called")
   $("#submit-response").addClass('disabled');
   dallinger.createAgent()
   .done(function (resp) {
@@ -69,6 +70,7 @@ var create_agent = function() {
 
 // Get a nodes transmissions. This runs constanly once create_agent has run, which it will once you load up the html page 
 var get_transmissions = function() {
+    console.log("get transmissions was called");
     dallinger.getTransmissions(my_node_id, {
         status: "pending"
     })
@@ -323,6 +325,7 @@ var show_experiment = function() {
 }
 
 var hide_experiment = function() {
+  $("#waiting").removeClass("hidden");
   $("#instructions").addClass("hidden");
   $("#submit-0").addClass("hidden");
   $("#submit-0").addClass("disabled");
@@ -372,38 +375,35 @@ var submit_choice = function(value) {
     .done(get_pog()); // It's like above, only this time it starts checking its neighbors
 }
 
-// Get's hold of the pogbot
-var get_pog = function() {
+// Get's hold of the pogbot and loops if all nodes haven't chosen yet.
+var get_pog = function (){ 
+  pog_timeout = setTimeout(function() {
+  console.log("Get pog was called")
   dallinger.get(
   "/node/" + my_node_id + "/neighbors",
   {
     connection: "to",
-    type: "PogBot",
+    type: "pot_of_greed_pot",
   }
-).done(function (resp) {
-    pog = resp.nodes;
-    parse_pog(pog);
+).done(function (resp){
+    pog = resp.nodes
+    pog.forEach(function(node){
+      id = node.id
+      if (id == 2){
+        poground = JSON.parse(node.property2).round;
+        pot = JSON.parse(node.property1).pot
+        if (poground == round) {
+          get_results(pot)
+        } else {get_pog();
+       }
+      }
+    })
   })
+  }, 1000);
 }
 
-// Checks if the pogbots round counter matches the current round. It only will if it has 
-// receieved input from all nodes and worked out the pot.
-var parse_pog = function(pog) {
-  pog.forEach(function(node) {
-    poground = JSON.parse(node.property1).round;
-    pot = JSON.parse(node.property1).pot;
-    if (poground == round) {
-      get_results(pot)
-    } else {
-      setTimeout(function(){
-        get_pog(); // If it isnt the same round (still waiting on a node), it just calls get_pog again.
-      } , 1000);
-    }
-  })
-}
-
-// Get hold of the participants results.
 var get_results = function(pot) {
+  clearTimeout(pog_timeout);
   console.log("get results was called")
   pot = parseInt(pot , 10)
   dallinger.get(
@@ -412,12 +412,11 @@ var get_results = function(pot) {
             connection: "to",
             type: "ProbeNode",
         }
-    ).done(function (resp) {
+     ).done(function (resp) {
     neighbors = resp.nodes;
-    my_leftovers = check_nodes(neighbors); //Function call
-    my_leftovers = parseInt(my_leftovers , 10);
+    check_nodes(neighbors); //Function call
     round_earnings = my_leftovers + pot;
-    console.log(round_earnings);
+console.log(round_earnings);
     display_results(round_earnings); // function call
   })
 }
@@ -429,7 +428,7 @@ var check_nodes = function(neighbors) {
     node_id = node.id;
     leftovers = JSON.parse(node.property4).leftovers;
     if (node_id == my_node_id) {
-      return leftovers
+      my_leftovers = leftovers
     }
   })
 }
@@ -438,6 +437,7 @@ var check_nodes = function(neighbors) {
 var display_results = function(round_earnings) {
   console.log("display_results was called"); 
   result_countdown = 10; // How long can participants view this?
+  $("#waiting").addClass("hidden");
   $("#earnings").removeClass("hidden");
   $("#points").removeClass("hidden"); 
   $("#points").html(round_earnings);
@@ -451,6 +451,7 @@ var start_timer_countdown = function() {
   console.log("start timer countdown was called")
   results_timeout = setTimeout(function(){
     result_countdown = result_countdown - 1;
+    console.log(result_countdown);
     if (result_countdown <=0) {
       hide_results(); 
     } else {
@@ -461,6 +462,7 @@ var start_timer_countdown = function() {
 
 // Hides the results and recalls show expeirment if the rounds aren't finished.
 var hide_results = function() {
+  clearTimeout(results_timeout);
   console.log("hide results was called")
   $("#earnings").addClass("hidden");
   $("#points").addClass("hidden"); 
@@ -471,3 +473,6 @@ var hide_results = function() {
     console.log("It's all ogre. Now you just need to build in a submit response and its finished")
   }
 }
+
+     
+

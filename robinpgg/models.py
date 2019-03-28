@@ -175,7 +175,7 @@ class PogBot(Node):
     @property
     def round(self):
         import json
-        return json.loads(self.property1)["round"]
+        return json.loads(self.property2)["round"]
 
     @pot.setter
     def pot(self, val):
@@ -187,9 +187,9 @@ class PogBot(Node):
     @round.setter
     def round(self, val):
         import json
-        p1 = json.loads(self.property1)
-        p1["round"] = val
-        self.property1 = json.dumps(p1)
+        p2 = json.loads(self.property2)
+        p2["round"] = val
+        self.property2 = json.dumps(p2)
 
 
     def update(self, infos):

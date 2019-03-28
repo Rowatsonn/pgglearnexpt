@@ -42,7 +42,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1
-        self.initial_recruitment_size = 1
+        self.initial_recruitment_size = 2
         if session:
             self.setup()
             
@@ -62,7 +62,7 @@ class pgglearn(Experiment):
     def create_network(self):
         """Return a new network."""
         from . import models
-        return self.models.RNetwork(max_size=3)
+        return self.models.RNetwork(max_size=4)
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -95,7 +95,7 @@ class pgglearn(Experiment):
             pog.property1 = json.dumps({
                     'pot': 0 
                 })
-            pog.property1 = json.dumps({
+            pog.property2 = json.dumps({
                     'round': 0 
                 })
             node.network.nodes(type=Source)[0].transmit() 
@@ -134,7 +134,7 @@ class pgglearn(Experiment):
             except: 
                 pass #This is to stop errors in the PGG part of the study
 
-        if len(node.infos()) > 11:
+        if len(node.infos()) > 11: # Is the questionaire over?
             info_int = int(info.contents) # This converts it to an integer. Which is good. 
             leftovers = 10 - info_int
             node.score_in_pgg += leftovers # This will add whatever points the node didn't spend to its score
