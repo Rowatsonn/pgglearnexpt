@@ -264,12 +264,4 @@ class RNetwork(Burst):
                 if n != n2:
                     n.connect(n2)
 
-#class Info(Info):
-    #"""Custom info class which is needed to use mutate"""
-
-    #def _mutated_contents(self):
-       # pog = self.node.network.nodes(type=PogBot) # Get the Pog
-        #contents = pog.pot # Read the property to find the contents
-       # return contents
-        
 

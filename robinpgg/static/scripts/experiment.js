@@ -454,6 +454,7 @@ var get_pog = function (){
   }, 1000);
 }
 
+// Retrieves the nodes leftovers and the pot and works out how much they earned that round
 var get_results = function(pot) {
   clearTimeout(pog_timeout);
   console.log("get results was called")
@@ -468,8 +469,11 @@ var get_results = function(pot) {
     neighbors = resp.nodes;
     check_nodes(neighbors); //Function call
     round_earnings = my_leftovers + pot;
-    console.log(round_earnings);
-    display_results(round_earnings); // function call
+    if(round_earnings == 0){ //In SD, if the threshold wasn't met, this will be true.
+      fail_round(); // Calls a function to display relevant snowdrift information
+    } else {
+        display_results(round_earnings); // function call
+    }
   })
 }
 
@@ -527,5 +531,41 @@ var hide_results = function() {
   }
 }
 
-     
+// Displays the HTML script telling the participants they scored 0 this round
+var fail_round = function(){
+  console.log("fail round was called")
+  snow_countdown = 10; 
+  $("#waiting").addClass("hidden");
+  $("#SD").removeClass("hidden");
+  $("#SD1").removeClass("hidden");
+  start_snow_countdown();
+}
+
+// Starts a countdown to determine how long this is on screen for
+var start_snow_countdown = function(){
+  console.log("start snow countdown was called")
+  snow_timeout = setTimeout(function(){
+    snow_countdown = snow_countdown - 1;
+    console.log(snow_countdown);
+    if(snow_countdown <=0){
+      hide_snow();
+    } else {
+      start_snow_countdown();
+    }
+  }, 1000);
+}
+
+// Hides the snowdrift information and recalls the experiment if the rounds aren't finished.
+var hide_snow = function(){
+  clearTimeout(snow_timeout);
+  console.log("hide snow was called")
+  $("#SD").addClass("hidden");
+  $("#SD1").addClass("hidden");
+  if(round < 6){
+    show_experiment();
+  } else {
+    dallinger.allowExit();
+    dallinger.goToPage('questionaire');
+  }
+}     
 

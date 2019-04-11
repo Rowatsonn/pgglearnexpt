@@ -24,6 +24,7 @@
                     <h1 class="hidden" id="waiting">Waiting for other players...</h1>
                     <h1 class="hidden" id="instructions">Please select below how many points you would like to donate to the public fund:</h1>
                     <h1 class="hidden" id="earnings"><strong>This round </strong>you earned:</h1>
+                    <h1 class="hidden" id="SD">Unfortunately, the total donations this round did not meet the required threshold</h1>
                 </div>
             </div>
         </div>
@@ -63,6 +64,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h1 class="hidden" id="added">This will be added to your score</h1>
+                    <h1 class="hidden" id="SD1">Therefore, everyone has scored 0 this round</h1>
                 </div>
             </div>
         </div>
@@ -79,7 +81,7 @@
 {% endblock %}
 {% block scripts %}
     <script>
-start_experiment();
+	start_experiment();
     </script>
 {% endblock %}
 
