@@ -230,7 +230,11 @@ var check_ID = function() {
   return ID;
 }
 
-// Checks for all neighbors of node 1 (the source) with a to connection that are probenodes.
+var hide_blank = function() {
+   $("#blank").addClass("hidden");
+}
+
+// Checks for all neighbors of node 2 (the pog) with a to connection that are probenodes.
 var check_neighbors = function() {
     dallinger.get(
         "/node/" + 2 + "/neighbors",
@@ -239,16 +243,19 @@ var check_neighbors = function() {
             type: "ProbeNode",
         }
     ).done(function (resp) {
-        $("blank").addClass("hidden");
         MYID = check_ID(); // Calls check ID for use in parse_neighbors.
         neighbors = resp.nodes;
+        if (neighbors.length == 0) {
+            check_neighbors()
+        } else {
         parse_neighbors(neighbors);
+        }
     })
 }
 
 // After getting said neighbors. This interprets them.
 var parse_neighbors = function(neighbors) {
-  neighbors.forEach(function(node) {
+    neighbors.forEach(function(node) {
     score = JSON.parse(node.property1).score_in_quiz;
     prestige = JSON.parse(node.property2).prestige;
     id = node.participant_id;
@@ -256,13 +263,13 @@ var parse_neighbors = function(neighbors) {
       display_score_you(score, id);
     } else if (prestige == 1) {
       display_score(score, id);
-    }
+    } 
   });
 }
 
 // Displays the score when someone else is the winner
 var display_score = function(score , id){
-  console.log("Display score was called");
+  hide_blank();
   $("#Congratulations").show();
   $("#id-head").removeClass("hidden");
   $("#ID").removeClass("hidden");
@@ -275,7 +282,7 @@ var display_score = function(score , id){
 
 // Displays the score when you win.
 var display_score_you = function(score , id){
-  console.log("Display score you was called");
+  hide_blank();
   $("#Congratulations").show();
   $("#id-head").removeClass("hidden");
   $("#ID").removeClass("hidden");
@@ -285,6 +292,51 @@ var display_score_you = function(score , id){
   $("#Score").html(score);
   $("#out-of").removeClass("hidden");
 }
+
+// Beginning of code for the PGG instructions
+
+var begin_instructions = function(){
+  my_node_id = dallinger.storage.get("my_node");
+  dallinger.get(
+  "/node/" + my_node_id + "/neighbors",
+  {
+    connection: "to",
+    type: "PogBot",
+  }
+).done(function(resp) {
+    pog = resp.nodes
+    pog.forEach(function(node){
+      try{
+        snowdrift = JSON.parse(node.property3).snowdrift;
+      }
+      catch(err){
+        begin_instructions();
+      }
+    })
+  dallinger.storage.set("snowdrift" , snowdrift);
+  if(snowdrift == 1){
+    $("#SD").show();
+    $("#next").show();
+  } else {
+    $("#PD").show();
+    $("#next").show();
+   }
+ })
+}
+
+// This calls on every pgg instructions page. A cookie saved before which stores whether or not the game is a snowdrift
+// and thus participants will see the appropriate instructions.
+var page_check = function(){
+  snowdrift = dallinger.storage.get("snowdrift")
+  if(snowdrift == 1){
+    $("#SD").show();
+    $("#next2").show();
+  } else {
+    $("#PD").show();
+    $("#next").show();
+  }
+}
+
 
 // Beginning of code for the PGG page
 
@@ -383,7 +435,7 @@ var get_pog = function (){
   "/node/" + my_node_id + "/neighbors",
   {
     connection: "to",
-    type: "pot_of_greed_pot",
+    type: "PogBot",
   }
 ).done(function (resp){
     pog = resp.nodes
@@ -416,7 +468,7 @@ var get_results = function(pot) {
     neighbors = resp.nodes;
     check_nodes(neighbors); //Function call
     round_earnings = my_leftovers + pot;
-console.log(round_earnings);
+    console.log(round_earnings);
     display_results(round_earnings); // function call
   })
 }
@@ -470,7 +522,8 @@ var hide_results = function() {
   if(round < 6){
     show_experiment();
   } else {
-    console.log("It's all ogre. Now you just need to build in a submit response and its finished")
+    dallinger.allowExit();
+    dallinger.goToPage('questionnaire');
   }
 }
 

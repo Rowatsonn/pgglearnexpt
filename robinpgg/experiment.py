@@ -42,7 +42,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1
-        self.initial_recruitment_size = 2
+        self.initial_recruitment_size = 1 # Change this to = the number of probe nodes
         if session:
             self.setup()
             
@@ -62,7 +62,7 @@ class pgglearn(Experiment):
     def create_network(self):
         """Return a new network."""
         from . import models
-        return self.models.RNetwork(max_size=4)
+        return self.models.RNetwork(max_size=3) #Change this to change the sample size. N + 2
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -97,6 +97,9 @@ class pgglearn(Experiment):
                 })
             pog.property2 = json.dumps({
                     'round': 0 
+                })
+            pog.property3 = json.dumps({
+                    'snowdrift': 1 # Set for whether the game is a snowdrift or not.
                 })
             node.network.nodes(type=Source)[0].transmit() 
     
@@ -144,16 +147,4 @@ class pgglearn(Experiment):
             pendings = len(pogst) 
             if pendings == probes:
                 pog.receive()
-# This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time. When it comes to the social learning condition, this may need to be changed.
-
-
-    #def transmission_get_request(self, node, transmissions):# If the number of pending transmissions for the PoGBot currently equals the number of ProbeNodes in the network. In other words, have all participants decided what to do in the PGG
-        #"""This will handle calling the PogBot's get transmissions and then
-       # doing what it needs to do with them"""
-        #pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG
-       # pogst = node.network.transmissions(status='pending') # How many pending transmissions?
-       # number = len(pogst) 
-       # probes = node.network.size(type=self.models.ProbeNode) # How many probes?
-       # if number == probes:
-         #   pog.receive() # These transmissions are then passed to update (see models).          
-      
+# This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time.

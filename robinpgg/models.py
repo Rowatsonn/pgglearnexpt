@@ -176,6 +176,11 @@ class PogBot(Node):
     def round(self):
         import json
         return json.loads(self.property2)["round"]
+    
+    @property
+    def snowdrift(self):
+        import json
+        return json.loads(self.property3)["snowdrift"]
 
     @pot.setter
     def pot(self, val):
@@ -190,6 +195,13 @@ class PogBot(Node):
         p2 = json.loads(self.property2)
         p2["round"] = val
         self.property2 = json.dumps(p2)
+ 
+    @snowdrift.setter
+    def snowdrift(self, val):
+        import json
+        p3 = json.loads(self.property3)
+        p3["round"] = val
+        self.property3 = json.dumps(p3)
 
 
     def update(self, infos):
@@ -197,24 +209,41 @@ class PogBot(Node):
         is called in the backend"""
         decisions = [] # Empty list ready for decisions
         probes = self.network.size(type=ProbeNode) # Number of ProbeNodes
-        nodes = self.network.nodes(type=ProbeNode) # Objec containing the probes
+        nodes = self.network.nodes(type=ProbeNode) # Object containing the probes
         pog = self.network.nodes(type=PogBot)[0] # Get the Pog
+        snowdrift = self.snowdrift #Determines what maths need to happen to the pot
         sum = 0 # Object for PGG contributions
         for info in infos: # Get the contents of the infos and set to integer
             info = int(info.contents)
             decisions.append(info)
-
         for num in decisions: # Add up these numbers
-           sum += num
+                sum += num
+
+        if snowdrift == 0: # Regular prisoner's dilemma
+            sum = sum*2 # Double the result
+            earnings = sum/probes # Divide by the number of probes (pps) in the network
+            self.pot = earnings
+            for node in nodes:
+                node.score_in_pgg += earnings
+            self.round += 1 # Up the round counter by one. This is a necessary cue for the front end
         
-        sum = sum*2 # Double the result
-        earnings = sum/probes # Divide by the number of probes (pps) in the network
-        self.pot = earnings
-        self.round += 1 # Up the round counter by one. This is a necessary cue for the front end
-    
-        for node in nodes:
-            node.score_in_pgg += earnings
-        
+        elif snowdrift == 1: # The game is a snowdrift
+            if sum < 10: # The threshold has not been met
+                self.pot = 0  
+                for node in nodes: # This is necessary because the nodes increase their own score during info_post_request
+                    leftovers = int(node.leftovers)
+                    current_score = int(node.score_in_pgg)
+                    new_score = current_score - leftovers
+                    node.score_in_pgg = new_score 
+                    node.leftovers = 0
+                self.round += 1
+            else: # The threshold HAS been met
+                sum = sum*2
+                earnings = sum/probes
+                self.pot = earnings
+                for node in nodes:
+                    node.score_in_pgg += earnings
+                self.round += 1
 
 class RNetwork(Burst):
     """A custom form of the burst network to be used in the public goods game"""

@@ -1,31 +1,54 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    <div class="main_div">
+    <div id="PD" class="main_div" style="display:none;">
         <h1>Part Two</h1>
 
         <hr>
 
-        <p>In this example all players decide to donate all of their money to the public fund. 		This means there are 40 points in the public pot. This will double to 80 and be split 		amongst all players. Therefore, all players finish the round with 20 points each.</p>
+        <p>In this example all players decide to donate all of their points to the public fund. This means there are <strong>40</strong> points in the public pot. This will double to <strong>80</strong> and be split amongst all players. Therefore, all players finish the round with <strong>20</strong> points each.</p>
 
 <img src='/static/images/All-cooperate.png/' width="600" height="400">
 
-	<p>Note that in this case, every participant ended up with equal points and all with more 		points than they had at the start.</p> 
+	<p>Note that in this case, all players ended up with the same points and all with more points than they had at the start.</p> 
 	<p>When you are ready to proceed, click the button below.</p> 
+    
+        <hr>
+    </div>
+    <div>
+      <div id="next" class="row" style="display:none;">
+        <div class="col-xs-10"></div>
+        <div class="col-xs-2">
+          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_instructions - 3');">Next</button>
+        </div>
+    </div>
+    <div id="SD" class="main_div" style="display:none;">
+        <h1>Part Two</h1>
 
         <hr>
 
-        <div>
-            <div class="row">
-                <div class="col-xs-10"></div>
-                <div class="col-xs-2">
-                    <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_instructions - 3');">
-                    Next</button>
-                </div>
-            </div>
-        </div>
+        <p>In this example all players decide to donate all of their points to the public fund. This means there are <strong>40</strong> points in the public pot which is <strong>over the threshold</strong>. This will double to <strong>80</strong> and be split amongst all players. Therefore, all players finish the round with <strong>20</strong> points each.</p>
+
+<img src='/static/images/SD-all-cop.png/' width="600" height="400">
+
+	<p>Note that in this case, all players ended up with the same points and all with more points than they had at the start.</p> 
+	<p>When you are ready to proceed, click the button below.</p> 
+    
+        <hr>
     </div>
+    <div>
+      <div id="next2" class="row" style="display:none;">
+        <div class="col-xs-10"></div>
+        <div class="col-xs-2">
+          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_instructions - 3');">Next</button>
+        </div>
+    </div>    
+
 {% endblock %}
 
 {% block scripts %}
+    <script>
+      page_check();
+    </script>
+
 {% endblock %}
