@@ -130,6 +130,31 @@ class ProbeNode(Node):
     def leftovers(self):
         import json
         return json.loads(self.property4)["leftovers"]
+    
+    @property
+    def donation(self):
+        import json
+        return json.loads(self.property4)["donation"]
+
+    @property
+    def prestige_list(self):
+        import json
+        return json.loads(self.property5)["prestige_list"]
+
+    @property
+    def payoff_list(self):
+        import json
+        return json.loads(self.property5)["payoff_list"]
+
+    @property
+    def conform_list(self):
+        import json
+        return json.loads(self.property5)["conform_list"]
+
+    @property
+    def info_choice(self):
+        import json
+        return json.loads(self.property4)["info_choice"]
 
     @score_in_quiz.setter
     def score_in_quiz(self, val):
@@ -158,6 +183,41 @@ class ProbeNode(Node):
         p4 = json.loads(self.property4)
         p4["leftovers"] = val
         self.property4 = json.dumps(p4)
+
+    @donation.setter
+    def donation(self, val):
+        import json
+        p4 = json.loads(self.property4)
+        p4["donation"] = val
+        self.property4 = json.dumps(p4)
+
+    @info_choice.setter
+    def info_choice(self, val):
+        import json
+        p4 = json.loads(self.property4)
+        p4["info_choice"] = val
+        self.property4 = json.dumps(p4)
+
+    @prestige_list.setter
+    def prestige_list(self, val):
+        import json
+        p5 = json.loads(self.property5)
+        p5["prestige_list"] = val
+        self.property5 = json.dumps(p5)
+
+    @payoff_list.setter
+    def payoff_list(self, val):
+        import json
+        p5 = json.loads(self.property5)
+        p5["payoff_list"] = val
+        self.property5 = json.dumps(p5)
+
+    @conform_list.setter
+    def conform_list(self, val):
+        import json
+        p5 = json.loads(self.property5)
+        p5["conform_list"] = val
+        self.property5 = json.dumps(p5)
 
 
 class PogBot(Node):
@@ -219,30 +279,71 @@ class PogBot(Node):
         for num in decisions: # Add up these numbers
                 sum += num
 
+        mean = sum / probes # Doing this, means it is robust 
+
         if snowdrift == 0: # Regular prisoner's dilemma
+            winning_score = 0 # Necessary for the payoff learning
             sum = sum*2 # Double the result
             earnings = sum/probes # Divide by the number of probes (pps) in the network
             self.pot = earnings
             for node in nodes:
                 node.score_in_pgg += earnings
+                node_score = node.score_in_pgg
+                if node_score > winning_score:
+                    winning_score = node_score
+
+            for node in nodes:
+                node_score = node.score_in_pgg # Is the node the winning node. If it is, get their payoff list and their donation. Extend the list
+                if node_score == winning_score: 
+                    paylist = node.payoff_list
+                    donation = node.donation
+                    paylist.extend([donation])
+                    for node in nodes: # Then update it on every node
+                        node.payoff_list = paylist
+
             self.round += 1 # Up the round counter by one. This is a necessary cue for the front end
         
         elif snowdrift == 1: # The game is a snowdrift
             if sum < 10: # The threshold has not been met
+                winning_score = 0
                 self.pot = 0  
                 for node in nodes: # This is necessary because the nodes increase their own score during info_post_request
                     leftovers = int(node.leftovers)
                     current_score = int(node.score_in_pgg)
                     new_score = current_score - leftovers
+                    if new_score > winning_score:
+                        winning_score = new_score
                     node.score_in_pgg = new_score 
                     node.leftovers = 0
+                for node in nodes:
+                    node_score = node.score_in_pgg
+                    if node_score == winning_score: # Is the node the winning node. If it is, get their payoff list and their donation. Extend the list
+                        paylist = node.payoff_list
+                        donation = node.donation
+                        paylist.extend([donation])
+                        for node in nodes: # Then update it on every node
+                            node.payoff_list = paylist
+
                 self.round += 1
             else: # The threshold HAS been met
+                winning_score = 0
                 sum = sum*2
                 earnings = sum/probes
                 self.pot = earnings
                 for node in nodes:
                     node.score_in_pgg += earnings
+                    node_score = node.score_in_pgg
+                    if node_score > winning_score:
+                        winning_score = node_score
+
+                for node in nodes:
+                    node_score = node.score_in_pgg
+                    if node_score == winning_score: # Is the node the winning node. If it is, get their payoff list and their donation. Extend the list
+                        paylist = node.payoff_list
+                        donation = int(node.donation)
+                        paylist.extend([donation])
+                        for node in nodes: # Then update it on every node
+                            node.payoff_list = paylist
                 self.round += 1
 
 class RNetwork(Burst):

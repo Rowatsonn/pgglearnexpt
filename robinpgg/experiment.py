@@ -77,7 +77,12 @@ class pgglearn(Experiment):
                 'score_in_pgg' : 0
             })
         node.property4 = json.dumps({
-                'leftovers' : 0
+                'leftovers' : 0,
+            })
+        node.property5 = json.dumps({
+                'prestige_list' : [],
+                'conform_list' : [],
+                'payoff_list' : [],
             })
         return node
     	
@@ -106,7 +111,7 @@ class pgglearn(Experiment):
     def info_post_request(self, node, info):
         """This will handle the source transmitting, calculating
         the score in the quiz and assigning prestige to the winner.
-        Then finally for the PGG, it will get transmit choices to the POG
+        Then finally for the PGG, it will transmit choices to the POG
         """
         nodes = node.network.nodes(type=self.models.ProbeNode) # All probenodes ONLY
         pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG 
@@ -114,7 +119,7 @@ class pgglearn(Experiment):
         answers = [len(node.infos()) for node in nodes] # Works out how many questions (infos) each node has answered(produced)
     
         if len(node.infos()) == 10: # If a node has answered 10 questions
-            correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt" ,     "Asia" , "Iodine" , "The Comedy of Errors"]
+            correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt","Asia","Iodine","The Comedy of Errors"]
             score = 0
             infos = node.infos()
             for info in infos:
@@ -132,16 +137,29 @@ class pgglearn(Experiment):
             node.network.rearrange_network() # This kills the source, its vectors and adds the POGbot     
     
         elif all_same(answers): # Have ALL nodes answered the same number of questions
-            try:
-                node.network.nodes(type=Source)[0].transmit()
-            except: 
-                pass #This is to stop errors in the PGG part of the study
+            current_answers = []
+            # For all nodes, get the most recently made info
+            import operator
+            for n in nodes:
+                current_answers.append(max(n.infos(), key=operator.attrgetter("id")))
+            # is the current info the most recently made info across all nodes?
+            if info == max(current_answers, key=operator.attrgetter("id")):
+                try:
+                    node.network.nodes(type=Source)[0].transmit()
+                except: 
+                    pass #This is to stop errors in the PGG part of the study
 
         if len(node.infos()) > 11: # Is the questionaire over?
-            info_int = int(info.contents) # This converts it to an integer. Which is good. 
+            info_int = int(info.contents) # This converts it to an integer. Which is good.
+            node.donation = info_int 
             leftovers = 10 - info_int
             node.score_in_pgg += leftovers # This will add whatever points the node didn't spend to its score
             node.leftovers = leftovers # This will store their leftovers seperately for use in js
+            if node.prestige == 1:
+                for node in nodes: # This updates the prestige_list on all nodes. If the current node is the prestige
+                    plist = node.prestige_list
+                    plist.extend([info_int])
+                    node.prestige_list = plist
             node.transmit(what=info , to_whom=self.models.PogBot)
             pogst = node.network.transmissions(status='pending') # How many pending transmissions?
             pendings = len(pogst) 
