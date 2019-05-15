@@ -279,7 +279,11 @@ class PogBot(Node):
         for num in decisions: # Add up these numbers
                 sum += num
 
-        mean = sum / probes # Doing this, means it is robust 
+        mean = sum / probes # This is currently the conformist learning. Maybe will change this. 
+        for node in nodes: # Give the conformity information to all the nodes
+            clist = node.conform_list
+            clist.extend([mean])
+            node.conform_list = clist
 
         if snowdrift == 0: # Regular prisoner's dilemma
             winning_score = 0 # Necessary for the payoff learning

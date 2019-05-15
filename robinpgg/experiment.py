@@ -42,7 +42,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1
-        self.initial_recruitment_size = 1 # Change this to = the number of probe nodes
+        self.initial_recruitment_size = 2 # Change this to = the number of probe nodes
         if session:
             self.setup()
             
@@ -58,11 +58,12 @@ class pgglearn(Experiment):
         self.experiment_repeats = 1
         self.custom_variable = config.get('custom_variable')
         self.num_participants = config.get('num_participants', 1)
+  
 
     def create_network(self):
         """Return a new network."""
         from . import models
-        return self.models.RNetwork(max_size=3) #Change this to change the sample size. N + 2
+        return self.models.RNetwork(max_size=4) #Change this to change the sample size. N + 2
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -78,6 +79,7 @@ class pgglearn(Experiment):
             })
         node.property4 = json.dumps({
                 'leftovers' : 0,
+                'info_choice' : "full" # To manually set the social learning, change this. To either conformity / prestige / payoff / full.
             })
         node.property5 = json.dumps({
                 'prestige_list' : [],
@@ -85,13 +87,6 @@ class pgglearn(Experiment):
                 'payoff_list' : [],
             })
         return node
-    	
-    def recruit(self):
-    	"""Hopefully should recruit one pp at a time, until the network fills."""
-    	if self.networks(full=False):
-    		self.recruiter.recruit(n=1)
-    	else: 
-    		self.recruiter.close_recruitment()
 
     def node_post_request(self, participant, node):
         if node.network.full:
@@ -150,17 +145,19 @@ class pgglearn(Experiment):
                     pass #This is to stop errors in the PGG part of the study
 
         if len(node.infos()) > 11: # Is the questionaire over?
+            node.transmit(what=info , to_whom=self.models.PogBot)
             info_int = int(info.contents) # This converts it to an integer. Which is good.
             node.donation = info_int 
             leftovers = 10 - info_int
             node.score_in_pgg += leftovers # This will add whatever points the node didn't spend to its score
             node.leftovers = leftovers # This will store their leftovers seperately for use in js
+
             if node.prestige == 1:
                 for node in nodes: # This updates the prestige_list on all nodes. If the current node is the prestige
                     plist = node.prestige_list
                     plist.extend([info_int])
                     node.prestige_list = plist
-            node.transmit(what=info , to_whom=self.models.PogBot)
+
             pogst = node.network.transmissions(status='pending') # How many pending transmissions?
             pendings = len(pogst) 
             if pendings == probes:

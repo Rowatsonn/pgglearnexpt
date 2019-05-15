@@ -245,6 +245,7 @@ var check_neighbors = function() {
     ).done(function (resp) {
         MYID = check_ID(); // Calls check ID for use in parse_neighbors.
         neighbors = resp.nodes;
+        console.log(neighbors)
         if (neighbors.length == 0) {
             check_neighbors()
         } else {
@@ -296,28 +297,38 @@ var display_score_you = function(score , id){
 // Beginning of code for the PGG instructions
 
 var begin_instructions = function(){
+  console.log("Begin instructions was called")
   my_node_id = dallinger.storage.get("my_node");
   dallinger.get(
   "/node/" + my_node_id + "/neighbors",
   {
     connection: "to",
-    type: "PogBot",
+    id: "pot_of_greed_bot",
   }
 ).done(function(resp) {
     pog = resp.nodes
+    console.log(pog)
     pog.forEach(function(node){
+      id = node.id
+      if (id==2){
       try{
         snowdrift = JSON.parse(node.property3).snowdrift;
+        console.log(snowdrift)
       }
       catch(err){
         begin_instructions();
+        console.log("caught an error")
+      }
       }
     })
   dallinger.storage.set("snowdrift" , snowdrift);
+  console.log("Storage set was called")
   if(snowdrift == 1){
+    console.log("It's a SD")
     $("#SD").show();
     $("#next").show();
   } else {
+    console.log("It's a PD")
     $("#PD").show();
     $("#next").show();
    }
@@ -439,6 +450,7 @@ var get_pog = function (){
   }
 ).done(function (resp){
     pog = resp.nodes
+    console.log(pog)
     pog.forEach(function(node){
       id = node.id
       if (id == 2){
@@ -446,7 +458,7 @@ var get_pog = function (){
         pot = JSON.parse(node.property1).pot
         if (poground == round) {
           get_results(pot)
-        } else {get_pog();
+        } else { get_pog();
        }
       }
     })
@@ -480,11 +492,19 @@ var get_results = function(pot) {
 // Find the leftovers the participant had
 var check_nodes = function(neighbors) {
   console.log("check nodes was called")
-  neighbors.forEach(function(node) {
+  neighbors.forEach(function(node) { // The block of code below is extracting the relevent social information from the node. It takes the last element in the list.
     node_id = node.id;
     leftovers = JSON.parse(node.property4).leftovers;
+    info_choice = JSON.parse(node.property4).info_choice;
+    prestige_list = JSON.parse(node.property5).prestige_list;
+    last_prestige = prestige_list[prestige_list.length - 1];
+    conformity_list = JSON.parse(node.property5).conform_list;
+    last_conformity = conformity_list[conformity_list.length - 1];
+    payoff_list = JSON.parse(node.property5).payoff_list;
+    last_prestige = payoff_list[payoff_list.length - 1];
     if (node_id == my_node_id) {
       my_leftovers = leftovers
+      my_info = info_choice // This checks which info the participant needs. This is robust to different choices, which is nice.  
     }
   })
 }
@@ -498,9 +518,43 @@ var display_results = function(round_earnings) {
   $("#points").removeClass("hidden"); 
   $("#points").html(round_earnings);
   $("#added").removeClass("hidden");
+  if (my_info == "prestige"){
+    console.log("My prestige is " + last_prestige)
+    $("#donation").removeClass("hidden")
+    $("#prestige").removeClass("hidden")
+    $("#donation").html(last_prestige)
+  } else if (my_info == "conformity"){
+    $("#donation").removeClass("hidden")
+    $("#conformity").removeClass("hidden")
+    $("#donation").html(last_conformity)
+  } else if (my_info == "payoff"){
+    $("#donation").removeClass("hidden")
+    $("#payoff").removeClass("hidden")
+    $("#donation").html(last_payoff)
+  } else if (my_info == "full"){
+    full_info(neighbors) // Calls the function below
+  }
   start_timer_countdown();  
   }
 
+// In the full info condition, this function handles getting the last donation and ID for each participant and putting it on the table.
+var full_info = function(neighbors){
+  console.log("full info was called")
+  $("#full").removeClass("hidden"); // Displays the table
+  var neighborsLength = neighbors.length;
+  for (var i = 0; i < neighborsLength; i++){ //For every neighbor
+    node = neighbors[i]
+    console.log(node);
+    ID = node.participant_id;
+    donation = JSON.parse(node.property4).donation;
+    row_name = "#row" + (i+1);
+    $(row_name).removeClass("hidden");
+    id_name = "#id" + (i+1);
+    $(id_name).html(ID);
+    donation_name = "#donation" + (i+1);
+    $(donation_name).html(donation);
+  }
+}
 
 // Starts a timer for the scorescreen to keep everyone synced up
 var start_timer_countdown = function() {
@@ -523,6 +577,11 @@ var hide_results = function() {
   $("#earnings").addClass("hidden");
   $("#points").addClass("hidden"); 
   $("#added").addClass("hidden");
+  $("#prestige").addClass("hidden");
+  $("#conformity").addClass("hidden");
+  $("#payoff").addClass("hidden");
+  $("#donation").addClass("hidden");
+  $("#full").addClass("hidden");
   if(round < 6){
     show_experiment();
   } else {
@@ -538,6 +597,19 @@ var fail_round = function(){
   $("#waiting").addClass("hidden");
   $("#SD").removeClass("hidden");
   $("#SD1").removeClass("hidden");
+  $("#donation").removeClass("hidden")
+  if (my_info == "prestige"){
+    $("#prestige").removeClass("hidden")
+    $("#donation").html(last_prestige)
+  } else if (my_info == "conformity"){
+    $("#conformity").removeClass("hidden")
+    $("#donation").html(last_conformity)
+  } else if (my_info == "payoff"){
+    $("#payoff").removeClass("hidden")
+    $("#donation").html(last_payoff)
+  } else if (my_info == "full"){
+    full_info(neighbors);
+  }
   start_snow_countdown();
 }
 
@@ -561,11 +633,16 @@ var hide_snow = function(){
   console.log("hide snow was called")
   $("#SD").addClass("hidden");
   $("#SD1").addClass("hidden");
+  $("#prestige").addClass("hidden");
+  $("#conformity").addClass("hidden");
+  $("#payoff").addClass("hidden");
+  $("#donation").addClass("hidden");
+  $("#full").addClass("hidden");
   if(round < 6){
     show_experiment();
   } else {
     dallinger.allowExit();
-    dallinger.goToPage('questionaire');
+    dallinger.goToPage('questionnaire');
   }
 }     
 
