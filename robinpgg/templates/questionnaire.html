@@ -12,10 +12,15 @@
 	                {% endblock %}
 	                <div class="row question">
 	                    <div class="col-md-8">
-	                        How do you think most people would say you should behave in this game?
+	                      <h1>Please answer the following questions about the game you have just played</h1>
 	                    </div>
 	                    <div class="col-md-4">
-	                        <input type="text" id="moral" name="moral"/>
+                              <label for="comment">How do you think most people would say you should behave in this game?</label>
+	                      <textarea class="form-control" rows="3" name="moral"></textarea>
+	                    </div>
+                            <div class="col-md-4">
+                              <label for="comment">Why did you choose to behave how you did in the game?</label>
+	                      <textarea class="form-control" rows="3" name="behaviour"></textarea>
 	                    </div>
 	                </div>
 	            {% endblock %}

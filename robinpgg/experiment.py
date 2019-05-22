@@ -42,7 +42,10 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1
-        self.initial_recruitment_size = 2 # Change this to = the number of probe nodes
+        self.initial_recruitment_size = 1 # Change this to = the number of probe nodes
+        self.known_classes = {
+            "PogBot": models.PogBot,
+        }
         if session:
             self.setup()
             
@@ -63,7 +66,7 @@ class pgglearn(Experiment):
     def create_network(self):
         """Return a new network."""
         from . import models
-        return self.models.RNetwork(max_size=4) #Change this to change the sample size. N + 2
+        return self.models.RNetwork(max_size=3) #Change this to change the sample size. N + 2
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -79,7 +82,8 @@ class pgglearn(Experiment):
             })
         node.property4 = json.dumps({
                 'leftovers' : 0,
-                'info_choice' : "full" # To manually set the social learning, change this. To either conformity / prestige / payoff / full.
+                'donation' : 0,
+                'info_choice' : "BB" # To manually set the social learning, change this. To either conformity / prestige / payoff / full / BB (Black box).
             })
         node.property5 = json.dumps({
                 'prestige_list' : [],

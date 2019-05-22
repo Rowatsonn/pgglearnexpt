@@ -303,36 +303,27 @@ var begin_instructions = function(){
   "/node/" + my_node_id + "/neighbors",
   {
     connection: "to",
-    id: "pot_of_greed_bot",
+    node_type: "PogBot",
   }
 ).done(function(resp) {
     pog = resp.nodes
     console.log(pog)
     pog.forEach(function(node){
       id = node.id
-      if (id==2){
-      try{
-        snowdrift = JSON.parse(node.property3).snowdrift;
-        console.log(snowdrift)
+      snowdrift = JSON.parse(node.property3).snowdrift;
+      console.log(snowdrift)
+      dallinger.storage.set("snowdrift" , snowdrift); // Sets the condition as a cookie
+      if(snowdrift == 1){
+         console.log("It's a SD")
+         $("#SD").show();
+         $("#next").show();
+      } else {
+         console.log("It's a PD")
+         $("#PD").show();
+         $("#next").show();
       }
-      catch(err){
-        begin_instructions();
-        console.log("caught an error")
-      }
-      }
+      })
     })
-  dallinger.storage.set("snowdrift" , snowdrift);
-  console.log("Storage set was called")
-  if(snowdrift == 1){
-    console.log("It's a SD")
-    $("#SD").show();
-    $("#next").show();
-  } else {
-    console.log("It's a PD")
-    $("#PD").show();
-    $("#next").show();
-   }
- })
 }
 
 // This calls on every pgg instructions page. A cookie saved before which stores whether or not the game is a snowdrift
@@ -446,20 +437,18 @@ var get_pog = function (){
   "/node/" + my_node_id + "/neighbors",
   {
     connection: "to",
-    type: "PogBot",
+    node_type: "PogBot",
   }
 ).done(function (resp){
     pog = resp.nodes
     console.log(pog)
     pog.forEach(function(node){
       id = node.id
-      if (id == 2){
-        poground = JSON.parse(node.property2).round;
-        pot = JSON.parse(node.property1).pot
-        if (poground == round) {
-          get_results(pot)
-        } else { get_pog();
-       }
+      poground = JSON.parse(node.property2).round;
+      pot = JSON.parse(node.property1).pot
+      if (poground == round) {
+        get_results(pot)
+      } else { get_pog();
       }
     })
   })
@@ -541,6 +530,7 @@ var display_results = function(round_earnings) {
 var full_info = function(neighbors){
   console.log("full info was called")
   $("#full").removeClass("hidden"); // Displays the table
+  $("#table").removeClass("hidden"); // Displays the sentence above the table
   var neighborsLength = neighbors.length;
   for (var i = 0; i < neighborsLength; i++){ //For every neighbor
     node = neighbors[i]
@@ -582,6 +572,7 @@ var hide_results = function() {
   $("#payoff").addClass("hidden");
   $("#donation").addClass("hidden");
   $("#full").addClass("hidden");
+  $("#table").addClass("hidden");
   if(round < 6){
     show_experiment();
   } else {
@@ -638,6 +629,7 @@ var hide_snow = function(){
   $("#payoff").addClass("hidden");
   $("#donation").addClass("hidden");
   $("#full").addClass("hidden");
+  $("#table").addClass("hidden");
   if(round < 6){
     show_experiment();
   } else {
