@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div id="PD" class="main_div">
+        <h1>Part Two</h1>
+
+
+        <p id="BB" class="hidden">During the game, after each round you will receieve feedback on how many points you have scored. However, you will not be able to see how much any other participant chose to donate.</p>
+
+        <p id="prestige" class="hidden">During the game, after each round you will receieve feedback on how many points you have scored. You will also see how much the participant who scored highest in the quiz chose to donate that round.<p>
+
+        <p id="conform" class="hidden">During the game, after each round you will receieve feedback on how many points you have scored. You will also see what the average donation was during that round.</p>
+
+       <p id="payoff" class="hidden">During the game, after each round you will receieve feedback on how many points you have scored. You will also see how much the participant who currently has the most points chose to donate in that round.</p> 
+
+      <p id="full" class="hidden">During the game, after each round you will receieve feedback on how many points you have scored. You will also see a breakdown of how much each participant chose to donate that round</p>
+
+      <p id="choose" class="hidden">During the game, after each round you will receieve feedback on how many points you have scored. You may also select below to view information regarding the behaviour of some other participants in the game. You may select from the highest scoring participant from the quiz, the average donation after each round or the donation of the highest earner in the game after each round. If you choose to do so, your final score in the game will be divided by 10, so please choose carefully. If you do <strong>not</strong> wish to view any extra information, please select none. </p>
+	
+   </div>
+   <div>
+     
+    <div>
+      <div id="next" class="row">
+        <div class="col-xs-10"></div>
+        <div class="col-xs-2">
+          <p>When you are ready to proceed, click the button below.</p> 
+          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('PGG');">Next</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+      final_page();
+    </script>
+{% endblock %}
+

@@ -59,6 +59,7 @@ var create_agent = function() {
   .done(function (resp) {
     my_node_id = resp.node.id;
     dallinger.storage.set("my_node" , my_node_id); //This is where we set the cookie for my node
+    condition_check(); // Calls a function to read off what condition the experiment is in for the node. 
     $("#submit-response").removeClass('disabled');
     get_transmissions(my_node_id); //It starts constantly checking it's transmissions
   })
@@ -67,6 +68,37 @@ var create_agent = function() {
     dallinger.error(rejection);
   });
 };
+
+// Checks what condition it is for the nodes. 
+var condition_check = function(){
+  console.log("Condition check was called");
+  my_node_id = dallinger.storage.get("my_node");
+  console.log(my_node_id)
+  dallinger.get(
+  "/node/" + 1 + "/neighbors",
+  {
+        connection: "to",
+    }
+).done(function(resp){
+    nodes = resp.nodes;
+    console.log(nodes)
+    nodes.forEach(function(node){
+      node_id = node.id
+      condition = JSON.parse(node.property4).info_choice
+      console.log("condition is")
+      console.log(condition)
+      console.log("ID is")
+      console.log(node_id)
+      console.log("My node ID is")
+      console.log(my_node_id)
+      if (node_id = my_node_id){
+        console.log("Made it to the if statement")
+        console.log(condition)
+        dallinger.storage.set("my_condition" , condition)
+      }
+    })
+  })
+}
 
 // Get a nodes transmissions. This runs constanly once create_agent has run, which it will once you load up the html page 
 var get_transmissions = function() {
@@ -182,7 +214,6 @@ var start_answer_timeout = function() {
             $("#countdown").hide();
             $("#countdown").html("");
             submit_response(Wwer1);
-            
         } else {
             start_answer_timeout();
         }
@@ -339,6 +370,23 @@ var page_check = function(){
   }
 }
 
+// This calls on the final page (pgg_condition_check) to explain what information they will receieve OR to provide them with the opportunity to choose
+// their social learning (NOT YET PROGRAMMED OR HTML'd)
+var final_page = function(){
+  console.log("Final Page was called");
+  condition = dallinger.storage.get("my_condition");
+  if (condition == "BB"){
+    $("#BB").removeClass("hidden")
+  } else if(condition == "prestige"){
+    $("#prestige").removeClass("hidden")
+  } else if(condition == "payoff"){
+    $("#payoff").removeClass("hidden")
+  } else if(condition == "conformity"){
+    $("#conform").removeClass("hidden")
+  } else if(condition == "full"){
+     $("#full").removeClass("hidden")
+  }
+}
 
 // Beginning of code for the PGG page
 

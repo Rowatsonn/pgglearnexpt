@@ -41,7 +41,7 @@ class pgglearn(Experiment):
         super(pgglearn, self).__init__(session)
         from . import models 
         self.models = models
-        self.experiment_repeats = 1
+        self.experiment_repeats = 1 # Change this to the number of runs you want. 
         self.initial_recruitment_size = 1 # Change this to = the number of probe nodes
         self.known_classes = {
             "PogBot": models.PogBot,
@@ -92,6 +92,14 @@ class pgglearn(Experiment):
             })
         return node
 
+    def bonus(self, participant):
+        """Calculate a participants bonus."""
+        node = participant.nodes()[0]
+        score = node.score_in_pgg
+        bonus = score * 0.01
+        self.log(str(bonus))
+        return bonus
+        
     def node_post_request(self, participant, node):
         if node.network.full:
             import json
