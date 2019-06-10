@@ -45,6 +45,7 @@ class pgglearn(Experiment):
         self.initial_recruitment_size = 1 # Change this to = the number of probe nodes
         self.known_classes = {
             "PogBot": models.PogBot,
+            "QuizSource": models.QuizSource,
         }
         if session:
             self.setup()
@@ -114,12 +115,24 @@ class pgglearn(Experiment):
                     'snowdrift': 1 # Set for whether the game is a snowdrift or not.
                 })
             node.network.nodes(type=Source)[0].transmit() 
+
+    def transmission_get_request(self, node, transmissions):
+        """All this does is update the last_request property for use in the AFK functions"""
+        from datetime import datetime
+        node.last_request = datetime.now()
+    
+    def node_get_request(self, node, nodes):
+        """Runs when neighbors is requested and also updates last request for use in AFK"""
+        from datetime import datetime
+        node.last_request = datetime.now()
     
     def info_post_request(self, node, info):
         """This will handle the source transmitting, calculating
         the score in the quiz and assigning prestige to the winner.
         Then finally for the PGG, it will transmit choices to the POG
         """
+        from datetime import datetime 
+        node.last_request = datetime.now()
         nodes = node.network.nodes(type=self.models.ProbeNode) # All probenodes ONLY
         pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG 
         probes = node.network.size(type=self.models.ProbeNode) # How many probes?

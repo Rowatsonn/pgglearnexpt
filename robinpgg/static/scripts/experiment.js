@@ -59,7 +59,6 @@ var create_agent = function() {
   .done(function (resp) {
     my_node_id = resp.node.id;
     dallinger.storage.set("my_node" , my_node_id); //This is where we set the cookie for my node
-    condition_check(); // Calls a function to read off what condition the experiment is in for the node. 
     $("#submit-response").removeClass('disabled');
     get_transmissions(my_node_id); //It starts constantly checking it's transmissions
   })
@@ -68,37 +67,6 @@ var create_agent = function() {
     dallinger.error(rejection);
   });
 };
-
-// Checks what condition it is for the nodes. 
-var condition_check = function(){
-  console.log("Condition check was called");
-  my_node_id = dallinger.storage.get("my_node");
-  console.log(my_node_id)
-  dallinger.get(
-  "/node/" + 1 + "/neighbors",
-  {
-        connection: "to",
-    }
-).done(function(resp){
-    nodes = resp.nodes;
-    console.log(nodes)
-    nodes.forEach(function(node){
-      node_id = node.id
-      condition = JSON.parse(node.property4).info_choice
-      console.log("condition is")
-      console.log(condition)
-      console.log("ID is")
-      console.log(node_id)
-      console.log("My node ID is")
-      console.log(my_node_id)
-      if (node_id = my_node_id){
-        console.log("Made it to the if statement")
-        console.log(condition)
-        dallinger.storage.set("my_condition" , condition)
-      }
-    })
-  })
-}
 
 // Get a nodes transmissions. This runs constanly once create_agent has run, which it will once you load up the html page 
 var get_transmissions = function() {
@@ -213,7 +181,7 @@ var start_answer_timeout = function() {
             disable_answer_buttons(); // Calls another function
             $("#countdown").hide();
             $("#countdown").html("");
-            submit_response(Wwer1);
+            submit_response(Wwer1, human=false);
         } else {
             start_answer_timeout();
         }
@@ -241,19 +209,66 @@ var disable_answer_buttons = function() {
     $("#question").html("Waiting for the next question..."); 
 }
 
-// Submit the answer for this question as an info. 
-var submit_response = function(value) {
+// Submit the answer for this question as an info. Human defaults to true but is passed false if it was chosen by the timer 
+var submit_response = function(value, human=true) {
     clearTimeout(answer_timeout); // This is to stop some bug where it would double submit answers. This stops the timeout.
-    $("#countdown").hide();
-    data = {
-       "contents": value
-    }
-    dallinger.createInfo(my_node_id, data)
-    .done(get_transmissions());
-      
+    $("#countdown").hide()
+    dallinger.createInfo(my_node_id, {
+      contents: value,
+      property1: JSON.stringify({
+        "human": human
+      })
+    }).done(get_transmissions());    
 }
 
 // Beginning of code for Scorescreen
+
+// Finds and saves the ID of the Pog as a cookie
+var save_pog = function(node){
+  dallinger.get(
+      "/node/" + node + "/neighbors",
+      {
+        connection: "to",
+        node_type: "PogBot",
+      }
+).done(function(resp){
+  console.log(resp)
+  pog = resp.nodes
+  pog.forEach(function(node){
+    pog_id = node.id
+    dallinger.storage.set("pog" , pog_id);
+  })
+})
+}
+
+// Checks what condition it is for the nodes. 
+var condition_check = function(pog_id){
+  console.log("Condition check was called");
+  dallinger.get(
+  "/node/" + pog_id + "/neighbors",
+  {
+        connection: "to",
+    }
+).done(function(resp){
+    nodes = resp.nodes;
+    console.log(nodes)
+    nodes.forEach(function(node){
+      node_id = node.id
+      condition = JSON.parse(node.property4).info_choice
+      console.log("condition is")
+      console.log(condition)
+      console.log("ID is")
+      console.log(node_id)
+      console.log("My node ID is")
+      console.log(my_node_id)
+      if (node_id = my_node_id){
+        console.log("Made it to the if statement")
+        console.log(condition)
+        dallinger.storage.set("my_condition" , condition)
+      }
+    })
+  })
+}
 
 // Get the participants own participant_ID. Since it is forgotton upon moving pages
 var check_ID = function() {
@@ -266,9 +281,11 @@ var hide_blank = function() {
 }
 
 // Checks for all neighbors of node 2 (the pog) with a to connection that are probenodes.
-var check_neighbors = function() {
+var check_neighbors = function(){
+    my_node_id = dallinger.storage.get("my_node");
+    save_pog(my_node_id); // Saves the pog as a cookie
     dallinger.get(
-        "/node/" + 2 + "/neighbors",
+        "/node/" + pog_id + "/neighbors",
         {
             connection: "to",
             type: "ProbeNode",
@@ -310,6 +327,7 @@ var display_score = function(score , id){
   $("#Score").removeClass("hidden");
   $("#Score").html(score);
   $("#out-of").removeClass("hidden");
+  condition_check(pog_id);
 }
 
 // Displays the score when you win.
@@ -323,6 +341,7 @@ var display_score_you = function(score , id){
   $("#Score").removeClass("hidden");
   $("#Score").html(score);
   $("#out-of").removeClass("hidden");
+  condition_check(pog_id);
 }
 
 // Beginning of code for the PGG instructions
@@ -391,7 +410,8 @@ var final_page = function(){
 // Beginning of code for the PGG page
 
 var start_experiment = function() {
-  my_node_id = dallinger.storage.get("my_node"); // Get's the participant's node and saves it
+  my_node_id = dallinger.storage.get("my_node"); // Gets the participant's node and saves it
+  pog_id = dallinger.storage.get("pog"); // Gets the pog's ID
   round = 0 // Set's the round counter, this will increase after each pass
   show_experiment(); 
 }
@@ -460,21 +480,23 @@ var start_experiment_timeout = function () {
     console.log(countdown)
     if (countdown <=0) {
       hide_experiment();
-      submit_choice(force_choice); // If a participant doesn't decide, a random number is submitted
+      submit_choice(force_choice, human=false); // If a participant doesn't decide, a random number is submitted
     } else {
       start_experiment_timeout();
     }
   }, 1000); 
 }
-                              
-var submit_choice = function(value) {
+
+//Submits the participants choice. Human defaults to true, unless the choice is random.                               
+var submit_choice = function(value, human=true) {
     clearTimeout(experiment_timeout);
     hide_experiment();
-    data = {
-       "contents": value
-    }
-    dallinger.createInfo(my_node_id, data)
-    .done(get_pog()); // It's like above, only this time it starts checking its neighbors
+    dallinger.createInfo(my_node_id, {
+      contents: value,
+      property1: JSON.stringify({
+        "human": human
+      })
+    }).done(get_pog()); // It's like above, only this time it starts checking its neighbors
 }
 
 // Get's hold of the pogbot and loops if all nodes haven't chosen yet.
@@ -509,7 +531,7 @@ var get_results = function(pot) {
   console.log("get results was called")
   pot = parseInt(pot , 10)
   dallinger.get(
-        "/node/" + 2 + "/neighbors",
+        "/node/" + pog_id + "/neighbors",
         {
             connection: "to",
             type: "ProbeNode",

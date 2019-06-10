@@ -5,6 +5,7 @@ from dallinger.models import Info
 from dallinger.networks import Burst
 
 import sys
+import json
 
 class QuizSource(Source):
     """A Source that reads a question and transmits it. The question is transmitted along with the 
@@ -110,111 +111,106 @@ class ProbeNode(Node):
     __mapper_args__ = {
         "polymorphic_identity": "probe_node"
     }
-
+ 
+    from datetime import datetime
+    
     @property
     def score_in_quiz(self):
-        import json
         return json.loads(self.property1)["score_in_quiz"]
 
     @property
+    def last_request(self):
+        return datetime.strptime(json.loads(self.property1)["last_request"], "%Y-%m-%d %H:%M:%S.%f")
+
+
+    @property
     def prestige(self):
-        import json
         return json.loads(self.property2)["prestige"]
 
     @property
     def score_in_pgg(self):
-        import json
         return json.loads(self.property3)["score_in_pgg"]
 
     @property
     def leftovers(self):
-        import json
         return json.loads(self.property4)["leftovers"]
     
     @property
     def donation(self):
-        import json
         return json.loads(self.property4)["donation"]
 
     @property
     def prestige_list(self):
-        import json
         return json.loads(self.property5)["prestige_list"]
 
     @property
     def payoff_list(self):
-        import json
         return json.loads(self.property5)["payoff_list"]
 
     @property
     def conform_list(self):
-        import json
         return json.loads(self.property5)["conform_list"]
 
     @property
     def info_choice(self):
-        import json
         return json.loads(self.property4)["info_choice"]
 
     @score_in_quiz.setter
     def score_in_quiz(self, val):
-        import json
         p1 = json.loads(self.property1)
         p1["score_in_quiz"] = val
         self.property1 = json.dumps(p1)
 
+    @last_request.setter
+    def last_request(self, val):
+        p1 = json.loads(self.property1)
+        p1["last_request"] = str(val)
+        self.property1 = json.dumps(p1)
+
     @prestige.setter
     def prestige(self, val):
-        import json
         p2 = json.loads(self.property2)
         p2["prestige"] = val
         self.property2 = json.dumps(p2)
 
     @score_in_pgg.setter
     def score_in_pgg(self, val):
-        import json
         p3 = json.loads(self.property3)
         p3["score_in_pgg"] = val
         self.property3 = json.dumps(p3)
 
     @leftovers.setter
     def leftovers(self, val):
-        import json
         p4 = json.loads(self.property4)
         p4["leftovers"] = val
         self.property4 = json.dumps(p4)
 
     @donation.setter
     def donation(self, val):
-        import json
         p4 = json.loads(self.property4)
         p4["donation"] = val
         self.property4 = json.dumps(p4)
 
     @info_choice.setter
     def info_choice(self, val):
-        import json
         p4 = json.loads(self.property4)
         p4["info_choice"] = val
         self.property4 = json.dumps(p4)
 
     @prestige_list.setter
     def prestige_list(self, val):
-        import json
         p5 = json.loads(self.property5)
         p5["prestige_list"] = val
         self.property5 = json.dumps(p5)
 
     @payoff_list.setter
     def payoff_list(self, val):
-        import json
         p5 = json.loads(self.property5)
         p5["payoff_list"] = val
         self.property5 = json.dumps(p5)
 
     @conform_list.setter
     def conform_list(self, val):
-        import json
         p5 = json.loads(self.property5)
         p5["conform_list"] = val
         self.property5 = json.dumps(p5)
@@ -229,38 +225,32 @@ class PogBot(Node):
     
     @property
     def pot(self):
-        import json
         return json.loads(self.property1)["pot"]
 
     @property
     def round(self):
-        import json
         return json.loads(self.property2)["round"]
     
     @property
     def snowdrift(self):
-        import json
         return json.loads(self.property3)["snowdrift"]
 
     @pot.setter
     def pot(self, val):
-        import json
         p1 = json.loads(self.property1)
         p1["pot"] = val
         self.property1 = json.dumps(p1)
 
     @round.setter
     def round(self, val):
-        import json
         p2 = json.loads(self.property2)
         p2["round"] = val
         self.property2 = json.dumps(p2)
  
     @snowdrift.setter
     def snowdrift(self, val):
-        import json
         p3 = json.loads(self.property3)
-        p3["round"] = val
+        p3["snowdrift"] = val
         self.property3 = json.dumps(p3)
 
 
@@ -368,5 +358,19 @@ class RNetwork(Burst):
             for n2 in nodes:
                 if n != n2:
                     n.connect(n2)
+
+class Info(Info):
+    """Standard Info class which includes a human property to tell if it was randomly chosen"""
+
+    @property
+    def human(self):
+        return json.loads(self.property1)["human"]
+
+    @human.setter
+    def human(self, val):
+        p3 = json.loads(self.property1)
+        p3["human"] = val
+        self.property3 = json.dumps(p3)
+
 
 
