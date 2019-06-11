@@ -50,10 +50,23 @@ $(document).ready(function() {
   });
 });
 
+// Starts a timer to display a new message if participants end up waiting for too long. Implies somebody has gone AFK. 
+// This calls in the PGG and the quiz once the participant joins / makes a choice.
+var start_AFK_timeout = function(){
+  console.log("Start AFK Timeout was called")
+  console.log(afk_countdown)
+  afk_countdown = afk_countdown- 1
+  if (afk_countdown <= 0){
+    $("#long_time").removeClass("hidden") // This is a HTML element on both trivia and pgg which just states that participants should keep the window open.
+  } 
+}
+  
 // Create the agent.
 var create_agent = function() {
   // Setup participant and get node id
   console.log("Create agent called")
+  afk_countdown = 30 // Sets the AFK timeout.
+  console.log("afk countdown is " + afk_countdown) 
   $("#submit-response").addClass('disabled');
   dallinger.createAgent()
   .done(function (resp) {
@@ -71,6 +84,7 @@ var create_agent = function() {
 // Get a nodes transmissions. This runs constanly once create_agent has run, which it will once you load up the html page 
 var get_transmissions = function() {
     console.log("get transmissions was called");
+    start_AFK_timeout(); // Starts the timeout in the background for the AFK message to come up
     dallinger.getTransmissions(my_node_id, {
         status: "pending"
     })
@@ -97,6 +111,9 @@ var get_transmissions = function() {
 
 // Get the nodes info. resp is a generic term that servers use for a response from a browser. 
 var get_info = function(info_id) {
+    $("#long_time").addClass("hidden")
+    afk_countdown = 30 // Resets the AFK timer. Don't want the AFK message popping up unannounced.
+    console.log("successfully set the AFK countdown to" + afk_countdown) 
     dallinger.getInfo(my_node_id, info_id)
     .done(function(resp) {
         process_info(resp.info); // This is yet another function call. Also resp, contains an info. 
@@ -224,27 +241,38 @@ var submit_response = function(value, human=true) {
 // Beginning of code for Scorescreen
 
 // Finds and saves the ID of the Pog as a cookie
-var save_pog = function(node){
+var save_pog = function(){
+  my_node_id = dallinger.storage.get("my_node");
   dallinger.get(
-      "/node/" + node + "/neighbors",
-      {
-        connection: "to",
-        node_type: "PogBot",
-      }
+  "/node/" + my_node_id + "/neighbors",
+  {
+    connection: "to",
+    node_type: "PogBot",
+  }
 ).done(function(resp){
-  console.log(resp)
-  pog = resp.nodes
-  pog.forEach(function(node){
-    pog_id = node.id
-    dallinger.storage.set("pog" , pog_id);
+    pog = resp.nodes
+    console.log(pog)
+    if (pog.length > 0){
+      pog.forEach(function(node){
+        pog_id = node.id
+        dallinger.storage.set("pog" , pog_id)
+        if (typeof pog_id === "undefined"){
+          save_pog();
+        } else {
+          check_neighbors(pog_id);
+        }
+      })
+    } else {
+      save_pog(); // Recalls the function if it doesn't find the pog
+    }
   })
-})
 }
 
 // Checks what condition it is for the nodes. 
 var condition_check = function(pog_id){
   console.log("Condition check was called");
   dallinger.get(
+  
   "/node/" + pog_id + "/neighbors",
   {
         connection: "to",
@@ -280,15 +308,13 @@ var hide_blank = function() {
    $("#blank").addClass("hidden");
 }
 
-// Checks for all neighbors of node 2 (the pog) with a to connection that are probenodes.
-var check_neighbors = function(){
-    my_node_id = dallinger.storage.get("my_node");
-    save_pog(my_node_id); // Saves the pog as a cookie
+// Checks for all neighbors of the pog with a to connection
+var check_neighbors = function(pog_id){
+    console.log(pog_id)
     dallinger.get(
         "/node/" + pog_id + "/neighbors",
         {
             connection: "to",
-            type: "ProbeNode",
         }
     ).done(function (resp) {
         MYID = check_ID(); // Calls check ID for use in parse_neighbors.
@@ -300,7 +326,7 @@ var check_neighbors = function(){
         parse_neighbors(neighbors);
         }
     })
-}
+  }
 
 // After getting said neighbors. This interprets them.
 var parse_neighbors = function(neighbors) {
@@ -349,6 +375,8 @@ var display_score_you = function(score , id){
 var begin_instructions = function(){
   console.log("Begin instructions was called")
   my_node_id = dallinger.storage.get("my_node");
+  ping_server(my_node_id);
+  start_modal_timeout();
   dallinger.get(
   "/node/" + my_node_id + "/neighbors",
   {
@@ -376,9 +404,34 @@ var begin_instructions = function(){
     })
 }
 
+// Get's the infos for the node as a way to ping the server that they are still there
+var ping_server = function(){
+  console.log("Server Pinged");
+  my_node_id = dallinger.storage.get("my_node");
+  dallinger.getInfos(my_node_id)
+  modal_timer = 45 // Resets the timer on the modal countdown
+  $("#afkModal").modal('hide') // Closes the modal
+}
+
+// Timer which handles displaying the AFK modal popup
+var start_modal_timeout = function(){
+  modal_timeout = setTimeout(function(){
+    modal_timer = modal_timer - 1
+    console.log("Modal timer is" + "" + modal_timer)
+    if (modal_timer <=0){
+      $("#afkModal").modal('show') // Opens the modal
+      start_modal_timeout()
+    } else {
+      start_modal_timeout();
+    }
+  }, 1000);
+}
+
 // This calls on every pgg instructions page. A cookie saved before which stores whether or not the game is a snowdrift
 // and thus participants will see the appropriate instructions.
 var page_check = function(){
+  ping_server();
+  start_modal_timeout()
   snowdrift = dallinger.storage.get("snowdrift")
   if(snowdrift == 1){
     $("#SD").show();
@@ -393,6 +446,8 @@ var page_check = function(){
 // their social learning (NOT YET PROGRAMMED OR HTML'd)
 var final_page = function(){
   console.log("Final Page was called");
+  ping_server();
+  start_modal_timeout();
   condition = dallinger.storage.get("my_condition");
   if (condition == "BB"){
     $("#BB").removeClass("hidden")
@@ -410,6 +465,7 @@ var final_page = function(){
 // Beginning of code for the PGG page
 
 var start_experiment = function() {
+  afk_countdown = 30 
   my_node_id = dallinger.storage.get("my_node"); // Gets the participant's node and saves it
   pog_id = dallinger.storage.get("pog"); // Gets the pog's ID
   round = 0 // Set's the round counter, this will increase after each pass
@@ -502,6 +558,7 @@ var submit_choice = function(value, human=true) {
 // Get's hold of the pogbot and loops if all nodes haven't chosen yet.
 var get_pog = function (){ 
   pog_timeout = setTimeout(function() {
+  start_AFK_timeout();
   console.log("Get pog was called")
   dallinger.get(
   "/node/" + my_node_id + "/neighbors",
@@ -518,7 +575,8 @@ var get_pog = function (){
       pot = JSON.parse(node.property1).pot
       if (poground == round) {
         get_results(pot)
-      } else { get_pog();
+      } else { 
+        get_pog();
       }
     })
   })
@@ -527,8 +585,10 @@ var get_pog = function (){
 
 // Retrieves the nodes leftovers and the pot and works out how much they earned that round
 var get_results = function(pot) {
-  clearTimeout(pog_timeout);
   console.log("get results was called")
+  clearTimeout(pog_timeout);
+  afk_countdown = 30 // Resets the AFK timer
+  $("#long_time").addClass("hidden")
   pot = parseInt(pot , 10)
   dallinger.get(
         "/node/" + pog_id + "/neighbors",

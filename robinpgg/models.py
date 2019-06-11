@@ -132,6 +132,10 @@ class ProbeNode(Node):
         return json.loads(self.property3)["score_in_pgg"]
 
     @property
+    def round_earnings(self):
+        return json.loads(self.property3)["round_earnings"]
+
+    @property
     def leftovers(self):
         return json.loads(self.property4)["leftovers"]
     
@@ -177,6 +181,12 @@ class ProbeNode(Node):
     def score_in_pgg(self, val):
         p3 = json.loads(self.property3)
         p3["score_in_pgg"] = val
+        self.property3 = json.dumps(p3)
+
+    @round_earnings.setter
+    def round_earnings(self, val):
+        p3 = json.loads(self.property3)
+        p3["round_earnings"] = val
         self.property3 = json.dumps(p3)
 
     @leftovers.setter
@@ -275,13 +285,18 @@ class PogBot(Node):
             clist.extend([mean])
             node.conform_list = clist
 
-        if snowdrift == 0: # Regular prisoner's dilemma
+        if snowdrift == 0: # Game is a prisoner's dilemma
             winning_score = 0 # Necessary for the payoff learning
             sum = sum*2 # Double the result
             earnings = sum/probes # Divide by the number of probes (pps) in the network
             self.pot = earnings
             for node in nodes:
                 node.score_in_pgg += earnings
+                round_scores = node.round_earnings # Update the round_earnings list in property 3
+                leftovers = int(node.leftovers)
+                this_round = leftovers + earnings
+                round_scores.extend([this_round])
+                node.round_earnings = round_scores
                 node_score = node.score_in_pgg
                 if node_score > winning_score:
                     winning_score = node_score
@@ -302,6 +317,10 @@ class PogBot(Node):
                 winning_score = 0
                 self.pot = 0  
                 for node in nodes: # This is necessary because the nodes increase their own score during info_post_request
+                    round_scores = node.round_earnings
+                    this_round = 0 # Set the round earnings in property 3 to 0, because the snowdrift was failed
+                    round_scores.extend([this_round])
+                    node.round_earnings = round_scores
                     leftovers = int(node.leftovers)
                     current_score = int(node.score_in_pgg)
                     new_score = current_score - leftovers
@@ -326,6 +345,11 @@ class PogBot(Node):
                 self.pot = earnings
                 for node in nodes:
                     node.score_in_pgg += earnings
+                    round_scores = node.round_earnings # Update the round_earnings list in property 3
+                    leftovers = int(node.leftovers)
+                    this_round = leftovers + earnings
+                    round_scores.extend([this_round])
+                    node.round_earnings = round_scores
                     node_score = node.score_in_pgg
                     if node_score > winning_score:
                         winning_score = node_score

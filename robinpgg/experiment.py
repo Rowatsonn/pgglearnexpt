@@ -9,6 +9,8 @@ from . import models
 
 import json
 
+from datetime import datetime
+
 try:
     from bots import Bot
     Bot = Bot
@@ -42,7 +44,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1 # Change this to the number of runs you want. 
-        self.initial_recruitment_size = 1 # Change this to = the number of probe nodes
+        self.initial_recruitment_size = 2 # Change this to = the number of probe nodes
         self.known_classes = {
             "PogBot": models.PogBot,
             "QuizSource": models.QuizSource,
@@ -67,7 +69,7 @@ class pgglearn(Experiment):
     def create_network(self):
         """Return a new network."""
         from . import models
-        return self.models.RNetwork(max_size=3) #Change this to change the sample size. N + 2
+        return self.models.RNetwork(max_size=4) #Change this to change the sample size. N + 2
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -79,7 +81,8 @@ class pgglearn(Experiment):
                 'prestige' : 0
             })
         node.property3 = json.dumps({
-                'score_in_pgg' : 0
+                'score_in_pgg' : 0,
+                'round_earnings' : []
             })
         node.property4 = json.dumps({
                 'leftovers' : 0,
@@ -89,7 +92,7 @@ class pgglearn(Experiment):
         node.property5 = json.dumps({
                 'prestige_list' : [],
                 'conform_list' : [],
-                'payoff_list' : [],
+                'payoff_list' : []
             })
         return node
 
@@ -124,6 +127,10 @@ class pgglearn(Experiment):
     def node_get_request(self, node, nodes):
         """Runs when neighbors is requested and also updates last request for use in AFK"""
         from datetime import datetime
+        node.last_request = datetime.now()
+
+    def info_get_request(self, node, infos):
+        """Runs on the instructions page automatically and also when the popup comes up"""
         node.last_request = datetime.now()
     
     def info_post_request(self, node, info):

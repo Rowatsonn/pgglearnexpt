@@ -1,6 +1,12 @@
 {% extends "layout.html" %}
 
 {% block body %}
+     <div id="afkModal" class="modal">
+        <div class="modal-body text-center" style="display:none;">
+          <h1>Are you still reading?</h1>
+             <button type="button" class="btn btn-success btn-lg" onClick="ping_server()">Yes</button>
+        </div>
+    </div>
     <div id="PD" class="main_div" style="display:none;">
         <h1>Part Two</h1>
 
