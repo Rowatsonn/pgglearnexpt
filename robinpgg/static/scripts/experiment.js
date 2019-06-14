@@ -57,10 +57,26 @@ var start_AFK_timeout = function(){
   console.log(afk_countdown)
   afk_countdown = afk_countdown- 1
   if (afk_countdown <= 0){
-    $("#long_time").removeClass("hidden") // This is a HTML element on both trivia and pgg which just states that participants should keep the window open.
+    $("#long_time").show(); // This is a HTML element on both trivia and pgg which just states that participants should keep the window open.
   } 
 }
   
+// Timer for the popup of the AFK modal on the instructions pages. Timer resets on the HTML code.
+var start_modal_timeout = function(counter){
+  console.log("modalTimeout was called")
+  modal_timeout = setTimeout(function(){
+    counter = counter - 1
+    console.log("counter is " + counter)
+    if (counter <= 0) {
+      jQuery.noConflict();
+      $('#reading').modal('show');
+    } else {
+      start_modal_timeout(counter);
+    }
+  }, 1000);
+}
+
+
 // Create the agent.
 var create_agent = function() {
   // Setup participant and get node id
@@ -111,7 +127,7 @@ var get_transmissions = function() {
 
 // Get the nodes info. resp is a generic term that servers use for a response from a browser. 
 var get_info = function(info_id) {
-    $("#long_time").addClass("hidden")
+    $("#long_time").hide();
     afk_countdown = 30 // Resets the AFK timer. Don't want the AFK message popping up unannounced.
     console.log("successfully set the AFK countdown to" + afk_countdown) 
     dallinger.getInfo(my_node_id, info_id)
@@ -129,6 +145,7 @@ var get_info = function(info_id) {
 var process_info = function(info) {
     parse_question(info);
     if (number == 11) {
+        console.log("number identified as 11")
         submit_response(Wwer1); // Creates an info just to signal Q is done. To not break the network again later.
         dallinger.allowExit();
         dallinger.goToPage('score');
@@ -235,7 +252,7 @@ var submit_response = function(value, human=true) {
       property1: JSON.stringify({
         "human": human
       })
-    }).done(get_transmissions());    
+    }).done(get_transmissions());  
 }
 
 // Beginning of code for Scorescreen
@@ -305,7 +322,7 @@ var check_ID = function() {
 }
 
 var hide_blank = function() {
-   $("#blank").addClass("hidden");
+   $("#blank").hide();
 }
 
 // Checks for all neighbors of the pog with a to connection
@@ -349,7 +366,7 @@ var display_score = function(score , id){
   $("#id-head").removeClass("hidden");
   $("#ID").removeClass("hidden");
   $("#ID").html(id);
-  $("#other-win").removeClass("hidden");
+  $("#other-win").show();
   $("#Score").removeClass("hidden");
   $("#Score").html(score);
   $("#out-of").removeClass("hidden");
@@ -363,7 +380,7 @@ var display_score_you = function(score , id){
   $("#id-head").removeClass("hidden");
   $("#ID").removeClass("hidden");
   $("#ID").html(id);
-  $("#you-win").removeClass("hidden");
+  $("#you-win").show();
   $("#Score").removeClass("hidden");
   $("#Score").html(score);
   $("#out-of").removeClass("hidden");
@@ -376,7 +393,6 @@ var begin_instructions = function(){
   console.log("Begin instructions was called")
   my_node_id = dallinger.storage.get("my_node");
   ping_server(my_node_id);
-  start_modal_timeout();
   dallinger.get(
   "/node/" + my_node_id + "/neighbors",
   {
@@ -409,29 +425,12 @@ var ping_server = function(){
   console.log("Server Pinged");
   my_node_id = dallinger.storage.get("my_node");
   dallinger.getInfos(my_node_id)
-  modal_timer = 45 // Resets the timer on the modal countdown
-  $("#afkModal").modal('hide') // Closes the modal
-}
-
-// Timer which handles displaying the AFK modal popup
-var start_modal_timeout = function(){
-  modal_timeout = setTimeout(function(){
-    modal_timer = modal_timer - 1
-    console.log("Modal timer is" + "" + modal_timer)
-    if (modal_timer <=0){
-      $("#afkModal").modal('show') // Opens the modal
-      start_modal_timeout()
-    } else {
-      start_modal_timeout();
-    }
-  }, 1000);
 }
 
 // This calls on every pgg instructions page. A cookie saved before which stores whether or not the game is a snowdrift
 // and thus participants will see the appropriate instructions.
 var page_check = function(){
   ping_server();
-  start_modal_timeout()
   snowdrift = dallinger.storage.get("snowdrift")
   if(snowdrift == 1){
     $("#SD").show();
@@ -447,18 +446,17 @@ var page_check = function(){
 var final_page = function(){
   console.log("Final Page was called");
   ping_server();
-  start_modal_timeout();
   condition = dallinger.storage.get("my_condition");
   if (condition == "BB"){
-    $("#BB").removeClass("hidden")
+    $("#BB").show()
   } else if(condition == "prestige"){
-    $("#prestige").removeClass("hidden")
+    $("#prestige").show()
   } else if(condition == "payoff"){
-    $("#payoff").removeClass("hidden")
+    $("#payoff").show()
   } else if(condition == "conformity"){
-    $("#conform").removeClass("hidden")
+    $("#conform").show()
   } else if(condition == "full"){
-     $("#full").removeClass("hidden")
+     $("#full").show()
   }
 }
 
@@ -473,29 +471,11 @@ var start_experiment = function() {
 }
 
 var show_experiment = function() {
-  $("#instructions").removeClass("hidden");
-  $("#submit-0").removeClass("hidden");
-  $("#submit-0").removeClass("disabled");
-  $("#submit-1").removeClass("hidden");
-  $("#submit-1").removeClass("disabled");
-  $("#submit-2").removeClass("hidden");
-  $("#submit-2").removeClass("disabled");
-  $("#submit-3").removeClass("hidden");
-  $("#submit-3").removeClass("disabled");
-  $("#submit-4").removeClass("hidden");
-  $("#submit-4").removeClass("disabled");
-  $("#submit-5").removeClass("hidden");
-  $("#submit-5").removeClass("disabled");
-  $("#submit-6").removeClass("hidden");
-  $("#submit-6").removeClass("disabled");
-  $("#submit-7").removeClass("hidden");
-  $("#submit-7").removeClass("disabled");
-  $("#submit-8").removeClass("hidden");
-  $("#submit-8").removeClass("disabled");
-  $("#submit-9").removeClass("hidden");
-  $("#submit-9").removeClass("disabled");
-  $("#submit-10").removeClass("hidden");
-  $("#submit-10").removeClass("disabled");
+  for (var i = 0; i < 11; i++){ // For every button on the screen
+  button = "#submit-" + i
+  $(button).show()
+  $(button).removeClass("disabled");
+ }
   force_choice = Math.floor(Math.random() * 10) + 0;
   round += 1
   countdown = 10; // Set the desired countdown number here  
@@ -503,30 +483,12 @@ var show_experiment = function() {
 }
 
 var hide_experiment = function() {
-  $("#waiting").removeClass("hidden");
-  $("#instructions").addClass("hidden");
-  $("#submit-0").addClass("hidden");
-  $("#submit-0").addClass("disabled");
-  $("#submit-1").addClass("hidden");
-  $("#submit-1").addClass("disabled");
-  $("#submit-2").addClass("hidden");
-  $("#submit-2").addClass("disabled");
-  $("#submit-3").addClass("hidden");
-  $("#submit-3").addClass("disabled");
-  $("#submit-4").addClass("hidden");
-  $("#submit-4").addClass("disabled");
-  $("#submit-5").addClass("hidden");
-  $("#submit-5").addClass("disabled");
-  $("#submit-6").addClass("hidden");
-  $("#submit-6").addClass("disabled");
-  $("#submit-7").addClass("hidden");
-  $("#submit-7").addClass("disabled");
-  $("#submit-8").addClass("hidden");
-  $("#submit-8").addClass("disabled");
-  $("#submit-9").addClass("hidden");
-  $("#submit-9").addClass("disabled");
-  $("#submit-10").addClass("hidden");
-  $("#submit-10").addClass("disabled");
+for (var i = 0; i < 11; i++){ // For every button on the screen
+  button = "#submit-" + i
+  $(button).hide()
+  $(button).addClass("disabled");
+ }
+ $("#waiting").show();
 }
 
 var start_experiment_timeout = function () {
@@ -588,7 +550,7 @@ var get_results = function(pot) {
   console.log("get results was called")
   clearTimeout(pog_timeout);
   afk_countdown = 30 // Resets the AFK timer
-  $("#long_time").addClass("hidden")
+  $("#long_time").hide();
   pot = parseInt(pot , 10)
   dallinger.get(
         "/node/" + pog_id + "/neighbors",
@@ -632,24 +594,24 @@ var check_nodes = function(neighbors) {
 var display_results = function(round_earnings) {
   console.log("display_results was called"); 
   result_countdown = 10; // How long can participants view this?
-  $("#waiting").addClass("hidden");
-  $("#earnings").removeClass("hidden");
-  $("#points").removeClass("hidden"); 
+  $("#waiting").hide();
+  $("#earnings").show();
+  $("#points").show(); 
   $("#points").html(round_earnings);
-  $("#added").removeClass("hidden");
+  $("#added").show();
   if (my_info == "prestige"){
     console.log("My prestige is " + last_prestige)
-    $("#donation").removeClass("hidden")
-    $("#prestige").removeClass("hidden")
-    $("#donation").html(last_prestige)
+    $("#donate").show()
+    $("#prestige").show()
+    $("#donate").html(last_prestige)
   } else if (my_info == "conformity"){
-    $("#donation").removeClass("hidden")
-    $("#conformity").removeClass("hidden")
-    $("#donation").html(last_conformity)
+    $("#donate").show()
+    $("#conformity").show()
+    $("#donate").html(last_conformity)
   } else if (my_info == "payoff"){
-    $("#donation").removeClass("hidden")
-    $("#payoff").removeClass("hidden")
-    $("#donation").html(last_payoff)
+    $("#donate").show()
+    $("#payoff").show()
+    $("#donate").html(last_payoff)
   } else if (my_info == "full"){
     full_info(neighbors) // Calls the function below
   }
@@ -659,8 +621,8 @@ var display_results = function(round_earnings) {
 // In the full info condition, this function handles getting the last donation and ID for each participant and putting it on the table.
 var full_info = function(neighbors){
   console.log("full info was called")
-  $("#full").removeClass("hidden"); // Displays the table
-  $("#table").removeClass("hidden"); // Displays the sentence above the table
+  $("#full").show(); // Displays the table
+  $("#table").show(); // Displays the sentence above the table
   var neighborsLength = neighbors.length;
   for (var i = 0; i < neighborsLength; i++){ //For every neighbor
     node = neighbors[i]
@@ -668,7 +630,7 @@ var full_info = function(neighbors){
     ID = node.participant_id;
     donation = JSON.parse(node.property4).donation;
     row_name = "#row" + (i+1);
-    $(row_name).removeClass("hidden");
+    $(row_name).show();
     id_name = "#id" + (i+1);
     $(id_name).html(ID);
     donation_name = "#donation" + (i+1);
@@ -694,15 +656,15 @@ var start_timer_countdown = function() {
 var hide_results = function() {
   clearTimeout(results_timeout);
   console.log("hide results was called")
-  $("#earnings").addClass("hidden");
-  $("#points").addClass("hidden"); 
-  $("#added").addClass("hidden");
-  $("#prestige").addClass("hidden");
-  $("#conformity").addClass("hidden");
-  $("#payoff").addClass("hidden");
-  $("#donation").addClass("hidden");
-  $("#full").addClass("hidden");
-  $("#table").addClass("hidden");
+  $("#earnings").hide();
+  $("#points").hide(); 
+  $("#added").hide();
+  $("#prestige").hide();
+  $("#conformity").hide();
+  $("#payoff").hide();
+  $("#donate").hide();
+  $("#full").hide();
+  $("#table").hide();
   if(round < 6){
     show_experiment();
   } else {
@@ -715,19 +677,21 @@ var hide_results = function() {
 var fail_round = function(){
   console.log("fail round was called")
   snow_countdown = 10; 
-  $("#waiting").addClass("hidden");
-  $("#SD").removeClass("hidden");
-  $("#SD1").removeClass("hidden");
-  $("#donation").removeClass("hidden")
+  $("#waiting").hide();
+  $("#SD").show();
+  $("#SD1").show();
   if (my_info == "prestige"){
-    $("#prestige").removeClass("hidden")
-    $("#donation").html(last_prestige)
+    $("#prestige").show()
+    $("#donate").show()
+    $("#donate").html(last_prestige)
   } else if (my_info == "conformity"){
-    $("#conformity").removeClass("hidden")
-    $("#donation").html(last_conformity)
+    $("#conformity").show()
+    $("#donate").show()
+    $("#donate").html(last_conformity)
   } else if (my_info == "payoff"){
-    $("#payoff").removeClass("hidden")
-    $("#donation").html(last_payoff)
+    $("#payoff").show()
+    $("#donate").show()
+    $("#donate").html(last_payoff)
   } else if (my_info == "full"){
     full_info(neighbors);
   }
@@ -752,14 +716,14 @@ var start_snow_countdown = function(){
 var hide_snow = function(){
   clearTimeout(snow_timeout);
   console.log("hide snow was called")
-  $("#SD").addClass("hidden");
-  $("#SD1").addClass("hidden");
-  $("#prestige").addClass("hidden");
-  $("#conformity").addClass("hidden");
-  $("#payoff").addClass("hidden");
-  $("#donation").addClass("hidden");
-  $("#full").addClass("hidden");
-  $("#table").addClass("hidden");
+  $("#SD").hide();
+  $("#SD1").hide();
+  $("#prestige").hide();
+  $("#conformity").hide();
+  $("#payoff").hide();
+  $("#donate").hide();
+  $("#full").hide();
+  $("#table").hide();
   if(round < 6){
     show_experiment();
   } else {

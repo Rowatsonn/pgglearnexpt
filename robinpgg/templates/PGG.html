@@ -20,12 +20,12 @@
     <div>
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
-                    <h1 class="hidden" id="waiting">Waiting for other participants...</h1>
-                    <h1 class="hidden" id="long_time">Sorry that you are still waiting.The other participants should be ready shortly. If somebody has left, the study will advance automatically. Please do not close this window. Thank you for your patience.</h1>
-                    <h1 class="hidden" id="instructions">Please select below how many points you would like to donate to the public fund:</h1>
-                    <h1 class="hidden" id="earnings"><strong>This round </strong>you earned:</h1>
-                    <h1 class="hidden" id="SD">Unfortunately, the total donations this round did not meet the required threshold</h1>
+                <div class="col-md-12 text-center">
+                    <h1 style="display:none;" id="waiting">Waiting for other participants...</h1>
+                    <h1 style="display:none;" id="long_time">Sorry that you are still waiting.The other participants should be ready shortly. If somebody has left, the study will advance automatically. Please do not close this window. Thank you for your patience.</h1>
+                    <h1 style="display:none;" id="instructions">Please select below how many points you would like to donate to the public fund:</h1>
+                    <h1 style="display:none;" id="earnings">This round you earned:</h1>
+                    <h1 style="display:none;" id="SD">Unfortunately, the total donations this round did not meet the required threshold</h1>
                 </div>
             </div>
         </div>
@@ -33,29 +33,34 @@
     <div>
         <div class="container">
             <div class="row">
-                <div>
-                    <h1 class="text-center hidden" id="points" style="font-size: 86px;">0</h1>
-                </div>
+               <div class="col-md-12 text-center">
+                  <div>
+                    <h1 id="points" style="font-size: 86px; display: none;">0</h1>
+                  </div>
+               </div>
             </div>
         </div>
     </div>
     <div>
         <div class="container">
             <div class="row">
-                <div class="col-md-6 text-center">
+                <div class="col-md-12 text-center">
                     <button onClick="submit_choice($('#submit-0').html())" class="btn btn-info btn-lg hidden" type="button" id="submit-0" style="width: 82px;height: 47px;">0</button>
                     <button onClick="submit_choice($('#submit-1').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-1" style="width: 82px;height: 47px;">1</button>
                     <button onClick="submit_choice($('#submit-2').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-2" style="width: 82px;height: 47px;">2</button>
                     <button onClick="submit_choice($('#submit-3').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-3" style="width: 82px;height: 47px;">3</button>
                     <button onClick="submit_choice($('#submit-4').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-4" style="width: 82px;height: 47px;">4</button>
                 </div>
-                <div class="text-center">
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
                     <button onClick="submit_choice($('#submit-5').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-5" style="width: 82px;height: 47px;">5</button>
                     <button onClick="submit_choice($('#submit-6').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-6" style="width: 82px;height: 47px;">6</button>
                     <button onClick="submit_choice($('#submit-7').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-7" style="width: 82px;height: 47px;">7</button>
                     <button onClick="submit_choice($('#submit-8').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-8" style="width: 82px;height: 47px;">8</button>
                     <button onClick="submit_choice($('#submit-9').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-9" style="width: 82px;height: 47px;">9</button>
                     <button onClick="submit_choice($('#submit-10').html())"class="btn btn-info btn-lg hidden" type="button" id="submit-10" style="width: 82px;height: 47px;">10</button>
+                </div>
             </div>
         </div>
     </div>
@@ -63,9 +68,9 @@
     <div>
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
-                    <h1 class="hidden" id="added">This will be added to your score</h1>
-                    <h1 class="hidden" id="SD1">Therefore, everyone has scored <strong>0</strong> this round</h1>
+                <div class="col-md-12 text-center">
+                    <h1 style="display:none;" id="added">This will be added to your score</h1>
+                    <h1 style="display:none;"" id="SD1">Therefore, everyone has scored 0 this round</h1>
                 </div>
             </div>
         </div>
@@ -73,20 +78,20 @@
     <div>
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
-                    <h1 class="hidden" id="prestige">This round, <strong>the participant who scored the highest in the quiz</strong> donated:</h1>
-                    <h1 class="hidden" id="payment">This round, <strong>the current leader in the game<strong> donated:</h1>
-                    <h1 class="hidden" id="conformity">This round, <strong>the average</strong> donation was:</h1>
-                    <h1 class="text-center hidden" id="donate" style="font-size: 86px;">0</h1>
+                <div class="col-md-12 text-center">
+                    <h1 style="display:none;" id="prestige">This round, the participant who scored the highest in the quiz donated:</h1>
+                    <h1 style="display:none;" id="payment">This round, the current leader in the game</strong> donated:</h1>
+                    <h1 style="display:none;" id="conformity">This round, the average donation was:</h1>
+                    <h1 style="font-size: 86px; display:none" id="donate">0</h1>
                 </div>
             </div>
         </div>
     </div>
     <div>
-      <h1 class="hidden" id="table">This is what everybody donated this round</h1>
+      <h1 style="display:none;" id="table">This is what everybody donated this round</h1>
     </div>
     <div class="table table-bordered">
-      <table class="table hidden" id="full">
+      <table class="table" id="full" style="display:none;">
         <thead>
           <tr>
             <th>Participant ID</th>
@@ -94,32 +99,25 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="hidden" id="row1">
+          <tr style="display:none;" id="row1">
             <td id="id1">0</td>
             <td id="donation1">0</td>
           </tr>
-          <tr class="hidden" id="row2">
+          <tr style="display:none;" id="row2">
             <td id="id2">0</td>
             <td id="donation2">0</td>
           </tr>
-          <tr class="hidden" id="row3">
+          <tr style="display:none;" id="row3">
             <td id="id3">0</td>
             <td id="donation3">0</td>
           </tr>
-          <tr class="hidden" id="row4">
+          <tr style="display:none;" id="row4">
             <td id="id4">0</td>
             <td id="donation4">0</td>
           </tr>
         </tbody>
       </table>
     </div>  
-    <div>
-        <div class="container">
-            <div class="row hidden">
-                <div class="col-md-offset-10 col-sm-offset-10 col-xs-offset-10"><button class="btn btn-success btn-lg" type="button" id="confirm" style="color: rgb(255,255,255);">Confirm</button></div>
-            </div>
-        </div>
-    </div>
 </body>
 
 {% endblock %}

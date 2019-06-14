@@ -7,6 +7,8 @@ from dallinger.networks import Burst
 import sys
 import json
 
+from datetime import datetime
+
 class QuizSource(Source):
     """A Source that reads a question and transmits it. The question is transmitted along with the 
     correct and incorrect answers."""
@@ -112,7 +114,6 @@ class ProbeNode(Node):
         "polymorphic_identity": "probe_node"
     }
  
-    from datetime import datetime
     
     @property
     def score_in_quiz(self):
@@ -120,8 +121,8 @@ class ProbeNode(Node):
 
     @property
     def last_request(self):
+        from datetime import datetime
         return datetime.strptime(json.loads(self.property1)["last_request"], "%Y-%m-%d %H:%M:%S.%f")
-
 
     @property
     def prestige(self):

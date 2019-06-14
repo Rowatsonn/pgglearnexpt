@@ -4,20 +4,19 @@
     <div class="main_div">
         <h1>Task Complete</h1>
         <hr>
-        <p>You are finished!  Thank you for your contributions to science. You will be eligible for full payment once you answer the following questions.</p>
+        <p>You are finished!  Thank you for your contributions to science. Please answer the following questions about the game you have just played. After which, you will be eligible for full payment plus a bonus based on your score from the game</p>
         <div class="main_div">
             <form>
             	{% block replace_questions %}
 	                {% block questions %}
 	                {% endblock %}
-	                <div class="row question">
-	                    <div class="col-md-8">
-	                      <h1>Please answer the following questions about the game you have just played</h1>
-	                    </div>
-	                    <div class="col-md-4">
+                        <div class="row question">
+                            <div class="col-md-4">
                               <label for="comment">How do you think most people would say you should behave in this game?</label>
-	                      <textarea class="form-control" rows="3" name="moral"></textarea>
-	                    </div>
+                              <textarea class="form-control" rows="3" name="moral"></textarea>
+                            </div>
+                        </div>
+	                <div class="row question">
                             <div class="col-md-4">
                               <label for="comment">Why did you choose to behave how you did in the game?</label>
 	                      <textarea class="form-control" rows="3" name="behaviour"></textarea>
