@@ -19,9 +19,70 @@
 
        <p id="payoff" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You will also see how much the participant who currently has the most points chose to donate in that round.</p> 
 
-      <p id="full" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You will also see a breakdown of how much each participant chose to donate that round</p>
+      <p id="full" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You will also be shown a table like the one below. On it, you can see how much each participant chose to donate that round. On the table, the participant who <strong>scored the highest in the quiz</strong> will be labelled with ***stars*** next to their name. The participant who <strong>currently has the most points in the game</strong> will be labelled next to their donation.</p>
+
+      <p id="regular" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You will also be shown a table like the one below. On it, you can see how much each participant chose to donate that round.</p>
 
       <p id="choose" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You may also select below to view information regarding the behaviour of some other participants in the game. You may select from the highest scoring participant from the quiz, the average donation after each round or the donation of the highest earner in the game after each round. If you choose to do so, your final score in the game will be divided by 10, so please choose carefully. If you do <strong>not</strong> wish to view any extra information, please select none. </p>
+
+      <div class="table table-bordered">
+      <table class="table" id="fullt" style="display:none">
+        <thead>
+          <tr>
+            <th>Participant ID</th>
+            <th>Donation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="row1">
+            <td id="id1">1</td>
+            <td id="donation1">Round Donation</td>
+          </tr>
+          <tr id="row2">
+            <td id="id2">***2***</td>
+            <td id="donation2">Round Donation</td>
+          </tr>
+          <tr id="row3">
+            <td id="id3">3</td>
+            <td id="donation3">Round Donation (This participant currently has the highest score)</td>
+          </tr>
+          <tr id="row4">
+            <td id="id4">4</td>
+            <td id="donation4">Round Donation</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table table-bordered">
+      <table class="table" id="regulart" style="display:none">
+        <thead>
+          <tr>
+            <th>Participant ID</th>
+            <th>Donation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="row1">
+            <td id="id1">1</td>
+            <td id="donation1">Round Donation</td>
+          </tr>
+          <tr id="row2">
+            <td id="id2">2</td>
+            <td id="donation2">Round Donation</td>
+          </tr>
+          <tr id="row3">
+            <td id="id3">3</td>
+            <td id="donation3">Round Donation</td>
+          </tr>
+          <tr id="row4">
+            <td id="id4">4</td>
+            <td id="donation4">Round Donation</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>   
+
       <p>When you are ready to proceed, click the button below.</p> 
    </div>
    <div>

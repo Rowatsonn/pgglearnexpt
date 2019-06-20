@@ -457,6 +457,10 @@ var final_page = function(){
     $("#conform").show()
   } else if(condition == "full"){
      $("#full").show()
+     $("#fullt").show()
+  } else if(condition == "regular"){
+     $("#regular").show()
+     $("#regulart").show()
   }
 }
 
@@ -478,6 +482,7 @@ var show_experiment = function() {
  }
   force_choice = Math.floor(Math.random() * 10) + 0;
   round += 1
+  $("#instructions").show();
   countdown = 10; // Set the desired countdown number here  
   start_experiment_timeout(); 
 }
@@ -489,12 +494,16 @@ for (var i = 0; i < 11; i++){ // For every button on the screen
   $(button).addClass("disabled");
  }
  $("#waiting").show();
+ $("#countdown").hide(); // Hides the countdown
+ $("#instructions").hide();
 }
 
 var start_experiment_timeout = function () {
   console.log("start experiment timeout was called")
   experiment_timeout = setTimeout(function(){
+    $("#countdown").show()
     countdown = countdown - 1;
+    $("#countdown").html(countdown);
     console.log(countdown)
     if (countdown <=0) {
       hide_experiment();
@@ -614,12 +623,49 @@ var display_results = function(round_earnings) {
     $("#donate").html(last_payoff)
   } else if (my_info == "full"){
     full_info(neighbors) // Calls the function below
-  }
-  start_timer_countdown();  
+  } else if (my_info == "regular"){
+    reg_pgg(neighbors) // Calls a similar function to full, without the social learning extras
+  } 
+start_timer_countdown();  
   }
 
-// In the full info condition, this function handles getting the last donation and ID for each participant and putting it on the table.
+// In the full info condition, this function handles getting the last donation and ID for each participant and putting it on the table. It also identifies the prestigious and the winning node
 var full_info = function(neighbors){
+  console.log("full info was called")
+  winning_score = 0
+  neighbors.forEach(function(node) {
+    node_score = JSON.parse(node.property3).score_in_pgg
+    if (node_score > winning_score){
+      winning_score = node_score
+    }
+  })
+  $("#full").show(); // Displays the table
+  $("#table").show(); // Displays the sentence above the table
+  var neighborsLength = neighbors.length;
+  for (var i = 0; i < neighborsLength; i++){ //For every neighbor
+    node = neighbors[i]
+    console.log(node);
+    ID = node.participant_id;
+    donation = JSON.parse(node.property4).donation;
+    prestige = JSON.parse(node.property2).prestige;
+    score = JSON.parse(node.property3).score_in_pgg;
+    if (prestige == 1){
+      ID = "***" + ID + "***"
+    }
+    if (score == winning_score){
+      donation = donation + " (This participant currently has the highest score)"
+    }
+    row_name = "#row" + (i+1);
+    $(row_name).show();
+    id_name = "#id" + (i+1);
+    $(id_name).html(ID);
+    donation_name = "#donation" + (i+1);
+    $(donation_name).html(donation);
+  }
+}
+
+// In the reg_pgg condition, this function handles getting the last donation and ID for each participant and putting it on the table.
+var reg_pgg = function(neighbors){
   console.log("full info was called")
   $("#full").show(); // Displays the table
   $("#table").show(); // Displays the sentence above the table
@@ -637,6 +683,7 @@ var full_info = function(neighbors){
     $(donation_name).html(donation);
   }
 }
+
 
 // Starts a timer for the scorescreen to keep everyone synced up
 var start_timer_countdown = function() {

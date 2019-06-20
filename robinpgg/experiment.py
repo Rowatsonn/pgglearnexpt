@@ -67,7 +67,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1 # Change this to the number of runs you want. 
-        self.initial_recruitment_size = 1 # Change this to = the number of probe nodes
+        self.initial_recruitment_size = 2 # Change this to = the number of probe nodes
         self.known_classes = {
             "PogBot": models.PogBot,
             "QuizSource": models.QuizSource,
@@ -92,7 +92,7 @@ class pgglearn(Experiment):
     def create_network(self):
         """Return a new network."""
         from . import models
-        return self.models.RNetwork(max_size=3) #Change this to change the sample size. N + 2
+        return self.models.RNetwork(max_size=4) #Change this to change the sample size. N + 2
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -112,7 +112,7 @@ class pgglearn(Experiment):
         node.property4 = json.dumps({
                 'leftovers' : 0,
                 'donation' : 0,
-                'info_choice' : "prestige" # To manually set the social learning, change this. To either conformity / prestige / payoff / full / BB (Black box).
+                'info_choice' : "full" # To manually set the social learning, change this. To either conformity / prestige / payoff / regular (a regular public goods game with a table of donations) / full (regular, plus the prestigious and winning node are labelled / BB (Black box, although do type BB). See below to change from a snowdrift.
             })
         node.property5 = json.dumps({
                 'prestige_list' : [],
@@ -125,7 +125,7 @@ class pgglearn(Experiment):
         """Calculate a participants bonus."""
         node = participant.nodes()[0]
         score = node.score_in_pgg
-        bonus = score * 0.01
+        bonus = score * 0.02 # This can be changed to what you like, but right now every point in the game is worth 2 cents
         self.log(str(bonus))
         return bonus
         
@@ -140,7 +140,7 @@ class pgglearn(Experiment):
                     'round': 0 
                 })
             pog.property3 = json.dumps({
-                    'snowdrift': 1 # Set for whether the game is a snowdrift or not.
+                    'snowdrift': 0 # Set for whether the game is a snowdrift or not.
                 })
             node.network.nodes(type=Source)[0].transmit() 
 
