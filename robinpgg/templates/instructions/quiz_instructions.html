@@ -28,14 +28,14 @@
     <script>
         dallinger.createParticipant();
         var modal = document.getElementById('reading')
-        var counter = 50
+        var counter = 40
         start_modal_timeout(counter) // Starts the modal timer
         window.onclick = function(event) {
         //alert(event.target)
             if (event.target == modal) {
                modal.style.display = "none";
                ping_server();
-               counter = 50
+               counter = 40
                start_modal_timeout(counter)
             } 
         }      

@@ -94,6 +94,39 @@
       <h1 style="display:none;" id="table">This is what everybody donated this round</h1>
     </div>
     <div class="table table-bordered">
+      <table class="table" id="extra" style="display:none;">
+        <thead>
+          <tr>
+            <th>Participant ID</th>
+            <th>Donation</th>
+            <th>Total Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="display:none;" id="erow1">
+            <td id="eid1">0</td>
+            <td id="edonation1">0</td>
+            <td id="etotalscore1">0</td>
+          </tr>
+          <tr style="display:none;" id="erow2">
+            <td id="eid2">0</td>
+            <td id="edonation2">0</td>
+            <td id="etotalscore2">0</td>
+          </tr>
+          <tr style="display:none;" id="erow3">
+            <td id="eid3">0</td>
+            <td id="edonation3">0</td>
+            <td id="etotalscore3">0</td>
+          </tr>
+          <tr style="display:none;" id="erow4">
+            <td id="eid4">0</td>
+            <td id="edonation4">0</td>
+            <td id="etotalscore4">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div> 
+    <div class="table table-bordered">
       <table class="table" id="full" style="display:none;">
         <thead>
           <tr>
@@ -120,7 +153,7 @@
           </tr>
         </tbody>
       </table>
-    </div>  
+    </div>
 </body>
 
 {% endblock %}

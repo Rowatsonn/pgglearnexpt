@@ -461,6 +461,9 @@ var final_page = function(){
   } else if(condition == "regular"){
      $("#regular").show()
      $("#regulart").show()
+  } else if(condition == "extra"){
+     $("#extra").show()
+     $("#extrat").show()
   }
 }
 
@@ -625,22 +628,24 @@ var display_results = function(round_earnings) {
     full_info(neighbors) // Calls the function below
   } else if (my_info == "regular"){
     reg_pgg(neighbors) // Calls a similar function to full, without the social learning extras
-  } 
+  } else if (my_info == "extra"){
+    extra_info(neighbors) // Calls a copy of full with a column for total score. Had to be done like this because the table wouldn't display otherwise
+  }
 start_timer_countdown();  
   }
 
-// In the full info condition, this function handles getting the last donation and ID for each participant and putting it on the table. It also identifies the prestigious and the winning node
+// In the full info condition, this function handles getting the last donation and ID for each participant and putting it on the table. It also identifies the prestigious and the winning node.
 var full_info = function(neighbors){
   console.log("full info was called")
   winning_score = 0
+  $("#table").show(); // Displays the sentence above the table
+  $("#full").show(); // Displays the table without total score
   neighbors.forEach(function(node) {
     node_score = JSON.parse(node.property3).score_in_pgg
     if (node_score > winning_score){
       winning_score = node_score
     }
   })
-  $("#full").show(); // Displays the table
-  $("#table").show(); // Displays the sentence above the table
   var neighborsLength = neighbors.length;
   for (var i = 0; i < neighborsLength; i++){ //For every neighbor
     node = neighbors[i]
@@ -664,9 +669,46 @@ var full_info = function(neighbors){
   }
 }
 
+// In the extra_info condition. Participants see the same information as in the full_info, only they also get a column specifying each participants current score. 
+var extra_info = function(neighbors){
+  console.log("extra info was called")
+  winning_score = 0
+  $("#table").show(); // Displays the sentence above the table
+  $("#extra").show(); // Displays the table with total score
+  neighbors.forEach(function(node) {
+    node_score = JSON.parse(node.property3).score_in_pgg
+    if (node_score > winning_score){
+      winning_score = node_score
+    }
+  })
+  var neighborsLength = neighbors.length;
+  for (var i = 0; i < neighborsLength; i++){ //For every neighbor
+    node = neighbors[i]
+    console.log(node);
+    ID = node.participant_id;
+    donation = JSON.parse(node.property4).donation;
+    prestige = JSON.parse(node.property2).prestige;
+    score = JSON.parse(node.property3).score_in_pgg;
+    if (prestige == 1){
+      ID = "***" + ID + "***"
+    }
+    if (score == winning_score){
+      donation = donation + " (This participant currently has the highest score)"
+    }
+    row_name = "#erow" + (i+1);
+    $(row_name).show();
+    id_name = "#eid" + (i+1);
+    $(id_name).html(ID);
+    donation_name = "#edonation" + (i+1);
+    $(donation_name).html(donation);
+    total_score_name = "#etotalscore" + (i+1)
+    $(total_score_name).html(score)
+  }
+}
+
 // In the reg_pgg condition, this function handles getting the last donation and ID for each participant and putting it on the table.
 var reg_pgg = function(neighbors){
-  console.log("full info was called")
+  console.log("reg pgg was called")
   $("#full").show(); // Displays the table
   $("#table").show(); // Displays the sentence above the table
   var neighborsLength = neighbors.length;
@@ -711,6 +753,7 @@ var hide_results = function() {
   $("#payoff").hide();
   $("#donate").hide();
   $("#full").hide();
+  $("#extra").hide();
   $("#table").hide();
   if(round < 6){
     show_experiment();
@@ -739,9 +782,11 @@ var fail_round = function(){
     $("#payoff").show()
     $("#donate").show()
     $("#donate").html(last_payoff)
-  } else if (my_info == "full"){
+  } else if (my_info == "full" || my_info == "extra"){
     full_info(neighbors);
-  }
+  } else if (my_info == "regular"){
+    reg_pgg(neighbors) // Calls a similar function to full, without the social learning extras
+  } 
   start_snow_countdown();
 }
 
@@ -770,6 +815,7 @@ var hide_snow = function(){
   $("#payoff").hide();
   $("#donate").hide();
   $("#full").hide();
+  $("#extra").hide();
   $("#table").hide();
   if(round < 6){
     show_experiment();
