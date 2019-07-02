@@ -199,8 +199,8 @@ var display_question = function() {
          $("#submit-a").html(Wwer2);
          $("#submit-b").html(Wwer1);
        }
- }; //End of the if else statement 
-    enable_answer_buttons(); //Calls another two functions below
+ }; // End of the if else statement 
+    enable_answer_buttons(); // Calls another two functions below
     countdown = 5; // This can set the time they have to answer
     start_answer_timeout();
 }; // End of the function
@@ -544,7 +544,6 @@ var get_pog = function (){
     pog = resp.nodes
     console.log(pog)
     pog.forEach(function(node){
-      id = node.id
       poground = JSON.parse(node.property2).round;
       pot = JSON.parse(node.property1).pot
       if (poground == round) {

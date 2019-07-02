@@ -12,13 +12,12 @@
             <p>By consenting to participate, you acknowledge that you are 18 years or older, have read this consent form, agree to its contents, and agree to take part in this research. If you do not wish to consent, close this page and return the HIT on Mechanical Turk.</p>
             {% endblock consent_text %}
             <hr>
-            <h4>If you are happy to take part, please click the button below to begin?</h4>
             <br>
 
 {% block consent_button %}
     <button type="button" class="btn btn-primary btn-lg" 
     onClick="dallinger.allowExit();dallinger.goToPage('instructions/quiz_instructions');"
-    style="float: left;">I agree
+    style="float: left;">I agree</button>
 {% endblock %}
 
 

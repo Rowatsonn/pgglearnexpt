@@ -169,7 +169,7 @@ class pgglearn(Experiment):
         node.last_request = datetime.now()
         nodes = node.network.nodes(type=self.models.ProbeNode) # All probenodes ONLY
         pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG 
-        probes = node.network.size(type=self.models.ProbeNode) # How many probes?
+        probes = len(nodes)
         answers = [len(node.infos()) for node in nodes] # Works out how many questions (infos) each node has answered(produced)
     
         if len(node.infos()) == 10: # If a node has answered 10 questions
@@ -181,7 +181,7 @@ class pgglearn(Experiment):
                     score +=1 
             node.score_in_quiz = score
     
-        if all_same(answers) and answers[0] == 10: #Have ALL nodes answered 10 questions?
+        if all_same(answers) and answers[0] == 10: # Have ALL nodes answered 10 questions?
             import operator  #For operator.attrgetter
             winner = max(nodes, key=operator.attrgetter("score_in_quiz"))
             winner.prestige = 1
