@@ -108,7 +108,6 @@ class pgglearn(Experiment):
         node.last_request = datetime.now()
         nodes = node.network.nodes(type=self.models.ProbeNode) # All probenodes ONLY
         pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG 
-        probes = len(nodes)
         answers = [len(node.infos()) for node in nodes] # Works out how many questions (infos) each node has answered(produced)
     
         if len(node.infos()) == 10: # If a node has answered 10 questions
@@ -151,7 +150,7 @@ class pgglearn(Experiment):
 
             pogst = node.network.transmissions(status='pending') # How many pending transmissions?
             pendings = len(pogst) 
-            if pendings == probes:
+            if pendings == len(nodes):
                 pog.receive()
     # This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time.
 
