@@ -129,18 +129,14 @@ class pgglearn(Experiment):
         elif all_same(answers) and answers[0] == 11:
             node.network.rearrange_network() # This kills the source, its vectors and adds the POGbot     
     
-        elif all_same(answers): # Have ALL nodes answered the same number of questions
+        elif all_same(answers) and answers[0] < 10: # Have ALL nodes answered the same number of questions (and < 10)
             current_answers = []
             # For all nodes, get the most recently made info
-            import operator
             for n in nodes:
                 current_answers.append(max(n.infos(), key=operator.attrgetter("id")))
             # is the current info the most recently made info across all nodes?
             if info == max(current_answers, key=operator.attrgetter("id")):
-                try:
-                    node.network.nodes(type=Source)[0].transmit()
-                except: 
-                    pass #This is to stop errors in the PGG part of the study
+                node.network.nodes(type=Source)[0].transmit()
 
         if len(node.infos()) > 11: # Is the questionaire over?
             node.transmit(what=info , to_whom=self.models.PogBot)
