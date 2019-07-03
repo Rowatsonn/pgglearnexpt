@@ -21,17 +21,6 @@ except ImportError:
 
 config = get_config()
 
-
-def extra_parameters():
-
-    types = {
-        'custom_variable': bool,
-        'num_participants': int,
-    }
-
-    for key in types:
-        config.register(key, types[key])
-
 def all_same(items):
     return all(x == items[0] for x in items) # Function to help with the post_info check down the line
 
@@ -58,8 +47,6 @@ def stiller_remover(self, node):
 
 class pgglearn(Experiment):
     """Define the structure of the experiment."""
-    num_participants = 1
-
     def __init__(self, session=None):
         """Call the same parent constructor, then call setup() if we have a session.
         """
@@ -80,14 +67,7 @@ class pgglearn(Experiment):
                 super(pgglearn, self).setup()
                 for net in self.networks():
                         self.models.QuizSource(network=net)
-                        self.models.PogBot(network=net)     
-           
-    def configure(self):
-        super(pgglearn, self).configure()
-        self.experiment_repeats = 1
-        self.custom_variable = config.get('custom_variable')
-        self.num_participants = config.get('num_participants', 1)
-  
+                        self.models.PogBot(network=net)
 
     def create_network(self):
         """Return a new network."""

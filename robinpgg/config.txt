@@ -1,8 +1,6 @@
 [Experiment]
 mode = sandbox
 auto_recruit = true
-custom_variable = true
-num_participants = 2
 
 [MTurk]
 title = robinpgg
