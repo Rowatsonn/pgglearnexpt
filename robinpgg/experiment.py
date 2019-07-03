@@ -35,10 +35,14 @@ class pgglearn(Experiment):
             
     def setup(self):
         if not self.networks():
-                super(pgglearn, self).setup()
-                for net in self.networks():
-                        self.models.QuizSource(network=net)
-                        self.models.PogBot(network=net)
+            super(pgglearn, self).setup()
+            for net in self.networks():
+                self.models.QuizSource(network=net)
+                pog = self.models.PogBot(network=net)
+                pog.property1 = json.dumps({ 'pot': 0 })
+                pog.property2 = json.dumps({ 'round': 0 })
+                # Set for whether the game is a snowdrift or not.
+                pog.property3 = json.dumps({ 'snowdrift': 0 })
 
     def create_network(self):
         """Return a new network."""
@@ -82,17 +86,6 @@ class pgglearn(Experiment):
         
     def node_post_request(self, participant, node):
         if node.network.full:
-            import json
-            pog = node.network.nodes(type=self.models.PogBot)[0]
-            pog.property1 = json.dumps({
-                    'pot': 0 
-                })
-            pog.property2 = json.dumps({
-                    'round': 0 
-                })
-            pog.property3 = json.dumps({
-                    'snowdrift': 0 # Set for whether the game is a snowdrift or not.
-                })
             node.network.nodes(type=Source)[0].transmit() 
 
     def transmission_get_request(self, node, transmissions):
