@@ -14,28 +14,7 @@ import json
 config = get_config()
 
 def all_same(items):
-    return all(x == items[0] for x in items) # Function to help with the post_info check down the line
-
-# Function to manage the removal of stillers
-def stiller_remover(self, node):
-    from datetime import datetime
-    good_nodes = []
-    bad_nodes = []
-    nodes = node.network.nodes(type=self.models.ProbeNode)
-    for n in nodes:
-        if (node.last_request - n.last_request).total_seconds() > 60:
-            bad_nodes.append(n)
-        else:
-            good_nodes.append(n)
-    if bad_nodes and node.id == max(good_nodes, key=operator.attrgetter("id")).id:
-        for n in bad_nodes:
-            node.network.max_size -= 1
-            n.fail()
-        if node.transmissions(): # This is to allow the function to still work in the PGG. Otherwise, the transmission resubmits and breaks the study.
-            most_recent_transmission = max(node.transmissions(), key=operator.attrgetter("id"))
-            most_recent_transmission.fail()
-        most_recent_info = max(node.network.infos(), key=operator.attrgetter("id"))
-        self.info_post_request(node, most_recent_info)
+    return all(x == items[0] for x in items)
 
 class pgglearn(Experiment):
     """Define the structure of the experiment."""
@@ -120,13 +99,13 @@ class pgglearn(Experiment):
         """All this does is update the last_request property for use in the AFK functions"""
         from datetime import datetime
         node.last_request = datetime.now()
-        stiller_remover(self, node)
+        self.stiller_remover(node)
     
     def node_get_request(self, node, nodes):
         """Runs when neighbors is requested and also updates last request for use in AFK"""
         from datetime import datetime
         node.last_request = datetime.now()
-        stiller_remover(self, node)
+        self.stiller_remover(node)
 
     def info_get_request(self, node, infos):
         """Runs on the instructions page automatically and also when the popup comes up"""
@@ -193,4 +172,24 @@ class pgglearn(Experiment):
             pendings = len(pogst) 
             if pendings == probes:
                 pog.receive()
-# This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time.
+    # This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time.
+
+    # Function to manage the removal of stillers
+    def stiller_remover(self, node):
+        good_nodes = []
+        bad_nodes = []
+        nodes = node.network.nodes(type=self.models.ProbeNode)
+        for n in nodes:
+            if (node.last_request - n.last_request).total_seconds() > 60:
+                bad_nodes.append(n)
+            else:
+                good_nodes.append(n)
+        if bad_nodes and node.id == max(good_nodes, key=operator.attrgetter("id")).id:
+            for n in bad_nodes:
+                node.network.max_size -= 1
+                n.fail()
+            if node.transmissions(): # This is to allow the function to still work in the PGG. Otherwise, the transmission resubmits and breaks the study.
+                most_recent_transmission = max(node.transmissions(), key=operator.attrgetter("id"))
+                most_recent_transmission.fail()
+            most_recent_info = max(node.network.infos(), key=operator.attrgetter("id"))
+            self.info_post_request(node, most_recent_info)
