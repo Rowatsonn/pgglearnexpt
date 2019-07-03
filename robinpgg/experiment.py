@@ -113,11 +113,8 @@ class pgglearn(Experiment):
     
         if len(node.infos()) == 10: # If a node has answered 10 questions
             correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt","Asia","Iodine","The Comedy of Errors"]
-            score = 0
-            infos = node.infos()
-            for info in infos:
-               if info.contents in correct_answers:
-                    score +=1 
+            answers = [i.contents for i in infos]
+            score = len([a for a in answers if a in correct_answers])
             node.score_in_quiz = score
     
         if all_same(answers) and answers[0] == 10: # Have ALL nodes answered 10 questions?
