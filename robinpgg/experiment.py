@@ -110,9 +110,10 @@ class pgglearn(Experiment):
         pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG 
         num_answers = [len(node.infos()) for node in nodes] # Works out how many questions (infos) each node has answered(produced)
     
-        if len(node.infos()) == 10: # If a node has answered 10 questions
+        my_infos = node.infos()
+        if len(my_infos) == 10: # If a node has answered 10 questions
             correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt","Asia","Iodine","The Comedy of Errors"]
-            answers = [i.contents for i in infos]
+            answers = [i.contents for i in my_infos]
             score = len([a for a in answers if a in correct_answers])
             node.score_in_quiz = score
     
