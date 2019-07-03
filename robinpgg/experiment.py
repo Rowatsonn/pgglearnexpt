@@ -46,34 +46,32 @@ class pgglearn(Experiment):
 
     def create_network(self):
         """Return a new network."""
-        from . import models
         return self.models.RNetwork(max_size=3) #Change this to change the sample size. N + 2
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
-        from datetime import datetime
         node = self.models.ProbeNode(network=network, participant=participant)
         node.property1 = json.dumps({
-                'score_in_quiz': 0,
-                'last_request' : str(datetime.now()),
-            })
+            'score_in_quiz': 0,
+            'last_request' : str(datetime.now()),
+        })
         node.property2 = json.dumps({
-                'prestige' : 0
-            })
+            'prestige' : 0
+        })
         node.property3 = json.dumps({
-                'score_in_pgg' : 0,
-                'round_earnings' : []
-            })
+            'score_in_pgg' : 0,
+            'round_earnings' : []
+        })
         node.property4 = json.dumps({
-                'leftovers' : 0,
-                'donation' : 0,
-                'info_choice' : "extra" # To manually set the social learning, change this. To either conformity / prestige / payoff / regular (a regular public goods game with a table of donations) / full (regular, plus the prestigious and winning node are labelled / extra (all the information of full + their overall scores) BB (Black box, although do type BB). See below to change from a snowdrift.
-            })
+            'leftovers' : 0,
+            'donation' : 0,
+            'info_choice' : "extra" # To manually set the social learning, change this. To either conformity / prestige / payoff / regular (a regular public goods game with a table of donations) / full (regular, plus the prestigious and winning node are labelled / extra (all the information of full + their overall scores) BB (Black box, although do type BB). See below to change from a snowdrift.
+        })
         node.property5 = json.dumps({
-                'prestige_list' : [],
-                'conform_list' : [],
-                'payoff_list' : []
-            })
+            'prestige_list' : [],
+            'conform_list' : [],
+            'payoff_list' : []
+        })
         return node
 
     def bonus(self, participant):
