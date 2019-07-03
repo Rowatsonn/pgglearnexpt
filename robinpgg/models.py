@@ -15,9 +15,13 @@ class QuizSource(Source):
         "polymorphic_identity": "quiz_source"
     }
 
-    def __init__(self, network):
-        super().__init__(network)
-        self.questions = [
+    def _contents(self):
+        """Define the contents of new Infos .... (New transmissions??)
+
+        transmit() -> _what() -> create_information() -> _contents().
+        """
+        number_transmissions = len(self.infos())
+        questions = [
             json.dumps({
                 'question': 'When did the First World War end?',
                 'number' : 1,
@@ -97,21 +101,17 @@ class QuizSource(Source):
             }),
         ]
 
-    def _contents(self):
-        """Define the contents of new Infos .... (New transmissions??)
-
-        transmit() -> _what() -> create_information() -> _contents().
-        """
-        number_transmissions = len(self.infos())
-        return self.questions[number_transmissions]
+        return questions[number_transmissions]
 
 class ProbeNode(Node):
     """A custom node for use in the experiment. Has some properties changed"""
     
+
     __mapper_args__ = {
         "polymorphic_identity": "probe_node"
     }
  
+    
     @property
     def score_in_quiz(self):
         return json.loads(self.property1)["score_in_quiz"]
