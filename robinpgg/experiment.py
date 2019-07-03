@@ -117,26 +117,27 @@ class pgglearn(Experiment):
             score = len([a for a in answers if a in correct_answers])
             node.score_in_quiz = score
     
-        if all_same(num_answers) and num_answers[0] == 10: # Have ALL nodes answered 10 questions?
-            import operator  #For operator.attrgetter
-            winner = max(nodes, key=operator.attrgetter("score_in_quiz"))
-            winner.prestige = 1
-            node.network.nodes(type=Source)[0].transmit()  
-       
-        elif all_same(num_answers) and num_answers[0] == 11:
-            node.network.rearrange_network() # This kills the source, its vectors and adds the POGbot     
-    
-        elif all_same(num_answers) and num_answers[0] < 10: # Have ALL nodes answered the same number of questions (and < 10)
-            current_answers = []
-            # For all nodes, get the most recently made info
-            for n in nodes:
-                current_answers.append(max(n.infos(), key=operator.attrgetter("id")))
-            # is the current info the most recently made info across all nodes?
-            if info == max(current_answers, key=operator.attrgetter("id")):
-                node.network.nodes(type=Source)[0].transmit()
+        if all_same(num_answers):
 
-        if len(node.infos()) > 11: # Is the questionaire over?
-            node.transmit(what=info , to_whom=self.models.PogBot)
+            if num_answers[0] < 10:
+                current_answers = []
+                for n in nodes:
+                    current_answers.append(max(n.infos(), key=operator.attrgetter("id")))
+                # is the current info the most recently made info across all nodes?
+                if info == max(current_answers, key=operator.attrgetter("id")):
+                    node.network.nodes(type=Source)[0].transmit()
+
+            elif num_answers[0] == 10: # Have ALL nodes answered 10 questions?
+                winner = max(nodes, key=operator.attrgetter("score_in_quiz"))
+                winner.prestige = 1
+                node.network.nodes(type=Source)[0].transmit()  
+       
+            elif num_answers[0] == 11:
+                node.network.rearrange_network() # This kills the source, its vectors and adds the POGbot     
+
+        if len(my_infos) > 11: # Is the questionaire over?
+            # This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time.
+            node.transmit(what=info, to_whom=self.models.PogBot)
             info_int = int(info.contents) # This converts it to an integer. Which is good.
             node.donation = info_int 
             leftovers = 10 - info_int
@@ -145,15 +146,11 @@ class pgglearn(Experiment):
 
             if node.prestige == 1:
                 for node in nodes: # This updates the prestige_list on all nodes. If the current node is the prestige
-                    plist = node.prestige_list
-                    plist.extend([info_int])
-                    node.prestige_list = plist
+                    node.prestige_list.append(info_int)
 
             pogst = node.network.transmissions(status='pending') # How many pending transmissions?
-            pendings = len(pogst) 
-            if pendings == len(nodes):
+            if len(pogst) == len(nodes):
                 pog.receive()
-    # This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time.
 
     # Function to manage the removal of stillers
     def stiller_remover(self, node):
