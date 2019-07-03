@@ -88,13 +88,11 @@ class pgglearn(Experiment):
 
     def transmission_get_request(self, node, transmissions):
         """All this does is update the last_request property for use in the AFK functions"""
-        from datetime import datetime
         node.last_request = datetime.now()
         self.stiller_remover(node)
     
     def node_get_request(self, node, nodes):
         """Runs when neighbors is requested and also updates last request for use in AFK"""
-        from datetime import datetime
         node.last_request = datetime.now()
         self.stiller_remover(node)
 
@@ -107,7 +105,6 @@ class pgglearn(Experiment):
         the score in the quiz and assigning prestige to the winner.
         Then finally for the PGG, it will transmit choices to the POG
         """
-        from datetime import datetime 
         node.last_request = datetime.now()
         nodes = node.network.nodes(type=self.models.ProbeNode) # All probenodes ONLY
         pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG 
