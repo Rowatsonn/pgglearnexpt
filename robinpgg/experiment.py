@@ -2,22 +2,14 @@
 from dallinger.config import get_config
 from dallinger.experiments import Experiment
 from dallinger.networks import Burst
-from dallinger.nodes import Source
+from dallinger.nodes import Source, Node
 from dallinger.nodes import Node
 
 from . import models
-
-import json
-
 from datetime import datetime
 
 import operator
-
-try:
-    from bots import Bot
-    Bot = Bot
-except ImportError:
-    pass
+import json
 
 config = get_config()
 
