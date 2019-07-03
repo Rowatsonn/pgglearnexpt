@@ -108,7 +108,7 @@ class pgglearn(Experiment):
         node.last_request = datetime.now()
         nodes = node.network.nodes(type=self.models.ProbeNode) # All probenodes ONLY
         pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG 
-        answers = [len(node.infos()) for node in nodes] # Works out how many questions (infos) each node has answered(produced)
+        num_answers = [len(node.infos()) for node in nodes] # Works out how many questions (infos) each node has answered(produced)
     
         if len(node.infos()) == 10: # If a node has answered 10 questions
             correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt","Asia","Iodine","The Comedy of Errors"]
@@ -116,16 +116,16 @@ class pgglearn(Experiment):
             score = len([a for a in answers if a in correct_answers])
             node.score_in_quiz = score
     
-        if all_same(answers) and answers[0] == 10: # Have ALL nodes answered 10 questions?
+        if all_same(num_answers) and num_answers[0] == 10: # Have ALL nodes answered 10 questions?
             import operator  #For operator.attrgetter
             winner = max(nodes, key=operator.attrgetter("score_in_quiz"))
             winner.prestige = 1
             node.network.nodes(type=Source)[0].transmit()  
        
-        elif all_same(answers) and answers[0] == 11:
+        elif all_same(num_answers) and num_answers[0] == 11:
             node.network.rearrange_network() # This kills the source, its vectors and adds the POGbot     
     
-        elif all_same(answers) and answers[0] < 10: # Have ALL nodes answered the same number of questions (and < 10)
+        elif all_same(num_answers) and num_answers[0] < 10: # Have ALL nodes answered the same number of questions (and < 10)
             current_answers = []
             # For all nodes, get the most recently made info
             for n in nodes:
