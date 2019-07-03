@@ -1,7 +1,5 @@
 from dallinger.nodes import Source
-from dallinger.models import Node
-from dallinger.models import Info
-
+from dallinger.models import Node, Info
 from dallinger.networks import Burst
 
 import sys
