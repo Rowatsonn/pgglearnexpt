@@ -158,11 +158,9 @@ class pgglearn(Experiment):
         good_nodes = [n for n in nodes if n not in bad_nodes]
         if bad_nodes and node.id == max(good_nodes, key=attrgetter("id")).id:
             for n in bad_nodes:
-                node.network.max_size -= 1
                 n.fail()
 
             self.readvance_network(node.network)
-
 
     def readvance_network(self, network):
         if network.infos():

@@ -223,6 +223,32 @@ class ProbeNode(Node):
         p5["conform_list"] = val
         self.property5 = json.dumps(p5)
 
+    def fail(self):
+
+        # don't allow multiple failings
+        if self.failed is True:
+            raise AttributeError(
+                "Cannot fail {} - it has already failed.".format(self))
+        else:
+
+            # if the group has started, shrink the network.
+            if self.network.infos():
+                self.network.max_size -= 1
+
+            # fail the node
+            self.failed = True
+            self.time_of_death = datetime.now()
+            self.network.calculate_full()
+
+            for v in self.vectors():
+                v.fail()
+            for i in self.infos():
+                i.fail()
+            for t in self.transmissions(direction="all"):
+                t.fail()
+            for t in self.transformations():
+                t.fail()
+
 
 class PogBot(Node):
     """The pot of greed, which will handle working out the scores for each of the participants."""
