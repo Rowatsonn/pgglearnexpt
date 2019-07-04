@@ -12,9 +12,6 @@ import json
 
 config = get_config()
 
-def all_same(items):
-    return all(x == items[0] for x in items)
-
 class pgglearn(Experiment):
     """Define the structure of the experiment."""
     def __init__(self, session=None):
@@ -105,52 +102,63 @@ class pgglearn(Experiment):
         Then finally for the PGG, it will transmit choices to the POG
         """
         node.last_request = datetime.now()
-        nodes = node.network.nodes(type=self.models.ProbeNode) # All probenodes ONLY
-        pog = node.network.nodes(type=self.models.PogBot)[0] # Get the POG 
-        num_answers = [len(node.infos()) for node in nodes] # Works out how many questions (infos) each node has answered(produced)
-    
         my_infos = node.infos()
-        if len(my_infos) == 10: # If a node has answered 10 questions
-            correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt","Asia","Iodine","The Comedy of Errors"]
-            answers = [i.contents for i in my_infos]
-            score = len([a for a in answers if a in correct_answers])
-            node.score_in_quiz = score
-    
-        if all_same(num_answers):
+        n_infos = len(my_infos)
+        
+        if n_infos <= 11:
+            self.advance_quiz(node, my_infos)
+        else:
+            self.advance_pgg(node, info)    
 
-            if num_answers[0] < 10:
-                current_answers = []
-                for n in nodes:
-                    current_answers.append(max(n.infos(), key=attrgetter("id")))
-                # is the current info the most recently made info across all nodes?
-                if info == max(current_answers, key=attrgetter("id")):
+    def advance_quiz(self, node, my_infos):
+        n_infos = len(my_infos)
+        nodes = node.network.nodes(type=self.models.ProbeNode)
+
+        if n_infos == 10: # if you've finished calculate your score
+            self.score_node(node, my_infos)
+
+        if self.everyone_ready(nodes): # if everyone has answered the same question
+            if info == max(node.network.infos(), key=attrgetter("id")): # if you're the most recent to answer
+                if n_infos <= 10:
+                    if n_infos == 10:
+                        winner = max(nodes, key=attrgetter("score_in_quiz"))
+                        winner.prestige = 1
                     node.network.nodes(type=Source)[0].transmit()
+                else: # so n_infos must be 11
+                    node.network.rearrange_network()
 
-            elif num_answers[0] == 10: # Have ALL nodes answered 10 questions?
-                winner = max(nodes, key=attrgetter("score_in_quiz"))
-                winner.prestige = 1
-                node.network.nodes(type=Source)[0].transmit()  
-       
-            elif num_answers[0] == 11:
-                node.network.rearrange_network() # This kills the source, its vectors and adds the POGbot     
+    def score_node(self, node, infos):
+        correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt","Asia","Iodine","The Comedy of Errors"]
+        answers = [i.contents for i in infos]
+        node.score_in_quiz = len([a for a in answers if a in correct_answers])
 
-        if len(my_infos) > 11: # Is the questionaire over?
-            # This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time.
-            node.transmit(what=info, to_whom=self.models.PogBot)
-            self.save()
-            info_int = int(info.contents) # This converts it to an integer. Which is good.
-            node.donation = info_int 
-            leftovers = 10 - info_int
-            node.score_in_pgg += leftovers # This will add whatever points the node didn't spend to its score
-            node.leftovers = leftovers # This will store their leftovers seperately for use in js
+    def everyone_ready(self, nodes):
+        num_answers = [len(node.infos()) for node in nodes]
+        return all(x == num_answers[0] for x in num_answers)
 
-            if node.prestige == 1:
-                for node in nodes: # This updates the prestige_list on all nodes. If the current node is the prestige
-                    node.prestige_list.append(info_int)
+    def advance_pgg(self, node, info):
+        # send their choice to the pog
+        transmission = node.transmit(what=info, to_whom=self.models.PogBot)
+        self.save()
 
-            pogst = node.network.transmissions(status='pending') # How many pending transmissions?
-            if len(pogst) == len(nodes):
+        # update their score
+        donation = int(info.contents)
+        node.donation = donation 
+        node.leftovers = 10 - donation
+        node.score_in_pgg += node.leftovers
+
+        # inform everyone else
+        nodes = node.network.nodes(type=self.models.ProbeNode)
+        if node.prestige == 1:
+            for node in nodes:
+                node.prestige_list.append(donation)
+
+        # tell pog to process transmissions
+        pending_transmissions = node.network.transmissions(status='pending')
+        if len(pending_transmissions) == len(nodes):
+            if transmission == max(pending_transmissions, key=attrgetter("id")):
                 pog.receive()
+
 
     # Function to manage the removal of stillers
     def stiller_remover(self, node):
