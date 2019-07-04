@@ -7,8 +7,7 @@ from dallinger.nodes import Node
 
 from . import models
 from datetime import datetime
-
-import operator
+from operator import attrgetter
 import json
 
 config = get_config()
@@ -122,13 +121,13 @@ class pgglearn(Experiment):
             if num_answers[0] < 10:
                 current_answers = []
                 for n in nodes:
-                    current_answers.append(max(n.infos(), key=operator.attrgetter("id")))
+                    current_answers.append(max(n.infos(), key=attrgetter("id")))
                 # is the current info the most recently made info across all nodes?
-                if info == max(current_answers, key=operator.attrgetter("id")):
+                if info == max(current_answers, key=attrgetter("id")):
                     node.network.nodes(type=Source)[0].transmit()
 
             elif num_answers[0] == 10: # Have ALL nodes answered 10 questions?
-                winner = max(nodes, key=operator.attrgetter("score_in_quiz"))
+                winner = max(nodes, key=attrgetter("score_in_quiz"))
                 winner.prestige = 1
                 node.network.nodes(type=Source)[0].transmit()  
        
@@ -154,20 +153,23 @@ class pgglearn(Experiment):
 
     # Function to manage the removal of stillers
     def stiller_remover(self, node):
-        good_nodes = []
-        bad_nodes = []
         nodes = node.network.nodes(type=self.models.ProbeNode)
-        for n in nodes:
-            if (node.last_request - n.last_request).total_seconds() > 60:
-                bad_nodes.append(n)
-            else:
-                good_nodes.append(n)
-        if bad_nodes and node.id == max(good_nodes, key=operator.attrgetter("id")).id:
+        bad_nodes = [n for n in nodes if (node.last_request - n.last_request).total_seconds() > 60]
+        good_nodes = [n for n in nodes if n not in bad_nodes]
+        if bad_nodes and node.id == max(good_nodes, key=attrgetter("id")).id:
             for n in bad_nodes:
                 node.network.max_size -= 1
                 n.fail()
-            if node.transmissions(): # This is to allow the function to still work in the PGG. Otherwise, the transmission resubmits and breaks the study.
-                most_recent_transmission = max(node.transmissions(), key=operator.attrgetter("id"))
+
+            self.readvance_network(node.network)
+
+
+    def readvance_network(self, network):
+        if network.infos():
+            if network.nodes(type=Source):
+                most_recent_info = max(network.infos(), key=attrgetter("id"))
+                self.info_post_request(most_recent_info.origin, most_recent_info)
+            else:
+                most_recent_transmission = max(node.transmissions(), key=attrgetter("id"))
                 most_recent_transmission.fail()
-            most_recent_info = max(node.network.infos(), key=operator.attrgetter("id"))
-            self.info_post_request(node, most_recent_info)
+                self.info_post_request(most_recent_transmission.origin, most_recent_transmission.info)
