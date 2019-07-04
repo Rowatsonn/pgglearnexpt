@@ -4,6 +4,7 @@ from dallinger.networks import Burst
 
 import sys
 import json
+from operator import attrgetter
 
 from datetime import datetime
 
@@ -288,105 +289,40 @@ class PogBot(Node):
         self.property3 = json.dumps(p3)
 
 
+    def process_pd(self, nodes):
+        self.pot = total*2/len(nodes)
+        for node in nodes:
+            node.score_in_pgg += self.pot
+            node.round_earnings.append(node.leftovers + self.pot)
+
+    def process_failed_snowdrift(self, nodes):
+        self.pot = 0  
+        for node in nodes:
+            node.round_earnings.append(0)
+            node.score_in_pgg -= node.leftovers
+            node.leftovers = 0
+
     def update(self, infos):
         """This will handle working out the scores. Infos end up here whenever .receieve()
         is called in the backend"""
-        decisions = [] # Empty list ready for decisions
-        probes = self.network.size(type=ProbeNode) # Number of ProbeNodes
-        nodes = self.network.nodes(type=ProbeNode) # Object containing the probes
-        pog = self.network.nodes(type=PogBot)[0] # Get the Pog
-        snowdrift = self.snowdrift #Determines what maths need to happen to the pot
-        sum = 0 # Object for PGG contributions
-        for info in infos: # Get the contents of the infos and set to integer
-            info = int(info.contents)
-            decisions.append(info)
-        for num in decisions: # Add up these numbers
-                sum += num
+        nodes = self.network.nodes(type=ProbeNode)
+        snowdrift = self.snowdrift == 1
 
-        mean = sum / probes # This is currently the conformist learning. Maybe will change this. 
-        for node in nodes: # Give the conformity information to all the nodes
-            clist = node.conform_list
-            clist.extend([mean])
-            node.conform_list = clist
+        total = sum([int(i.contents) for i in infos])
+        mean = total/len(nodes)
+        for node in nodes:
+            node.conform_list.append(mean)
 
-        if snowdrift == 0: # Game is a prisoner's dilemma
-            winning_score = 0 # Necessary for the payoff learning
-            sum = sum*2 # Double the result
-            earnings = sum/probes # Divide by the number of probes (pps) in the network
-            self.pot = earnings
-            for node in nodes:
-                node.score_in_pgg += earnings
-                round_scores = node.round_earnings # Update the round_earnings list in property 3
-                leftovers = int(node.leftovers)
-                this_round = leftovers + earnings
-                round_scores.extend([this_round])
-                node.round_earnings = round_scores
-                node_score = node.score_in_pgg
-                if node_score > winning_score:
-                    winning_score = node_score
+        if not snowdrift or total > 10:
+            self.process_pd(nodes)
+        else:
+            self.process_failed_snowdrift(nodes)     
 
-            for node in nodes:
-                node_score = node.score_in_pgg # Is the node the winning node. If it is, get their payoff list and their donation. Extend the list
-                if node_score == winning_score: 
-                    paylist = node.payoff_list
-                    donation = node.donation
-                    paylist.extend([donation])
-                    for node in nodes: # Then update it on every node
-                        node.payoff_list = paylist
-
-            self.round += 1 # Up the round counter by one. This is a necessary cue for the front end
+        winner = max(nodes, key=attrgetter("score_in_pgg"))
+        for node in nodes:
+            node.payoff_list.append(winner.donation)
         
-        elif snowdrift == 1: # The game is a snowdrift
-            if sum < 10: # The threshold has not been met
-                winning_score = 0
-                self.pot = 0  
-                for node in nodes: # This is necessary because the nodes increase their own score during info_post_request
-                    round_scores = node.round_earnings
-                    this_round = 0 # Set the round earnings in property 3 to 0, because the snowdrift was failed
-                    round_scores.extend([this_round])
-                    node.round_earnings = round_scores
-                    leftovers = int(node.leftovers)
-                    current_score = int(node.score_in_pgg)
-                    new_score = current_score - leftovers
-                    if new_score > winning_score:
-                        winning_score = new_score
-                    node.score_in_pgg = new_score 
-                    node.leftovers = 0
-                for node in nodes:
-                    node_score = node.score_in_pgg
-                    if node_score == winning_score: # Is the node the winning node. If it is, get their payoff list and their donation. Extend the list
-                        paylist = node.payoff_list
-                        donation = node.donation
-                        paylist.extend([donation])
-                        for node in nodes: # Then update it on every node
-                            node.payoff_list = paylist
-
-                self.round += 1
-            else: # The threshold HAS been met
-                winning_score = 0
-                sum = sum*2
-                earnings = sum/probes
-                self.pot = earnings
-                for node in nodes:
-                    node.score_in_pgg += earnings
-                    round_scores = node.round_earnings # Update the round_earnings list in property 3
-                    leftovers = int(node.leftovers)
-                    this_round = leftovers + earnings
-                    round_scores.extend([this_round])
-                    node.round_earnings = round_scores
-                    node_score = node.score_in_pgg
-                    if node_score > winning_score:
-                        winning_score = node_score
-
-                for node in nodes:
-                    node_score = node.score_in_pgg
-                    if node_score == winning_score: # Is the node the winning node. If it is, get their payoff list and their donation. Extend the list
-                        paylist = node.payoff_list
-                        donation = int(node.donation)
-                        paylist.extend([donation])
-                        for node in nodes: # Then update it on every node
-                            node.payoff_list = paylist
-                self.round += 1
+        self.round += 1
 
 class RNetwork(Burst):
     """A custom form of the burst network to be used in the public goods game"""
