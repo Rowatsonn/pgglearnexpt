@@ -137,6 +137,7 @@ class pgglearn(Experiment):
         if len(my_infos) > 11: # Is the questionaire over?
             # This will cause the node to transmit to PogBot ONLY. This is to avoid transmissions being receieved at the wrong time.
             node.transmit(what=info, to_whom=self.models.PogBot)
+            self.save()
             info_int = int(info.contents) # This converts it to an integer. Which is good.
             node.donation = info_int 
             leftovers = 10 - info_int
