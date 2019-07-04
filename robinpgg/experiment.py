@@ -173,3 +173,15 @@ class pgglearn(Experiment):
                 most_recent_transmission = max(node.transmissions(), key=attrgetter("id"))
                 most_recent_transmission.fail()
                 self.info_post_request(most_recent_transmission.origin, most_recent_transmission.info)
+
+    def assignment_abandoned(self, participant):
+        networks = [n.network for n in participant.nodes()]
+        self.fail_participant(participant)
+        for n in networks:
+            self.readvance_network(n)
+
+    def assignment_returned(self, participant):
+        networks = [n.network for n in participant.nodes()]
+        self.fail_participant(participant)
+        for n in networks:
+            self.readvance_network(n)
