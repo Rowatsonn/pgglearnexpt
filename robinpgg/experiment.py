@@ -134,7 +134,7 @@ class pgglearn(Experiment):
 
     def everyone_ready(self, nodes):
         num_answers = [len(node.infos()) for node in nodes]
-        return all(x == num_answers[0] for x in num_answers)
+        return all([x == num_answers[0] for x in num_answers])
 
     def advance_pgg(self, node, info):
         # send their choice to the pog
