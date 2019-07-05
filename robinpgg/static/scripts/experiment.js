@@ -52,8 +52,11 @@ var create_agent = function() {
   $("#submit-response").addClass('disabled');
   dallinger.createAgent()
   .done(function (resp) {
-    my_node_id = resp.node.id;
+    node = resp.node
+    my_node_id = node.id;
     dallinger.storage.set("my_node" , my_node_id); //This is where we set the cookie for my node
+    condition =  JSON.parse(node.property4).info_choice
+    dallinger.storage.set("my_condition" , condition) // Set a cookie for the condition RATHER than in condition check as before
     $("#submit-response").removeClass('disabled');
     get_transmissions(my_node_id); //It starts constantly checking it's transmissions
   })
@@ -223,7 +226,7 @@ var submit_response = function(value, human=true) {
 
 // Beginning of code for Scorescreen
 
-// Finds and saves the ID of the Pog as a cookie
+// Finds and saves the ID of the Pog as a cookie. Calls on score.html
 var save_pog = function(){
   my_node_id = dallinger.storage.get("my_node");
   dallinger.get(
@@ -240,44 +243,18 @@ var save_pog = function(){
         pog_id = node.id
         dallinger.storage.set("pog" , pog_id)
         if (typeof pog_id === "undefined"){
-          save_pog();
+          setTimeout(function(){
+            save_pog();
+          }, 1000)
         } else {
           check_neighbors(pog_id);
-        }
-      })
-    } else {
-      save_pog(); // Recalls the function if it doesn't find the pog
+         }
+        })
+  } else {
+      setTimeout(function(){
+        save_pog(); // Recalls the function if it doesn't find the pog
+      }, 1000)
     }
-  })
-}
-
-// Checks what condition it is for the nodes. 
-var condition_check = function(pog_id){
-  console.log("Condition check was called");
-  dallinger.get(
-  
-  "/node/" + pog_id + "/neighbors",
-  {
-        connection: "to",
-    }
-).done(function(resp){
-    nodes = resp.nodes;
-    console.log(nodes)
-    nodes.forEach(function(node){
-      node_id = node.id
-      condition = JSON.parse(node.property4).info_choice
-      console.log("condition is")
-      console.log(condition)
-      console.log("ID is")
-      console.log(node_id)
-      console.log("My node ID is")
-      console.log(my_node_id)
-      if (node_id = my_node_id){
-        console.log("Made it to the if statement")
-        console.log(condition)
-        dallinger.storage.set("my_condition" , condition)
-      }
-    })
   })
 }
 
@@ -304,7 +281,9 @@ var check_neighbors = function(pog_id){
         neighbors = resp.nodes;
         console.log(neighbors)
         if (neighbors.length == 0) {
+          setTimeout(function(){
             check_neighbors()
+          }, 1000)
         } else {
         parse_neighbors(neighbors);
         }
@@ -336,7 +315,7 @@ var display_score = function(score , id){
   $("#Score").removeClass("hidden");
   $("#Score").html(score);
   $("#out-of").removeClass("hidden");
-  condition_check(pog_id);
+  $("#next").show()
 }
 
 // Displays the score when you win.
@@ -350,7 +329,7 @@ var display_score_you = function(score , id){
   $("#Score").removeClass("hidden");
   $("#Score").html(score);
   $("#out-of").removeClass("hidden");
-  condition_check(pog_id);
+  $("#next").show()
 }
 
 // Beginning of code for the PGG instructions
@@ -559,7 +538,7 @@ var check_nodes = function(neighbors) {
     conformity_list = JSON.parse(node.property5).conform_list;
     last_conformity = conformity_list[conformity_list.length - 1];
     payoff_list = JSON.parse(node.property5).payoff_list;
-    last_prestige = payoff_list[payoff_list.length - 1];
+    last_payoff = payoff_list[payoff_list.length - 1];
     if (node_id == my_node_id) {
       my_leftovers = leftovers
       my_info = info_choice // This checks which info the participant needs. This is robust to different choices, which is nice.  
@@ -720,6 +699,7 @@ var hide_results = function() {
   $("#full").hide();
   $("#extra").hide();
   $("#table").hide();
+  hide_table() 
   if(round < 6){
     show_experiment();
   } else {
@@ -728,6 +708,20 @@ var hide_results = function() {
   }
 }
 
+// Hides the table rows. This is only needed in case somebody leaves. Otherwise, you are stuck with a redundant and confusing row in the table. 
+var hide_table = function(){
+  console.log("Hide Table was called")
+  $("#full").hide();
+  $("#extra").hide();
+  $("#table").hide()
+  var neighborsLength = neighbors.length;
+  for (var i=0; i < neighborsLength; i++){
+    row_name = "#row" + (i+1);
+    alt_row = "#erow" + (i+1);
+    $(row_name).hide()
+    $(alt_row).hide()
+  }
+}
 // Displays the HTML script telling the participants they scored 0 this round
 var fail_round = function(){
   console.log("fail round was called")
@@ -779,9 +773,7 @@ var hide_snow = function(){
   $("#conformity").hide();
   $("#payoff").hide();
   $("#donate").hide();
-  $("#full").hide();
-  $("#extra").hide();
-  $("#table").hide();
+  hide_table();
   if(round < 6){
     show_experiment();
   } else {

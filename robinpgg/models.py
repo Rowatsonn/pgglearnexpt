@@ -258,6 +258,14 @@ class PogBot(Node):
         "polymorphic_identity": "pot_of_greed_bot"
     }
     
+    def __init__(self, network):
+        super().__init__(network)
+        self.property1 = json.dumps({ 'pot': 0 })
+        self.property2 = json.dumps({ 'round': 0 })
+        # Set for whether the game is a snowdrift or not.
+        self.property3 = json.dumps({ 'snowdrift': 1 })
+
+
     @property
     def pot(self):
         return json.loads(self.property1)["pot"]
@@ -289,7 +297,7 @@ class PogBot(Node):
         self.property3 = json.dumps(p3)
 
 
-    def process_pd(self, nodes):
+    def process_pd(self, nodes, total):
         self.pot = total*2/len(nodes)
         for node in nodes:
             node.score_in_pgg += self.pot
@@ -298,7 +306,7 @@ class PogBot(Node):
     def process_failed_snowdrift(self, nodes):
         self.pot = 0  
         for node in nodes:
-            node.round_earnings.append(0)
+            node.round_earnings = node.round_earnings + [0]
             node.score_in_pgg -= node.leftovers
             node.leftovers = 0
 
@@ -311,16 +319,16 @@ class PogBot(Node):
         total = sum([int(i.contents) for i in infos])
         mean = total/len(nodes)
         for node in nodes:
-            node.conform_list.append(mean)
+            node.conform_list = node.conform_list + [mean]
 
-        if not snowdrift or total > 10:
-            self.process_pd(nodes)
+        if not snowdrift or total >= 10:
+            self.process_pd(nodes, total)
         else:
             self.process_failed_snowdrift(nodes)     
 
         winner = max(nodes, key=attrgetter("score_in_pgg"))
         for node in nodes:
-            node.payoff_list.append(winner.donation)
+            node.payoff_list = node.payoff_list + [winner.donation]
         
         self.round += 1
 

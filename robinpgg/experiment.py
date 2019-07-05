@@ -21,7 +21,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1 # Change this to the number of runs you want. 
-        self.initial_recruitment_size = 1 # Change this to = the number of probe nodes
+        self.initial_recruitment_size = 2 # Change this to = the number of probe nodes
         self.known_classes = {
             "PogBot": models.PogBot,
             "QuizSource": models.QuizSource,
@@ -35,14 +35,10 @@ class pgglearn(Experiment):
             for net in self.networks():
                 self.models.QuizSource(network=net)
                 pog = self.models.PogBot(network=net)
-                pog.property1 = json.dumps({ 'pot': 0 })
-                pog.property2 = json.dumps({ 'round': 0 })
-                # Set for whether the game is a snowdrift or not.
-                pog.property3 = json.dumps({ 'snowdrift': 0 })
 
     def create_network(self):
         """Return a new network."""
-        return self.models.RNetwork(max_size=3) #Change this to change the sample size. N + 2
+        return self.models.RNetwork(max_size=4) #Change this to change the sample size. N + 2
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -61,7 +57,7 @@ class pgglearn(Experiment):
         node.property4 = json.dumps({
             'leftovers' : 0,
             'donation' : 0,
-            'info_choice' : "extra" # To manually set the social learning, change this. To either conformity / prestige / payoff / regular (a regular public goods game with a table of donations) / full (regular, plus the prestigious and winning node are labelled / extra (all the information of full + their overall scores) BB (Black box, although do type BB). See below to change from a snowdrift.
+            'info_choice' : "full" # To manually set the social learning, change this. To either conformity / prestige / payoff / regular (a regular public goods game with a table of donations) / full (regular, plus the prestigious and winning node are labelled / extra (all the information of full + their overall scores) BB (Black box, although do type BB). See below to change from a snowdrift.
         })
         node.property5 = json.dumps({
             'prestige_list' : [],
@@ -102,15 +98,16 @@ class pgglearn(Experiment):
         Then finally for the PGG, it will transmit choices to the POG
         """
         node.last_request = datetime.now()
+        self.save()
         my_infos = node.infos()
         n_infos = len(my_infos)
         
         if n_infos <= 11:
-            self.advance_quiz(node, my_infos)
+            self.advance_quiz(node, my_infos, info)
         else:
             self.advance_pgg(node, info)    
 
-    def advance_quiz(self, node, my_infos):
+    def advance_quiz(self, node, my_infos, info):
         n_infos = len(my_infos)
         nodes = node.network.nodes(type=self.models.ProbeNode)
 
@@ -137,8 +134,12 @@ class pgglearn(Experiment):
         return all([x == num_answers[0] for x in num_answers])
 
     def advance_pgg(self, node, info):
+        
+        # Define the pog
+        pog = node.network.nodes(type=self.models.PogBot)[0]
+
         # send their choice to the pog
-        transmission = node.transmit(what=info, to_whom=self.models.PogBot)
+        transmission = node.transmit(what=info, to_whom=self.models.PogBot)[0]
         self.save()
 
         # update their score
@@ -150,8 +151,8 @@ class pgglearn(Experiment):
         # inform everyone else
         nodes = node.network.nodes(type=self.models.ProbeNode)
         if node.prestige == 1:
-            for node in nodes:
-                node.prestige_list.append(donation)
+            for n in nodes:
+                n.prestige_list = n.prestige_list + [donation]
 
         # tell pog to process transmissions
         pending_transmissions = node.network.transmissions(status='pending')
@@ -169,12 +170,12 @@ class pgglearn(Experiment):
             for n in bad_nodes:
                 n.fail()
 
-            self.readvance_network(node.network)
+            self.readvance_network(node)
 
-    def readvance_network(self, network):
-        if network.infos():
-            if network.nodes(type=Source):
-                most_recent_info = max(network.infos(), key=attrgetter("id"))
+    def readvance_network(self, node):
+        if node.network.infos():
+            if node.network.nodes(type=Source):
+                most_recent_info = max(node.network.infos(), key=attrgetter("id"))
                 self.info_post_request(most_recent_info.origin, most_recent_info)
             else:
                 most_recent_transmission = max(node.transmissions(), key=attrgetter("id"))
