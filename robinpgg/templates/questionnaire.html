@@ -2,9 +2,11 @@
 
 {% block body %}
     <div class="main_div">
-        <h1>Task Complete</h1>
+        <h1>Debriefing sheet</h1>
         <hr>
-        <p>You are finished!  Thank you for your contributions to science. Please answer the following questions about the game you have just played. After which, you will be eligible for full payment plus a bonus based on your score from the game</p>
+        <p>Thank you for taking part in this study. This study broadly aims to better understand the evolution of human cooperative behaviour and how this might be influenced by social learning. We did this, by measuring your cooperative behaviour through the money game.</p>
+	<p>If you would like further information about the study, would like to know what the general findings are once all the data has been collected or analysed or have any other questions in general. Please contact the lead researcher for this project. Robin Watson [robin.o.watson@durham.ac.uk]</p>
+	<p>Please answer the following short questions about the experiment you just took part in. After which, you will be eligible for full payment plus a bonus depending on your score from the game.</p>
         <div class="main_div">
             <form>
             	{% block replace_questions %}
@@ -22,15 +24,35 @@
 	                      <textarea class="form-control" rows="3" name="behaviour"></textarea>
 	                    </div>
 	                </div>
+
+	                <div class="row question">
+	                    <div class="col-md-8">
+	                        On a scale of 1-10 (where 10 is perfectly understood), how would you rate your understanding of how the game worked?
+	                    </div>
+	                    <div class="col-md-4">
+	                        <select id="understanding" name="understanding">
+	                            <option value="10">10 - Perfectly understood</option>
+	                            <option value="9">9</option>
+	                            <option value="8">8</option>
+	                            <option value="7">7</option>
+	                            <option value="6">6</option>
+	                            <option value="5" SELECTED>5 - Mostly Understood</option>
+	                            <option value="4">4</option>
+	                            <option value="3">3</option>
+	                            <option value="2">2</option>
+	                            <option value="1">1 - Did not at all understand</option>
+	                        </select>
+	                    </div>
+	                </div>
 	            {% endblock %}
             </form>
         </div>
         <hr>
         <di class="instructionsnav">
             <div class="row">
-                <div class="col-xs-9">
+                <div class="col-md-9">
                 </div>
-                <div class="col-xs-3">
+                <div class="col-md-3">
                     <button type="button" id="submit-questionnaire" class="btn btn-primary btn-lg continue">Continue</button>
                 </div>
             </div>

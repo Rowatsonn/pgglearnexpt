@@ -54,11 +54,13 @@ var create_agent = function() {
   .done(function (resp) {
     node = resp.node
     my_node_id = node.id;
-    dallinger.storage.set("my_node" , my_node_id); //This is where we set the cookie for my node
+    dallinger.storage.set("my_node" , my_node_id); // This is where we set the cookie for my node
     condition =  JSON.parse(node.property4).info_choice
-    dallinger.storage.set("my_condition" , condition) // Set a cookie for the condition RATHER than in condition check as before
+    dallinger.storage.set("my_condition" , condition) // Set a cookie for the condition here RATHER than in condition check as before
+    network_id = node.network_id // Gets the ID of the network for use in check_network
     $("#submit-response").removeClass('disabled');
-    get_transmissions(my_node_id); //It starts constantly checking it's transmissions
+    trivia_started = 0 // This is a cue as to whether to call check_network. Don't want it calling everytime the node answers a question
+    get_transmissions(my_node_id); // It starts constantly checking it's transmissions
   })
   .fail(function (rejection) {
     dallinger.allowExit();
@@ -69,7 +71,9 @@ var create_agent = function() {
 // Get a nodes transmissions. This runs constanly once create_agent has run, which it will once you load up the html page 
 var get_transmissions = function() {
     console.log("get transmissions was called");
+    if (trivia_started == 1) { // Countdown does not run if the trivia hasn't started. In other words, people are still joining.
     start_AFK_timeout(); // Starts the timeout in the background for the AFK message to come up
+    }
     dallinger.getTransmissions(my_node_id, {
         status: "pending"
     })
@@ -85,6 +89,9 @@ var get_transmissions = function() {
         } else {
             setTimeout(function(){
                 get_transmissions();
+                if (trivia_started == 0){ // Once the trivia is started, check_network will not run
+                check_network(); // This is needed for the counting of the number of expected / current participants 
+                }
             }, 1000); // Unless the node finds some info, it just calls get_transmissions every second. 
         }
     })
@@ -94,9 +101,26 @@ var get_transmissions = function() {
     });
 }
 
+// Checks the network to see whether or not it is full and displays the info on screen.
+var check_network = function() {
+  dallinger.get(
+  "/network/" + network_id 
+    ).done(function (resp){
+    network = resp.network
+    expected_probes = parseFloat(network.max_size) - 2
+    current_probes = JSON.parse(network.property1).num_probes
+    $("#joinedpps").html(current_probes)
+    $("#totalpps").html(expected_probes)
+  })
+}
+
 // Get the nodes info. resp is a generic term that servers use for a response from a browser. 
 var get_info = function(info_id) {
+    trivia_started = 1 // Stops check_network from running any more
     $("#long_time").hide();
+    $("#joinedpps").hide();
+    $("#totalpps").hide();
+    $("#slash").hide()
     afk_countdown = 30 // Resets the AFK timer. Don't want the AFK message popping up unannounced.
     console.log("successfully set the AFK countdown to" + afk_countdown) 
     dallinger.getInfo(my_node_id, info_id)
@@ -115,7 +139,7 @@ var process_info = function(info) {
     parse_question(info);
     if (number == 11) {
         console.log("number identified as 11")
-        submit_response(Wwer1); // Creates an info just to signal Q is done. To not break the network again later.
+        submit_response(Wwer1, human=false); // Creates an info just to signal Q is done. To not break the network again later.
         dallinger.allowExit();
         dallinger.goToPage('score');
     } else {
@@ -221,7 +245,11 @@ var submit_response = function(value, human=true) {
       property1: JSON.stringify({
         "human": human
       })
-    }).done(get_transmissions());  
+    }).done(function (resp) {
+		test = resp
+		console.log(resp)
+	    get_transmissions()
+	});  
 }
 
 // Beginning of code for Scorescreen

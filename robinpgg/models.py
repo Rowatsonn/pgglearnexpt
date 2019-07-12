@@ -111,8 +111,7 @@ class ProbeNode(Node):
     __mapper_args__ = {
         "polymorphic_identity": "probe_node"
     }
- 
-    
+
     @property
     def score_in_quiz(self):
         return json.loads(self.property1)["score_in_quiz"]
@@ -339,6 +338,16 @@ class RNetwork(Burst):
         "polymorphic_identity": "Robin_Network"
     }
 
+    @property
+    def num_probes(self):
+        return json.loads(self.property1)["num_probes"]
+
+    @num_probes.setter
+    def num_probes(self, val):
+        p1 = json.loads(self.property1)
+        p1["num_probes"] = val
+        self.property1 = json.dumps(p1)
+ 
     def rearrange_network(self):
         """This function will convert the current, regular, burst network into this"""
         source = self.nodes(type=QuizSource)

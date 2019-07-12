@@ -21,7 +21,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1 # Change this to the number of runs you want. 
-        self.initial_recruitment_size = 2 # Change this to = the number of probe nodes
+        self.initial_recruitment_size = 2 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
         self.known_classes = {
             "PogBot": models.PogBot,
             "QuizSource": models.QuizSource,
@@ -34,7 +34,7 @@ class pgglearn(Experiment):
             super(pgglearn, self).setup()
             for net in self.networks():
                 self.models.QuizSource(network=net)
-                pog = self.models.PogBot(network=net)
+                self.models.PogBot(network=net)
 
     def create_network(self):
         """Return a new network."""
@@ -75,6 +75,7 @@ class pgglearn(Experiment):
         return bonus
         
     def node_post_request(self, participant, node):
+        node.network.property1 = json.dumps({ 'num_probes': len(node.network.nodes(type=self.models.ProbeNode)) }) # Set for the benefit of Javascript in the check_network
         if node.network.full:
             node.network.nodes(type=Source)[0].transmit() 
 
@@ -82,7 +83,21 @@ class pgglearn(Experiment):
         """All this does is update the last_request property for use in the AFK functions"""
         node.last_request = datetime.now()
         self.stiller_remover(node)
-    
+         # fix for hanging issue.
+        received_transmissions = node.transmissions(direction="incoming", status="received")
+        if not transmissions:
+            if received_transmissions:
+                most_recent_transmission = max(received_transmissions, key=attrgetter("id"))
+                responses = node.infos(failed="all")
+                transmission_newer_than_response = False
+                if responses:
+                    most_recent_response = max(responses, key=attrgetter("id"))
+                    if most_recent_transmission.receive_time > most_recent_response.creation_time:
+                        transmission_newer_than_response = True
+                if transmission_newer_than_response or not responses:
+                    if not node.transmissions(direction="incoming", status="pending"):
+                        most_recent_transmission.origin.transmit(what=most_recent_transmission.info, to_whom=node)
+
     def node_get_request(self, node, nodes):
         """Runs when neighbors is requested and also updates last request for use in AFK"""
         node.last_request = datetime.now()
@@ -98,7 +113,6 @@ class pgglearn(Experiment):
         Then finally for the PGG, it will transmit choices to the POG
         """
         node.last_request = datetime.now()
-        self.save()
         my_infos = node.infos()
         n_infos = len(my_infos)
         
@@ -178,9 +192,13 @@ class pgglearn(Experiment):
                 most_recent_info = max(node.network.infos(), key=attrgetter("id"))
                 self.info_post_request(most_recent_info.origin, most_recent_info)
             else:
-                most_recent_transmission = max(node.transmissions(), key=attrgetter("id"))
-                most_recent_transmission.fail()
-                self.info_post_request(most_recent_transmission.origin, most_recent_transmission.info)
+                try:
+                    most_recent_transmission = max(node.transmissions(), key=attrgetter("id"))
+                    most_recent_transmission.fail()
+                    self.info_post_request(most_recent_transmission.origin, most_recent_transmission.info)
+                except ValueError: # There are no transmissions, because they have gone AFK in the scorescreen. In which case, just removing the nodes is fine. 
+                    pass
+                
 
     def assignment_abandoned(self, participant):
         networks = [n.network for n in participant.nodes()]

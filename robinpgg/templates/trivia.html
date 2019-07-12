@@ -1,11 +1,16 @@
 {% extends "layout.html" %}
 
-{% block body %}
+{% block head %}
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Trivia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">   
 </head>
+{% endblock %}
 
+{% block title %}
+    Trivia
+{% endblock %}
+
+{% block body %}
 <body>
     <div>
         <div class="container">
@@ -20,18 +25,31 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-9 col-sm-8 col-xs-9">
-                    <h2 class="text-center" id="question">Waiting for other participants...</h2>
+                    <h2 class="text-center" id="question">Waiting for other participants to join...</h2>
                 </div>
                 <div class="col-md-3 col-sm-4 col-xs-1">
                     <h2 class="text-center" id="countdown" style="font-size: 30px;">...</h2>
                 </div>
             </div>
+            <div class="row">
+               <h2 style="display:none" id="long_time">Sorry that you are still waiting. The other participants should be ready shortly. If somebody has left, the study will advance automatically. Please do not close this window. Thank you for your patience.</h2>
+            </div>
+            <div class="row">
+               <div class="col-md-3 col-sm-3 col-xs-3">
+                  <h2 class="text-center" id="joinedpps">0</h2>
+               </div>
+               <div class="col-md-6 col-sm-6 col-xs-6">
+                  <h2 class="text-center" id="slash">/</h2>
+               </div>
+               <div class="col-md-3 col-sm-3 col-xs-3">
+                  <h2 class="text-center" id="totalpps">0</h2>
+               </div>
+            </div>
         </div>
     </div>
     <div>
         <div class="container">
-            <div class="row">
-                <h2 style="display:none" id="long_time">Sorry that you are still waiting. The other participants should be ready shortly. If somebody has left, the study will advance automatically. Please do not close this window. Thank you for your patience.</h2>                
+            <div class="row">                
                 <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-a').html());disable_answer_buttons();" id="submit-a" style="background-color: rgb(250,128,114);width: 281px;height: 126px;color: Black;">A</button></div>
                 <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-b').html());disable_answer_buttons();" id="submit-b" style="background-color: rgb(115,194,251);width: 281px;height: 126px;color: Black;">B</button></div>
                 <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-c').html());disable_answer_buttons();" id="submit-c" style="background-color: rgb(152,251,152);width: 281px;height: 126px;color: Black;">C</button></div>
@@ -39,8 +57,8 @@
         </div>
     </div>
 </body>
-
 {% endblock %}
+
 {% block scripts %}
     <script>
         create_agent();
