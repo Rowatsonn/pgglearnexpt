@@ -28,16 +28,20 @@ var start_AFK_timeout = function(){
 }
   
 // Timer for the popup of the AFK modal on the instructions pages. Timer resets on the HTML code.
-var start_modal_timeout = function(counter){
+var start_modal_timeout = function(afkounter){
   console.log("modalTimeout was called")
   modal_timeout = setTimeout(function(){
-    counter = counter - 1
-    console.log("counter is " + counter)
-    if (counter <= 0) {
+    afkounter = afkounter - 1
+    console.log("counter is " + afkounter)
+    if (afkounter == 10) {
       jQuery.noConflict();
       $('#reading').modal('show');
+      start_modal_timeout(afkounter);
+    } else if (afkounter == 0) {
+      dallinger.allowExit();
+      dallinger.goToPage('AFK');
     } else {
-      start_modal_timeout(counter);
+      start_modal_timeout(afkounter);
     }
   }, 1000);
 }

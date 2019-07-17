@@ -7,27 +7,27 @@
              <button type="button" class="btn btn-success btn-lg" onClick="ping_server()">Yes</button>
         </div>
     </div>
-    <div id="PD" class="main_div" style="display:none;">
+    <div id="PD" class="main_div text-center" style="display:none;">
         <h1>Part Two</h1>
 
         <hr>
 
-        <p>During this part of the study, each round you will be given <strong>10</strong> lab points and you must decide how much of this, if any, to donate to a public fund. This public fund will then be doubled and split evenly amongst all players. Then, anything that you earn from the public fund, as well as any money you <strong>did not</strong> donate to the pot will be added to your overall score. At the end of the game, all players will receieve a bonus payout determined by their score during the game.</p>
+        <p>During this part of the study, each round you will be given <strong>10</strong> units of "lab money" and you must decide how much of this, if any, to donate to a public fund. This public fund will then be doubled and split evenly amongst all players. Then, anything that you earn from the public fund, as well as any money you <strong>did not</strong> donate to the pot will be added to your overall total. At the end of the game, the lab money you collected will be converted to real money, which will be then added to what you will receive from completing the study.</p>
 
-        <p>Before proceeding, there will be three examples to help you understand how the game works which will explain how each participant will score depending on their behavior.</p>
+        <p>On the following page, there will be a further description of the game and an animated picture to help you understand how the game works and how each participant scores depending on their behaviour.</p>
 	<p>When you are ready to proceed, click the button below.</p> 
 
         <hr>
 
     </div>
-    <div id="SD" class="main_div" style="display:none;">
+    <div id="SD" class="main_div text-center" style="display:none;">
         <h1>Part Two</h1>
 
         <hr>
 
-        <p>During this part of the study, each round you will be given <strong>10</strong> lab points and you must decide how much of this, if any, to donate to a public fund. This public fund will then be doubled and split evenly amongst all players. Then, anything that you earn from the public fund, as well as any money you <strong>did not</strong> donate to the pot will be added to your overall score. <strong>However</strong>, after everyone has donated, if the total in the pot is <strong>less than 10</strong> then everybodys score becomes <strong>0</strong> for that round. At the end of the game, all players will receieve a bonus payout determined by their score during the game.</p>
+        <p>During this part of the study, each round you will be given <strong>10</strong> units of "lab money" and you must decide how much of this, if any, to donate to a public fund. This public fund will then be doubled and split evenly amongst all players. Then, anything that you earn from the public fund, as well as any money you <strong>did not</strong> donate to the pot will be added to your overall total. <strong>However</strong>, after everyone has donated, if the total in the pot is <strong>less than 10</strong> then everybodys score becomes <strong>0</strong> for that round. At the end of the game, the lab money you collected will be converted to real money, which will be then added to what you will receive from completing the study.</p>
 
-        <p>Before proceeding, there will be three examples to help you understand how the game works which will explain how each participant will score depending on their behavior.</p>
+        <p>On the following page, there will be a further description of the game and an animated picture to help you understand how the game works and how each participant scores depending on their behaviour.</p>
 	<p>When you are ready to proceed, click the button below.</p> 
 
         <hr>
@@ -46,7 +46,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="readingLabel">Are you still reading?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="ping_server(); counter=50; start_modal_timeout(counter)">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="ping_server(); afkounter=60; clearTimeout(modal_timeout); start_modal_timeout(afkounter)">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -54,7 +54,7 @@
         <p>To keep your place in the experiment, please click below</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="ping_server(); counter=50; start_modal_timeout(counter);">Yes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="ping_server(); afkounter=60; clearTimeout(modal_timeout); start_modal_timeout(afkounter);">Yes</button>
       </div>
     </div>
   </div>
@@ -65,15 +65,16 @@
     <script>
         begin_instructions();
         var modal = document.getElementById('reading')
-        var counter = 50
-        start_modal_timeout(counter) // Starts the modal timer
+        var afkounter = 60
+        start_modal_timeout(afkounter) // Starts the modal timer
         window.onclick = function(event) {
         //alert(event.target)
             if (event.target == modal) {
                modal.style.display = "none";
+               clearTimeout(modal_timeout);
                ping_server();
-               counter = 50
-               start_modal_timeout(counter)
+               afkounter = 60
+               start_modal_timeout(afkounter)
             } 
         }      
     </script>

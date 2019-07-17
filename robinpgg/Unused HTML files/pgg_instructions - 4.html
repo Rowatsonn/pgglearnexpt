@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block body %}
+     <div id="afkModal" class="modal">
+        <div class="modal-body text-center" style="display:none;">
+          <h1>Are you still reading?</h1>
+             <button type="button" class="btn btn-success btn-lg" onClick="ping_server()">Yes</button>
+        </div>
+    </div>
+    <div id="PD" class="main_div" style="display:none;">
+        <h1>Part Two</h1>
+
+        <hr>
+
+        <p>In this example none of the players decide to donate anything to the public fund. This means there are <strong>no</strong> points in the public fund. Therefore, all the players will end the round with the points they started with.</p>
+
+
+<img src='/static/images/All-defect.png/' width="600" height="400" class="text-center">
+
+	<p>When you are ready to proceed, click the button below.</p> 
+    
+        <hr>
+    </div>
+    <div>
+      <div id="next" class="row" style="display:none;">
+        <div class="col-10"></div>
+        <div class="col-2">
+          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_condition_check');">Next</button>
+        </div>
+    </div>
+    <div id="SD" class="main_div" style="display:none;">
+        <h1>Part Two</h1>
+
+        <hr>
+
+        <p>In this example none of the players decide to donate anything to the public fund. This means there are <strong>no</strong> points in the public pot <strong>which is less than the threshold</strong>. Therefore, in this round, all players end the round with <strong>0</strong> points.</p>
+
+<img src='/static/images/SD-no-cop.png/' width="600" height="400" class="text-center">
+
+	<p>When you are ready to proceed, click the button below.</p> 
+    
+        <hr>
+    </div>
+    <div>
+      <div id="next2" class="row" style="display:none;">
+        <div class="col-10"></div>
+        <div class="col-2">
+          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_condition_check');">Next</button>
+        </div>
+    </div>    
+
+<!-- Modal -->
+<div class="modal fade" id="reading" tabindex="-1" role="dialog" aria-labelledby="readingLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="readingLabel">Are you still reading?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="ping_server(); counter=50; start_modal_timeout(counter)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>To keep your place in the experiment, please click below</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="ping_server(); counter=50; start_modal_timeout(counter);">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+      page_check();
+      var modal = document.getElementById('reading')
+        var counter = 50
+        start_modal_timeout(counter) // Starts the modal timer
+        window.onclick = function(event) {
+        //alert(event.target)
+            if (event.target == modal) {
+               modal.style.display = "none";
+               ping_server();
+               counter = 50
+               start_modal_timeout(counter)
+            } 
+        }      
+    </script>
+{% endblock %}
+

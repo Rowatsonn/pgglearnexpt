@@ -7,7 +7,7 @@
              <button type="button" class="btn btn-success btn-lg" onClick="ping_server()">Yes</button>
         </div>
     </div>
-    <div id="PD" class="main_div">
+    <div id="PD" class="main_div text-center">
         <h1>Part Two</h1>
 
 
@@ -119,7 +119,7 @@
       </table>
     </div>   
 
-      <p>When you are ready to proceed, click the button below.</p> 
+      <p>When you are ready to begin the experiment, click the button below.</p> 
    </div>
    <div>
      
@@ -127,7 +127,7 @@
       <div id="next" class="row">
         <div class="col-10"></div>
         <div class="col-2">
-          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('PGG');">Next</button>
+          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('PGG');">I'm ready to begin</button>
         </div>
     </div>
 
@@ -137,7 +137,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="readingLabel">Are you still reading?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="ping_server(); counter=50; start_modal_timeout(counter)">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="ping_server(); clearTimeout(modal_timeout); afkounter=60; start_modal_timeout(afkounter)">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -145,7 +145,7 @@
         <p>To keep your place in the experiment, please click below</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="ping_server(); counter=50; start_modal_timeout(counter);">Yes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="ping_server(); afkounter=60; clearTimeout(modal_timeout); start_modal_timeout(afkounter);">Yes</button>
       </div>
     </div>
   </div>
@@ -156,15 +156,16 @@
     <script>
       final_page();
       var modal = document.getElementById('reading')
-        var counter = 50
-        start_modal_timeout(counter) // Starts the modal timer
+        var afkounter = 60
+        start_modal_timeout(afkounter) // Starts the modal timer
         window.onclick = function(event) {
         //alert(event.target)
             if (event.target == modal) {
+               clearTimeout(modal_timeout);
                modal.style.display = "none";
                ping_server();
-               counter = 50
-               start_modal_timeout(counter)
+               afkounter = 60
+               start_modal_timeout(afkounter)
             } 
         }      
     </script>

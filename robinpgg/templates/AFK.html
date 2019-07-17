@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="main_div">
+        <h1>Sorry, you have been removed from the study due to inactivity.</h1>
+
+        <h1>You may now close this window or click the button below to exit.</h1>
+
+        <div>
+            <div class="row">
+                <div class="col-10"></div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-danger btn-lg" onClick="dallinger.allowExit(); self.close();">
+                    Exit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

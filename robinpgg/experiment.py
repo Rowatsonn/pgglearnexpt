@@ -21,7 +21,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1 # Change this to the number of runs you want. 
-        self.initial_recruitment_size = 2 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
+        self.initial_recruitment_size = 3 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
         self.known_classes = {
             "PogBot": models.PogBot,
             "QuizSource": models.QuizSource,
@@ -38,7 +38,7 @@ class pgglearn(Experiment):
 
     def create_network(self):
         """Return a new network."""
-        return self.models.RNetwork(max_size=4) #Change this to change the sample size. N + 2
+        return self.models.RNetwork(max_size=5) #Change this to change the sample size. N + 2
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -139,7 +139,7 @@ class pgglearn(Experiment):
                     node.network.rearrange_network()
 
     def score_node(self, node, infos):
-        correct_answers = ["1918","Venus","Bob Odenkirk","1890","Russia","1215","Franklin D. Roosevelt","Asia","Iodine","The Comedy of Errors"]
+        correct_answers = ["Venus","Animal","49","Iodine","Russia","Younger","$0.05","Asia","East","The Comedy of Errors"]
         answers = [i.contents for i in infos]
         node.score_in_quiz = len([a for a in answers if a in correct_answers])
 

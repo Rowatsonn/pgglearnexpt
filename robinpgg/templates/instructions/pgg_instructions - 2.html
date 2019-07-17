@@ -7,17 +7,16 @@
              <button type="button" class="btn btn-success btn-lg" onClick="ping_server()">Yes</button>
         </div>
     </div>
-    <div id="PD" class="main_div" style="display:none;">
+    <div id="PD" class="main_div text-center" style="display:none;">
         <h1>Part Two</h1>
 
         <hr>
 
-        <p>In this example all players decide to donate all of their points to the public fund. This means there are <strong>40</strong> points in the public pot. This will double to <strong>80</strong> and be split amongst all players. Therefore, all players finish the round with <strong>20</strong> points each.</p>
+        <p>In the animation below, there are three different scenarios displayed. The numbers on the left are the number of units each participant decided to donate and the numbers on the right are the total units that they earned from that round. Remember, anything you choose <strong>not</strong> to donate is automatically added to your rolling total. Therefore, if nobody donates any lab money, then everyone will end the round with the 10 units they started with.</p>
 
-        <img src='/static/images/All-cooperate.png/' width="600" height="400">
+        <img src='/static/gif/PD.gif/' width="750" height="550">
 
-	<p>Note that in this case, all players ended up with the same points and all with more points than they had at the start.</p> 
-	<p>When you are ready to proceed, click the button below.</p> 
+	<p>When you are ready to advance to the next instruction, click the button below.</p> 
     
         <hr>
     </div>
@@ -25,20 +24,21 @@
       <div id="next" class="row" style="display:none;">
         <div class="col-10"></div>
         <div class="col-2">
-          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_instructions - 3');">Next</button>
+          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_condition_check');">Next</button>
         </div>
     </div>
-    <div id="SD" class="main_div" style="display:none;">
+    <div id="SD" class="main_div text-center" style="display:none;">
         <h1>Part Two</h1>
 
         <hr>
 
-        <p>In this example all players decide to donate all of their points to the public fund. This means there are <strong>40</strong> points in the public pot which is <strong>over the threshold</strong>. This will double to <strong>80</strong> and be split amongst all players. Therefore, all players finish the round with <strong>20</strong> points each.</p>
+        <p>In the animation below, there are three different scenarios displayed. The numbers on the left are the number of units each participant decided to donate and the numbers on the right are the total units that they earned from that round. Remember, anything you choose <strong>not</strong> to donate is automatically added to your rolling total.</p>
+        
+        <p>Also remember that unless the total in the pot is equal to or greater than <strong>10 units</strong>, then nobody will earn anything from that round. This is shown in the third case on the animation. Therefore, if nobody donates any lab money, then nobody earns any points from that round.</p>
 
-<img src='/static/images/SD-all-cop.png/' width="600" height="400" class="text-center">
+<img src='/static/gif/SD.gif/' width="750" height="550" class="text-center">
 
-	<p>Note that in this case, all players ended up with the same points and all with more points than they had at the start.</p> 
-	<p>When you are ready to proceed, click the button below.</p> 
+	<p>When you are ready to advance to the next instruction, click the button below.</p> 
     
         <hr>
     </div>
@@ -46,7 +46,7 @@
       <div id="next2" class="row" style="display:none;">
         <div class="col-10"></div>
         <div class="col-2">
-          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_instructions - 3');">Next</button>
+          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('instructions/pgg_condition_check');">Next</button>
         </div>
     </div>    
 
@@ -56,7 +56,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="readingLabel">Are you still reading?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="ping_server(); counter=50; start_modal_timeout(counter)">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="ping_server(); afkounter=60; clearTimeout(modal_timeout); start_modal_timeout(afkounter)">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -64,7 +64,7 @@
         <p>To keep your place in the experiment, please click below</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="ping_server(); counter=50; start_modal_timeout(counter);">Yes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="ping_server(); afkounter=60; clearTimeout(modal_timeout); start_modal_timeout(afkounter);">Yes</button>
       </div>
     </div>
   </div>
@@ -75,15 +75,16 @@
     <script>
       page_check();
       var modal = document.getElementById('reading')
-        var counter = 50
-        start_modal_timeout(counter) // Starts the modal timer
+        var afkounter = 60
+        start_modal_timeout(afkounter) // Starts the modal timer
         window.onclick = function(event) {
         //alert(event.target)
             if (event.target == modal) {
+               clearTimeout(modal_timeout);
                modal.style.display = "none";
                ping_server();
-               counter = 50
-               start_modal_timeout(counter)
+               afkounter= 60
+               start_modal_timeout(afkounter)
             } 
         }      
     </script>

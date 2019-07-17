@@ -79,13 +79,46 @@
     </div>
 </body>
 
+<!-- Modal -->
+<div class="modal fade" id="reading" tabindex="-1" role="dialog" aria-labelledby="readingLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="readingLabel">Are you still reading?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="ping_server(); afkounter=60; clearTimeout(modal_timeout); start_modal_timeout(afkounter)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>To keep your place in the experiment, please click below</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="ping_server(); afkounter=60; clearTimeout(modal_timeout); start_modal_timeout(afkounter);">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </html>
 {% endblock %}
 {% block scripts %}
     <script>
 $(document).ready(function() {
 save_pog();
-}); 
+});
+    var modal = document.getElementById('reading')
+        var afkounter = 60
+        start_modal_timeout(afkounter) // Starts the modal timer
+        window.onclick = function(event) {
+        //alert(event.target)
+            if (event.target == modal) {
+               clearTimeout(modal_timeout);
+               modal.style.display = "none";
+               ping_server();
+               afkounter = 60
+               start_modal_timeout(afkounter)
+            } 
+        }     
     </script>
 {% endblock %}
 
