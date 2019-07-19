@@ -45,7 +45,7 @@
             <h4>Please click below to advance to the consent form</h4>
             <br>
 			{% block consent_button %}
-    			<button type="button" class="btn btn-primary btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('consent_form');" style="float: right;">Next</button>
+    			<button type="button" class="btn btn-primary btn-lg" onClick="dallinger.allowExit(); window.location='/instructions/instruct-ready?hit_id={{ hit_id }}&assignment_id={{ assignment_id }}&worker_id={{ worker_id }}&mode={{ mode }}';" style="float: right;">Next</button>
 			{% endblock consent_button %}
 
 			{% block reject_button %}
