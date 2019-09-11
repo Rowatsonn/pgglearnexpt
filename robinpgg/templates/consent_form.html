@@ -26,10 +26,12 @@
 
 	<h5>5) I understand that the data collected in this study will be kept anonymously and securely but agree that it may be shared with other researchers and used as part of a later computer simulation.</h5>
 
+        <h5>Once you click "I agree" below you will automatically be added into the game</h5>
+
 {% endblock consent_text %}
 
 {% block consent_button %}
-    <button type="button" class="btn btn-primary btn-lg" id="consent" style="float: right;">I agree</button>
+    <button type="button" class="btn btn-primary btn-lg" onClick="dallinger.allowExit();dallinger.goToPage('instructions/quiz_instructions');" style="float: right;">I agree</button>
 {% endblock consent_button %}
 
 {% block reject_button %}

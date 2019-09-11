@@ -806,7 +806,7 @@ var hide_snow = function(){
   $("#payoff").hide();
   $("#donate").hide();
   hide_table();
-  if(round < 6){
+  if(round < 7){
     show_experiment();
   } else {
     dallinger.allowExit();

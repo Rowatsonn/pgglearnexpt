@@ -21,7 +21,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1 # Change this to the number of runs you want. 
-        self.initial_recruitment_size = 3 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
+        self.initial_recruitment_size = 1 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
         self.known_classes = {
             "PogBot": models.PogBot,
             "QuizSource": models.QuizSource,
@@ -38,7 +38,7 @@ class pgglearn(Experiment):
 
     def create_network(self):
         """Return a new network."""
-        return self.models.RNetwork(max_size=5) #Change this to change the sample size. N + 2
+        return self.models.RNetwork(max_size=3) #Change this to change the sample size. N + 2. N + 2 because the network already has PoG and quiz source
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
