@@ -29,10 +29,8 @@ var start_AFK_timeout = function(){
   
 // Timer for the popup of the AFK modal on the instructions pages. Timer resets on the HTML code.
 var start_modal_timeout = function(afkounter){
-  console.log("modalTimeout was called")
   modal_timeout = setTimeout(function(){
     afkounter = afkounter - 1
-    console.log("counter is " + afkounter)
     if (afkounter == 10) {
       jQuery.noConflict();
       $('#reading').modal('show');
@@ -144,8 +142,6 @@ var process_info = function(info) {
     if (number == 11) {
         console.log("number identified as 11")
         submit_response(Wwer1, human=false); // Creates an info just to signal Q is done. To not break the network again later.
-        dallinger.allowExit();
-        dallinger.goToPage('score');
     } else {
         display_question(); // This is another function call 
         }
@@ -250,16 +246,22 @@ var submit_response = function(value, human=true) {
         "human": human
       })
     }).done(function (resp) {
-		test = resp
-		console.log(resp)
-	    get_transmissions()
-	});  
+       if (number == 11) {
+        dallinger.allowExit();
+        dallinger.goToPage('score');
+        } else {
+        test = resp
+        console.log(resp)
+	get_transmissions()
+        }
+  });  
 }
 
 // Beginning of code for Scorescreen
 
 // Finds and saves the ID of the Pog as a cookie. Calls on score.html
 var save_pog = function(){
+  console.log("Called save pog")
   my_node_id = dallinger.storage.get("my_node");
   dallinger.get(
   "/node/" + my_node_id + "/neighbors",
@@ -269,6 +271,7 @@ var save_pog = function(){
   }
 ).done(function(resp){
     pog = resp.nodes
+    console.log("This is the pog")
     console.log(pog)
     if (pog.length > 0){
       pog.forEach(function(node){
@@ -302,7 +305,8 @@ var hide_blank = function() {
 
 // Checks for all neighbors of the pog with a to connection
 var check_neighbors = function(pog_id){
-    console.log(pog_id)
+    console.log("check_neighbors was called")
+    console.log("pog_id is" + pog_id)
     dallinger.get(
         "/node/" + pog_id + "/neighbors",
         {
@@ -311,6 +315,7 @@ var check_neighbors = function(pog_id){
     ).done(function (resp) {
         MYID = check_ID(); // Calls check ID for use in parse_neighbors.
         neighbors = resp.nodes;
+        console.log("These are the neighbors")
         console.log(neighbors)
         if (neighbors.length == 0) {
           setTimeout(function(){
@@ -324,6 +329,7 @@ var check_neighbors = function(pog_id){
 
 // After getting said neighbors. This interprets them.
 var parse_neighbors = function(neighbors) {
+    console.log("Parse neighbors was called")
     neighbors.forEach(function(node) {
     score = JSON.parse(node.property1).score_in_quiz;
     prestige = JSON.parse(node.property2).prestige;
@@ -347,6 +353,8 @@ var display_score = function(score , id){
   $("#Score").removeClass("hidden");
   $("#Score").html(score);
   $("#out-of").removeClass("hidden");
+  $("#myid").html("You are participant " + MYID)
+  $("#myid").show()
   $("#next").show()
 }
 
@@ -806,7 +814,7 @@ var hide_snow = function(){
   $("#payoff").hide();
   $("#donate").hide();
   hide_table();
-  if(round < 7){
+  if(round < 6){
     show_experiment();
   } else {
     dallinger.allowExit();

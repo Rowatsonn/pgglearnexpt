@@ -186,6 +186,7 @@ class pgglearn(Experiment):
 
             self.readvance_network(node)
 
+    # Readvances the network when somebody either drops out or abandones on Mturk. Calls automatically in the Mturk case and in stiller remover otherwise. 
     def readvance_network(self, node):
         if node.network.infos():
             if node.network.nodes(type=Source):
@@ -196,18 +197,18 @@ class pgglearn(Experiment):
                     most_recent_transmission = max(node.transmissions(), key=attrgetter("id"))
                     most_recent_transmission.fail()
                     self.info_post_request(most_recent_transmission.origin, most_recent_transmission.info)
-                except ValueError: # There are no transmissions, because they have gone AFK in the scorescreen. In which case, just removing the nodes is fine. 
+                except ValueError: # There are no transmissions, because they have gone AFK in the scorescreen. In which case, just removing the nodes is fine as the game is advanced by the participants
                     pass
                 
 
     def assignment_abandoned(self, participant):
-        networks = [n.network for n in participant.nodes()]
+        #networks = [n.network for n in participant.nodes()]
         self.fail_participant(participant)
-        for n in networks:
+        for n in participant.nodes(failed="all"):
             self.readvance_network(n)
 
     def assignment_returned(self, participant):
-        networks = [n.network for n in participant.nodes()]
+        #networks = [n.network for n in participant.nodes()]
         self.fail_participant(participant)
-        for n in networks:
+        for n in participant.nodes(failed="all"):
             self.readvance_network(n)

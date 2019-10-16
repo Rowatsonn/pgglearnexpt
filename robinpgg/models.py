@@ -262,7 +262,7 @@ class PogBot(Node):
         self.property1 = json.dumps({ 'pot': 0 })
         self.property2 = json.dumps({ 'round': 0 })
         # Set for whether the game is a snowdrift or not.
-        self.property3 = json.dumps({ 'snowdrift': 1 })
+        self.property3 = json.dumps({ 'snowdrift': 0 })
 
 
     @property
