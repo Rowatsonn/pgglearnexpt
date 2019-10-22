@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block body %}
+   <html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>Scorescreen</title>
+</head>
+
+<body>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-nowrap text-center">Results of Part One</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <h2 class="text-left">You Scored:</h2>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <h2 class="text-center" id="participant-score">0</h2>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <h2 class="text-left">/ 10</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <h2>You Were:</h2>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <h2 class="text-center" id="participant-place">0</h2>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                    <h2 class="text-left">/ 4</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center">See how you did!</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="info">Participant ID</th>
+                    <th class="info text-left">Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="ID-1">ID 1</td>
+                    <td id="Score-1">Score 1</td>
+                </tr>
+                <tr>
+                    <td id="ID-2">ID 2 </td>
+                    <td id="Score-2">Score 2 </td>
+                </tr>
+                <tr>
+                    <td id="ID-3">ID 3</td>
+                    <td id="Score-3">Score 3 </td>
+                </tr>
+                <tr>
+                    <td id="ID-4">ID 4 </td>
+                    <td id="Score-4">Score 4</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-sm-4 col-sm-offset-10 col-xs-offset-8"><button class="btn btn-success btn-lg text-right" type="button" onclick="dallinger.allowExit();dallinger.goToPage('instructions/pgg_instructions - 1');">Next</button></div>
+    </div>
+</body>
+
+</html>
+{% endblock %}
+{% block scripts %}
+    <script>
+    </script>
+{% endblock %}
+

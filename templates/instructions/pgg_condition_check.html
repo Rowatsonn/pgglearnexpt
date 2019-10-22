@@ -1,0 +1,173 @@
+{% extends "layout.html" %}
+
+{% block body %}
+     <div id="afkModal" class="modal">
+        <div class="modal-body text-center" style="display:none;">
+          <h1>Are you still reading?</h1>
+             <button type="button" class="btn btn-success btn-lg" onClick="ping_server()">Yes</button>
+        </div>
+    </div>
+    <div id="PD" class="main_div text-center">
+        <h1>Part Two</h1>
+
+
+        <p id="BB" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. However, you will not be able to see how much any other participant chose to donate.</p>
+
+        <p id="prestige" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You will also see how much the participant who scored highest in the quiz chose to donate that round.<p>
+
+        <p id="conform" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You will also see what the average donation was during that round.</p>
+
+       <p id="payoff" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You will also see how much the participant who currently has the most points chose to donate in that round.</p> 
+
+      <p id="full" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You will also be shown a table like the one below. On it, you can see how much each participant chose to donate that round. On the table, the participant who <strong>scored the highest in the quiz</strong> will be labelled with ***stars*** next to their name. The participant who <strong>currently has the most points in the game</strong> will be labelled next to their donation.</p>
+
+      <p id="extra" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You will also be shown a table like the one below. On it, you can see how much each participant chose to donate that round and their <strong>current total score</strong>. On the table, the participant who <strong>scored the highest in the quiz</strong> will be labelled with ***stars*** next to their name. The participant who <strong>currently has the most points in the game</strong> will be labelled next to their donation.</p>
+
+      <p id="regular" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You will also be shown a table like the one below. On it, you can see how much each participant chose to donate that round.</p>
+
+      <p id="choose" style="display:none;">During the game, after each round you will receieve feedback on how many points you have scored. You may also select below to view information regarding the behaviour of some other participants in the game. You may select from the highest scoring participant from the quiz, the average donation after each round or the donation of the highest earner in the game after each round. If you choose to do so, your final score in the game will be divided by 10, so please choose carefully. If you do <strong>not</strong> wish to view any extra information, please select none. </p>
+
+      <div class="table table-bordered">
+      <table class="table" id="fullt" style="display:none">
+        <thead>
+          <tr>
+            <th>Participant ID</th>
+            <th>Donation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="row1">
+            <td id="id1">1</td>
+            <td id="donation1">Round Donation</td>
+          </tr>
+          <tr id="row2">
+            <td id="id2">***2***</td>
+            <td id="donation2">Round Donation</td>
+          </tr>
+          <tr id="row3">
+            <td id="id3">3</td>
+            <td id="donation3">Round Donation (This participant currently has the highest score)</td>
+          </tr>
+          <tr id="row4">
+            <td id="id4">4</td>
+            <td id="donation4">Round Donation</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table table-bordered">
+      <table class="table" id="extrat" style="display:none">
+        <thead>
+          <tr>
+            <th>Participant ID</th>
+            <th>Donation</th>
+            <th>Total Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="row1">
+            <td id="id1">1</td>
+            <td id="donation1">Round Donation</td>
+            <td>Participant total score</td>
+          </tr>
+          <tr id="row2">
+            <td id="id2">***2***</td>
+            <td id="donation2">Round Donation</td>
+            <td>Participant total score</td>            
+          </tr>
+          <tr id="row3">
+            <td id="id3">3</td>
+            <td id="donation3">Round Donation (This participant currently has the highest score)</td>
+            <td>Participant total score</td>
+          </tr>
+          <tr id="row4">
+            <td id="id4">4</td>
+            <td id="donation4">Round Donation</td>
+            <td>Participant total score</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table table-bordered">
+      <table class="table" id="regulart" style="display:none">
+        <thead>
+          <tr>
+            <th>Participant ID</th>
+            <th>Donation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="row1">
+            <td id="id1">1</td>
+            <td id="donation1">Round Donation</td>
+          </tr>
+          <tr id="row2">
+            <td id="id2">2</td>
+            <td id="donation2">Round Donation</td>
+          </tr>
+          <tr id="row3">
+            <td id="id3">3</td>
+            <td id="donation3">Round Donation</td>
+          </tr>
+          <tr id="row4">
+            <td id="id4">4</td>
+            <td id="donation4">Round Donation</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>   
+
+      <p>When you are ready to begin the experiment, click the button below.</p> 
+   </div>
+   <div>
+     
+    <div>
+      <div id="next" class="row">
+        <div class="col-10"></div>
+        <div class="col-2">
+          <button type="button" class="btn btn-success btn-lg" onClick="dallinger.allowExit(); dallinger.goToPage('PGG');">I'm ready</button>
+        </div>
+    </div>
+
+<!-- Modal -->
+<div class="modal fade" id="reading" tabindex="-1" role="dialog" aria-labelledby="readingLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="readingLabel">Are you still reading?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="ping_server(); clearTimeout(modal_timeout); afkounter=60; start_modal_timeout(afkounter)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>To keep your place in the experiment, please click below</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="ping_server(); afkounter=60; clearTimeout(modal_timeout); start_modal_timeout(afkounter);">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+      final_page();
+      var modal = document.getElementById('reading')
+        var afkounter = 60
+        start_modal_timeout(afkounter) // Starts the modal timer
+        window.onclick = function(event) {
+        //alert(event.target)
+            if (event.target == modal) {
+               clearTimeout(modal_timeout);
+               modal.style.display = "none";
+               ping_server();
+               afkounter = 60
+               start_modal_timeout(afkounter)
+            } 
+        }      
+    </script>
+{% endblock %}
+

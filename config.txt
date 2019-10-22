@@ -1,0 +1,30 @@
+[Experiment]
+mode = sandbox
+auto_recruit = false
+
+[MTurk]
+title = Evolution of Social Behaviour
+description = Investigating the evolution of social behaviour
+keywords = Psychology
+base_payment = 1.75
+lifetime = 24
+duration = 1.0
+contact_email_on_error = robin.o.watson@durham.ac.uk
+browser_exclude_rule = MSIE, mobile, tablet
+us_only = false
+approve_requirement = 95
+group_name = 
+assign_qualifications = false 
+qualification_blacklist = 
+
+[Database]
+database_url = postgresql://postgres@localhost/dallinger
+database_size = standard-0
+
+[Server]
+dyno_type = performance-m
+num_dynos_web = 2
+num_dynos_worker = 1
+host = 0.0.0.0
+clock_on = true
+logfile = -

@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">   
+</head>
+{% endblock %}
+
+{% block title %}
+    Trivia
+{% endblock %}
+
+{% block body %}
+<body>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center">Part One</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-8 col-xs-9">
+                    <h2 class="text-center" id="question">Waiting for other participants to join</h2>
+                </div>
+                <div class="col-md-3 col-sm-4 col-xs-1">
+                    <h2 class="text-center" id="countdown" style="font-size: 30px;">...</h2>
+                </div>
+            </div>
+            <div class="row">
+               <h2 style="display:none" id="long_time">Sorry that you are still waiting. The other participants should be ready shortly. If somebody has left, the study will advance automatically. Please do not close this window. Thank you for your patience.</h2>
+            </div>
+            <div class="row">
+               <div class="col-md-3 col-sm-3 col-xs-3">
+                  <h2 class="text-center" id="joinedpps">0</h2>
+               </div>
+               <div class="col-md-6 col-sm-6 col-xs-6">
+                  <h2 class="text-center" id="slash">/</h2>
+               </div>
+               <div class="col-md-3 col-sm-3 col-xs-3">
+                  <h2 class="text-center" id="totalpps">0</h2>
+               </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="row">                
+                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-a').html());disable_answer_buttons();" id="submit-a" style="background-color: rgb(250,128,114);width: 281px;height: 126px;color: Black;">A</button></div>
+                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-b').html());disable_answer_buttons();" id="submit-b" style="background-color: rgb(115,194,251);width: 281px;height: 126px;color: Black;">B</button></div>
+                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-c').html());disable_answer_buttons();" id="submit-c" style="background-color: rgb(152,251,152);width: 281px;height: 126px;color: Black;">C</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+       <div class="col-md-3 col-sm-3 col-xs-3">
+        <button id="play-alert" type="button" class="btn btn-primary" onClick="playSound();">Play Alert</button>
+        <button id="toggle-alert" type="button" class="btn btn-primary" onClick="toggleSound();">Disable alert</button> 
+       </div>
+       <div class="col-md-6 col-sm-6 col-xs-6">
+          <p> Alert is currently <span id="alert-text">enabled</span></p>
+       </div>
+       <div class="col-md-3 col-sm-3 col-xs-3">
+          <audio class="audios" id="alert" controls preload="none" style="display: none"> 
+          <source src="static/sounds/alert_long.wav" type="audio/mpeg">
+          </audio>
+       </div>
+    </div>
+    <div class="row">
+       <div class="col-md-12">
+          <p id="alert-alert">Once the group is full, the experiment will start and an alert will play to let you know. When you hear this alert, you should return straight away, as inactive participants are removed after 60 seconds. This alert will also play each time a new question is displayed. You can use the buttons above to hear what the alert sounds like and disable it if you wish<p> 
+</body>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        create_agent();
+    </script>
+{% endblock %}
+
