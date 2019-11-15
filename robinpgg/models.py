@@ -38,7 +38,7 @@ class QuizSource(Source):
                 'Rwer': 'Animal',
             }),
             json.dumps({
-                'question': 'What is the next number in this sequence: 1,4,9,16,25,36,...',
+                'question': 'What is the next number in this sequence: 1,4,9,16,25,36...',
                 'number': 3,
                 'Wwer1': '42',
                 'Wwer2': '45',
@@ -73,7 +73,7 @@ class QuizSource(Source):
                 'Rwer': '$0.05',
             }),
             json.dumps({
-                'question': 'In Which continent is Mt. Everest located?',
+                'question': 'In which continent is Mt. Everest located?',
                 'number': 8,
                 'Wwer1': 'Austrailia (Oceania)',
                 'Wwer2': 'Europe',
@@ -353,6 +353,8 @@ class RNetwork(Burst):
         source = self.nodes(type=QuizSource)
         for s in source:
             s.fail()
+            s.network.max_size -= 1 # Shrink the network to avoid someone turning up at the end and breaking the study.
+            s.network.calculate_full() # This will update the network to say whether it is full 
 
         nodes = self.nodes() # This wil connect all the nodes up, except to themselves.
         for n in nodes:

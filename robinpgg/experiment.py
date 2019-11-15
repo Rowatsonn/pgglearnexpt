@@ -20,8 +20,8 @@ class pgglearn(Experiment):
         super(pgglearn, self).__init__(session)
         from . import models 
         self.models = models
-        self.experiment_repeats = 1 # Change this to the number of runs you want. 
-        self.initial_recruitment_size = 1 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
+        self.experiment_repeats = 3 # Change this to the number of runs you want. 
+        self.initial_recruitment_size = 16 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
         self.known_classes = {
             "PogBot": models.PogBot,
             "QuizSource": models.QuizSource,
@@ -36,9 +36,19 @@ class pgglearn(Experiment):
                 self.models.QuizSource(network=net)
                 self.models.PogBot(network=net)
 
+    def get_network_for_participant(self, participant):
+        if participant.nodes(failed="all"):
+            return None
+
+        networks = self.networks(full=False)
+        if networks:
+            return min(networks, key=attrgetter("id"))
+        else:
+            return None
+
     def create_network(self):
         """Return a new network."""
-        return self.models.RNetwork(max_size=3) #Change this to change the sample size. N + 2. N + 2 because the network already has PoG and quiz source
+        return self.models.RNetwork(max_size=6) #Change this to change the sample size. N + 2. N + 2 because the network already has PoG and quiz source
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -70,8 +80,7 @@ class pgglearn(Experiment):
         """Calculate a participants bonus."""
         node = participant.nodes()[0]
         score = node.score_in_pgg
-        bonus = score * 0.02 # This can be changed to what you like, but right now every point in the game is worth 2 cents
-        self.log(str(bonus))
+        bonus = round(score * 0.025, 2) # This can be changed to what you like, but right now every point in the game is worth 2 cents
         return bonus
         
     def node_post_request(self, participant, node):

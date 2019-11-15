@@ -44,6 +44,30 @@ var start_modal_timeout = function(afkounter){
   }, 1000);
 }
 
+// This function plays the alert sound. NOTE that it has to be embedded on the page with the ID "alert" 
+var playSound = function() {
+  var sound = document.getElementById("alert")
+  sound.volume = 1.0;
+  var alert = dallinger.storage.get("sound");
+  if (alert) {
+    sound.play();
+  }
+}
+
+// This function toggles whether the alert sound plays or not
+var toggleSound = function() {
+  var alert = dallinger.storage.get("sound");
+  if (alert) {
+    dallinger.storage.set("sound", false); 
+    $("#toggle-alert").text("Enable alert");
+    $("#alert-text").text("disabled");
+  } else {
+    dallinger.storage.set("sound", true); 
+    $("#toggle-alert").text("Disable alert");
+    $("#alert-text").text("enabled");
+  }
+}
+  
 
 // Create the agent.
 var create_agent = function() {
@@ -57,6 +81,7 @@ var create_agent = function() {
     node = resp.node
     my_node_id = node.id;
     dallinger.storage.set("my_node" , my_node_id); // This is where we set the cookie for my node
+    dallinger.storage.set("sound" , true); // Sets the noise playing to true
     condition =  JSON.parse(node.property4).info_choice
     dallinger.storage.set("my_condition" , condition) // Set a cookie for the condition here RATHER than in condition check as before
     network_id = node.network_id // Gets the ID of the network for use in check_network
@@ -119,6 +144,8 @@ var check_network = function() {
 // Get the nodes info. resp is a generic term that servers use for a response from a browser. 
 var get_info = function(info_id) {
     trivia_started = 1 // Stops check_network from running any more
+    playSound();
+    $("#alert-alert").hide();
     $("#long_time").hide();
     $("#joinedpps").hide();
     $("#totalpps").hide();
@@ -194,7 +221,7 @@ var display_question = function() {
        }
  }; // End of the if else statement 
     enable_answer_buttons(); // Calls another two functions below
-    countdown = 5; // This can set the time they have to answer
+    countdown = 16; // This can set the time they have to answer
     start_answer_timeout();
 }; // End of the function
 
