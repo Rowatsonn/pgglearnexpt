@@ -221,7 +221,7 @@ var display_question = function() {
        }
  }; // End of the if else statement 
     enable_answer_buttons(); // Calls another two functions below
-    countdown = 5; // This can set the time they have to answer
+    countdown = 20; // This can set the time they have to answer
     start_answer_timeout();
 }; // End of the function
 
@@ -377,9 +377,9 @@ var display_score = function(score , id){
   $("#ID").removeClass("hidden");
   $("#ID").html(id);
   $("#other-win").show();
-  $("#Score").removeClass("hidden");
-  $("#Score").html(score);
-  $("#out-of").removeClass("hidden");
+  //$("#Score").show();
+  //$("#Score").html(score);
+  //$("#out-of").show();
   $("#myid").html("You are participant " + MYID)
   $("#myid").show()
   $("#next").show()
@@ -393,9 +393,9 @@ var display_score_you = function(score , id){
   $("#ID").removeClass("hidden");
   $("#ID").html(id);
   $("#you-win").show();
-  $("#Score").removeClass("hidden");
-  $("#Score").html(score);
-  $("#out-of").removeClass("hidden");
+  //$("#Score").show();
+  //$("#Score").html(score);
+  //$("#out-of").show();
   $("#next").show()
 }
 

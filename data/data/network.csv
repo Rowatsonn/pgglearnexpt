@@ -1,0 +1,4 @@
+id,creation_time,property1,property2,property3,property4,property5,failed,time_of_death,details,type,max_size,full,role
+1,2019-11-15 17:31:17.867317,"{""num_probes"": 4}",,,,,f,,{},Robin_Network,5,t,experiment
+2,2019-11-15 17:31:17.869534,"{""num_probes"": 4}",,,,,f,,{},Robin_Network,5,t,experiment
+3,2019-11-15 17:31:17.870881,"{""num_probes"": 3}",,,,,f,,{},Robin_Network,6,f,experiment

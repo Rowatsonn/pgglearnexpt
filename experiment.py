@@ -21,7 +21,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1 # Change this to the number of runs you want. 
-        self.initial_recruitment_size = 3 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
+        self.initial_recruitment_size = 4 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
         self.known_classes = {
             "PogBot": models.PogBot,
             "QuizSource": models.QuizSource,
@@ -36,9 +36,19 @@ class pgglearn(Experiment):
                 self.models.QuizSource(network=net)
                 self.models.PogBot(network=net)
 
+    def get_network_for_participant(self, participant):
+        if participant.nodes(failed="all"):
+            return None
+
+        networks = self.networks(full=False)
+        if networks:
+            return min(networks, key=attrgetter("id"))
+        else:
+            return None
+
     def create_network(self):
         """Return a new network."""
-        return self.models.RNetwork(max_size=5) #Change this to change the sample size. N + 2. N + 2 because the network already has PoG and quiz source
+        return self.models.RNetwork(max_size=6) #Change this to change the sample size. N + 2. N + 2 because the network already has PoG and quiz source
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -57,7 +67,7 @@ class pgglearn(Experiment):
         node.property4 = json.dumps({
             'leftovers' : 0,
             'donation' : 0,
-            'info_choice' : "full" # To manually set the social learning, change this. To either conformity / prestige / payoff / regular (a regular public goods game with a table of donations) / full (regular, plus the prestigious and winning node are labelled / extra (all the information of full + their overall scores) BB (Black box, although do type BB). See below to change from a snowdrift.
+            'info_choice' : "BB" # To manually set the social learning, change this. To either conformity / prestige / payoff / regular (a regular public goods game with a table of donations) / full (regular, plus the prestigious and winning node are labelled / extra (all the information of full + their overall scores) BB (Black box, although do type BB). See below to change to / from a snowdrift.
         })
         node.property5 = json.dumps({
             'prestige_list' : [],
@@ -70,8 +80,7 @@ class pgglearn(Experiment):
         """Calculate a participants bonus."""
         node = participant.nodes()[0]
         score = node.score_in_pgg
-        bonus = score * 0.02 # This can be changed to what you like, but right now every point in the game is worth 2 cents
-        self.log(str(bonus))
+        bonus = round(score * 0.025, 2) # This can be changed to what you like, but right now every point in the game is worth 0.025 cents
         return bonus
         
     def node_post_request(self, participant, node):
@@ -139,7 +148,7 @@ class pgglearn(Experiment):
                     node.network.rearrange_network()
 
     def score_node(self, node, infos):
-        correct_answers = ["Venus","Animal","49","Iodine","Russia","Younger","$0.05","Asia","East","The Comedy of Errors"]
+        correct_answers = ["Show prejudice to the larger nation","The students will stop talking to members of the opposite team and make friends with their own team","Decreases trust in people from other groups","Agree with the people who have guessed before him, even though he thinks they were wrong","A person with a high level of charisma","Generally, the group will go with the majority’s decision","Take on the attitudes and values of the group","What they know about the group the person comes from","People will work less hard than when working on their own","Show a certain amount of flexibility"]
         answers = [i.contents for i in infos]
         node.score_in_quiz = len([a for a in answers if a in correct_answers])
 

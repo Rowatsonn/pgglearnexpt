@@ -1,0 +1,159 @@
+id,creation_time,property1,property2,property3,property4,property5,failed,time_of_death,details,type,origin_id,network_id,contents
+2,2019-11-15 17:45:13.312026,"{""human"":true}",,,,,f,,{},info,7,1,Mercury
+3,2019-11-15 17:45:15.681478,"{""human"":true}",,,,,f,,{},info,11,1,Jupiter
+4,2019-11-15 17:45:17.144174,"{""human"":true}",,,,,f,,{},info,10,1,Venus
+5,2019-11-15 17:45:20.151794,"{""human"":true}",,,,,f,,{},info,9,1,Mercury
+7,2019-11-15 17:45:24.175744,"{""human"":true}",,,,,f,,{},info,11,1,Food
+8,2019-11-15 17:45:32.377777,"{""human"":true}",,,,,f,,{},info,7,1,Place
+9,2019-11-15 17:45:33.315128,"{""human"":true}",,,,,f,,{},info,9,1,Food
+10,2019-11-15 17:45:37.128961,"{""human"":false}",,,,,f,,{},info,10,1,Place
+12,2019-11-15 17:45:47.060948,"{""human"":true}",,,,,f,,{},info,9,1,49
+13,2019-11-15 17:45:47.896208,"{""human"":true}",,,,,f,,{},info,10,1,45
+14,2019-11-15 17:45:52.012105,"{""human"":true}",,,,,f,,{},info,11,1,45
+15,2019-11-15 17:45:53.320309,"{""human"":true}",,,,,f,,{},info,7,1,45
+17,2019-11-15 17:45:57.423429,"{""human"":true}",,,,,f,,{},info,7,1,Xenon
+18,2019-11-15 17:45:58.833681,"{""human"":true}",,,,,f,,{},info,10,1,Uranium
+19,2019-11-15 17:46:00.074058,"{""human"":true}",,,,,f,,{},info,11,1,Xenon
+20,2019-11-15 17:46:01.635453,"{""human"":true}",,,,,f,,{},info,9,1,Xenon
+22,2019-11-15 17:46:07.666798,"{""human"":true}",,,,,f,,{},info,11,1,Russia
+23,2019-11-15 17:46:07.710688,"{""human"":true}",,,,,f,,{},info,10,1,Russia
+24,2019-11-15 17:46:08.321578,"{""human"":true}",,,,,f,,{},info,9,1,India
+25,2019-11-15 17:46:08.864273,"{""human"":true}",,,,,f,,{},info,7,1,Russia
+27,2019-11-15 17:46:19.906618,"{""human"":true}",,,,,f,,{},info,10,1,Not enough information
+28,2019-11-15 17:46:21.661782,"{""human"":true}",,,,,f,,{},info,7,1,Younger
+29,2019-11-15 17:46:23.146426,"{""human"":true}",,,,,f,,{},info,9,1,Not enough information
+30,2019-11-15 17:46:24.200889,"{""human"":true}",,,,,f,,{},info,11,1,Younger
+32,2019-11-15 17:46:28.400465,"{""human"":true}",,,,,f,,{},info,9,1,$0.05
+33,2019-11-15 17:46:28.454244,"{""human"":true}",,,,,f,,{},info,7,1,$0.10
+34,2019-11-15 17:46:28.904823,"{""human"":true}",,,,,f,,{},info,10,1,$0.10
+35,2019-11-15 17:46:30.823607,"{""human"":true}",,,,,f,,{},info,11,1,$0.10
+37,2019-11-15 17:46:35.023513,"{""human"":true}",,,,,f,,{},info,9,1,Asia
+38,2019-11-15 17:46:35.234733,"{""human"":true}",,,,,f,,{},info,10,1,Asia
+39,2019-11-15 17:46:40.489202,"{""human"":true}",,,,,f,,{},info,11,1,Europe
+40,2019-11-15 17:46:42.896331,"{""human"":true}",,,,,f,,{},info,7,1,Asia
+42,2019-11-15 17:46:50.785241,"{""human"":true}",,,,,f,,{},info,10,1,East
+43,2019-11-15 17:46:56.89909,"{""human"":true}",,,,,f,,{},info,9,1,North
+44,2019-11-15 17:46:58.114458,"{""human"":true}",,,,,f,,{},info,11,1,West
+45,2019-11-15 17:47:03.444229,"{""human"":false}",,,,,f,,{},info,7,1,West
+47,2019-11-15 17:47:08.083211,"{""human"":true}",,,,,f,,{},info,7,1,The Comedy of Errors
+48,2019-11-15 17:47:10.550037,"{""human"":true}",,,,,f,,{},info,10,1,Romeo and Juiliet
+49,2019-11-15 17:47:12.191862,"{""human"":true}",,,,,f,,{},info,9,1,Macbeth
+50,2019-11-15 17:47:12.884497,"{""human"":true}",,,,,f,,{},info,11,1,Romeo and Juiliet
+52,2019-11-15 17:47:13.451384,"{""human"":false}",,,,,f,,{},info,11,1,Quiz Finished
+53,2019-11-15 17:47:14.169718,"{""human"":false}",,,,,f,,{},info,7,1,Quiz Finished
+54,2019-11-15 17:47:14.250723,"{""human"":false}",,,,,f,,{},info,10,1,Quiz Finished
+55,2019-11-15 17:47:14.537498,"{""human"":false}",,,,,f,,{},info,9,1,Quiz Finished
+1,2019-11-15 17:45:05.905542,,,,,,t,2019-11-15 17:47:14.691885,{},info,1,1,"{""question"": ""What is the hottest planet in the solar system?"", ""number"": 1, ""Wwer1"": ""Mercury"", ""Wwer2"": ""Jupiter"", ""Rwer"": ""Venus""}"
+6,2019-11-15 17:45:20.211164,,,,,,t,2019-11-15 17:47:14.70765,{},info,1,1,"{""question"": ""Rearrange the anagram \""KENOMY\"" and select the category to which it fits"", ""number"": 2, ""Wwer1"": ""Place"", ""Wwer2"": ""Food"", ""Rwer"": ""Animal""}"
+11,2019-11-15 17:45:37.187162,,,,,,t,2019-11-15 17:47:14.714615,{},info,1,1,"{""question"": ""What is the next number in this sequence: 1,4,9,16,25,36..."", ""number"": 3, ""Wwer1"": ""42"", ""Wwer2"": ""45"", ""Rwer"": ""49""}"
+56,2019-11-15 17:48:18.581944,"{""human"":true}",,,,,f,,{},info,9,1,7
+59,2019-11-15 17:49:39.35105,"{""human"":true}",,,,,f,,{},info,11,1,5
+60,2019-11-15 17:49:51.619218,"{""human"":true}",,,,,f,,{},info,7,1,0
+61,2019-11-15 17:49:52.291158,"{""human"":true}",,,,,f,,{},info,10,1,0
+62,2019-11-15 17:49:54.787038,"{""human"":true}",,,,,f,,{},info,11,1,8
+63,2019-11-15 17:50:00.043383,"{""human"":true}",,,,,f,,{},info,9,1,7
+65,2019-11-15 17:50:13.225201,"{""human"":true}",,,,,f,,{},info,10,1,0
+68,2019-11-15 17:50:29.467665,"{""human"":true}",,,,,f,,{},info,10,1,0
+69,2019-11-15 17:50:29.499255,"{""human"":true}",,,,,f,,{},info,7,1,0
+74,2019-11-15 17:50:50.16745,"{""human"":true}",,,,,f,,{},info,11,1,2
+75,2019-11-15 17:50:53.173846,"{""human"":true}",,,,,f,,{},info,9,1,6
+76,2019-11-15 17:51:06.342971,"{""human"":true}",,,,,f,,{},info,7,1,0
+116,2019-11-15 18:03:35.325246,"{""human"":true}",,,,,f,,{},info,12,2,Asia
+117,2019-11-15 18:03:36.921504,"{""human"":true}",,,,,f,,{},info,14,2,Asia
+118,2019-11-15 18:03:41.631019,"{""human"":true}",,,,,f,,{},info,15,2,Europe
+119,2019-11-15 18:03:42.073255,"{""human"":true}",,,,,f,,{},info,13,2,Asia
+121,2019-11-15 18:03:45.680596,"{""human"":true}",,,,,f,,{},info,13,2,East
+122,2019-11-15 18:03:51.264242,"{""human"":true}",,,,,f,,{},info,14,2,East
+123,2019-11-15 18:03:53.914721,"{""human"":true}",,,,,f,,{},info,15,2,West
+124,2019-11-15 18:03:55.548594,"{""human"":true}",,,,,f,,{},info,12,2,West
+126,2019-11-15 18:04:00.396011,"{""human"":true}",,,,,f,,{},info,12,2,The Comedy of Errors
+127,2019-11-15 18:04:00.566355,"{""human"":true}",,,,,f,,{},info,14,2,Romeo and Juiliet
+139,2019-11-15 18:06:09.434135,"{""human"":true}",,,,,f,,{},info,15,2,10
+141,2019-11-15 18:06:11.305453,"{""human"":true}",,,,,f,,{},info,13,2,10
+142,2019-11-15 18:06:12.359686,"{""human"":true}",,,,,f,,{},info,14,2,2
+144,2019-11-15 18:06:25.881993,"{""human"":true}",,,,,f,,{},info,14,2,0
+145,2019-11-15 18:06:26.529059,"{""human"":true}",,,,,f,,{},info,12,2,8
+16,2019-11-15 17:45:53.379677,,,,,,t,2019-11-15 17:47:14.722698,{},info,1,1,"{""question"": ""Which of these chemical elements is a Halogen?"", ""number"": 4, ""Wwer1"": ""Xenon"", ""Wwer2"": ""Uranium"", ""Rwer"": ""Iodine""}"
+21,2019-11-15 17:46:01.695751,,,,,,t,2019-11-15 17:47:14.733319,{},info,1,1,"{""question"": ""Which of these countries has the SMALLEST population?"", ""number"": 5, ""Wwer1"": ""India"", ""Wwer2"": ""United States of America"", ""Rwer"": ""Russia""}"
+26,2019-11-15 17:46:08.922697,,,,,,t,2019-11-15 17:47:14.741684,{},info,1,1,"{""question"": ""If Tanya is older than Eric and Cliff is older than Tanya. Then is Eric older or younger than Chris?"", ""number"": 6, ""Wwer1"": ""Older"", ""Wwer2"": ""Not enough information"", ""Rwer"": ""Younger""}"
+31,2019-11-15 17:46:24.259495,,,,,,t,2019-11-15 17:47:14.749868,{},info,1,1,"{""question"": ""A bat and a ball cost $1.10 in total. The bat cost $1.00 more than the ball. How much did the ball cost?"", ""number"": 7, ""Wwer1"": ""$0.01"", ""Wwer2"": ""$0.10"", ""Rwer"": ""$0.05""}"
+36,2019-11-15 17:46:30.886268,,,,,,t,2019-11-15 17:47:14.757841,{},info,1,1,"{""question"": ""In which continent is Mt. Everest located?"", ""number"": 8, ""Wwer1"": ""Austrailia (Oceania)"", ""Wwer2"": ""Europe"", ""Rwer"": ""Asia""}"
+41,2019-11-15 17:46:42.95607,,,,,,t,2019-11-15 17:47:14.766161,{},info,1,1,"{""question"": ""I am facing West. If I turn 90 degrees right, 180 degrees left then 90 degrees right. Which direction am I facing?"", ""number"": 9, ""Wwer1"": ""West"", ""Wwer2"": ""North"", ""Rwer"": ""East""}"
+46,2019-11-15 17:47:03.506782,,,,,,t,2019-11-15 17:47:14.772887,{},info,1,1,"{""question"": ""Which of these Shakespeare plays was written FIRST?"", ""number"": 10, ""Wwer1"": ""Macbeth"", ""Wwer2"": ""Romeo and Juiliet"", ""Rwer"": ""The Comedy of Errors""}"
+51,2019-11-15 17:47:12.953477,,,,,,t,2019-11-15 17:47:14.780592,{},info,1,1,"{""question"": ""This is a dummy question"", ""number"": 11, ""Wwer1"": ""Quiz Finished"", ""Wwer2"": ""Quiz Finished"", ""Rwer"": ""Quiz Finished""}"
+57,2019-11-15 17:48:31.252372,"{""human"":true}",,,,,f,,{},info,7,1,0
+58,2019-11-15 17:48:38.11266,"{""human"":true}",,,,,f,,{},info,10,1,0
+64,2019-11-15 17:50:12.138256,"{""human"":true}",,,,,f,,{},info,7,1,0
+66,2019-11-15 17:50:14.136028,"{""human"":true}",,,,,f,,{},info,11,1,4
+67,2019-11-15 17:50:17.244121,"{""human"":true}",,,,,f,,{},info,9,1,9
+70,2019-11-15 17:50:30.98282,"{""human"":true}",,,,,f,,{},info,11,1,0
+71,2019-11-15 17:50:35.814961,"{""human"":true}",,,,,f,,{},info,9,1,10
+72,2019-11-15 17:50:47.613951,"{""human"":true}",,,,,f,,{},info,10,1,0
+73,2019-11-15 17:50:47.71398,"{""human"":true}",,,,,f,,{},info,7,1,0
+77,2019-11-15 17:51:06.429351,"{""human"":true}",,,,,f,,{},info,10,1,0
+78,2019-11-15 17:51:06.821319,"{""human"":true}",,,,,f,,{},info,9,1,8
+79,2019-11-15 17:51:06.946753,"{""human"":true}",,,,,f,,{},info,11,1,0
+81,2019-11-15 18:02:05.113291,"{""human"":true}",,,,,f,,{},info,15,2,Venus
+82,2019-11-15 18:02:07.882817,"{""human"":true}",,,,,f,,{},info,13,2,Venus
+83,2019-11-15 18:02:08.011995,"{""human"":true}",,,,,f,,{},info,14,2,Venus
+84,2019-11-15 18:02:13.662985,"{""human"":false}",,,,,f,,{},info,12,2,Mercury
+86,2019-11-15 18:02:23.58045,"{""human"":true}",,,,,f,,{},info,14,2,Food
+87,2019-11-15 18:02:25.920171,"{""human"":true}",,,,,f,,{},info,15,2,Animal
+88,2019-11-15 18:02:30.17297,"{""human"":false}",,,,,f,,{},info,12,2,Place
+89,2019-11-15 18:02:30.554353,"{""human"":true}",,,,,f,,{},info,13,2,Food
+91,2019-11-15 18:02:38.986916,"{""human"":true}",,,,,f,,{},info,13,2,42
+92,2019-11-15 18:02:39.900955,"{""human"":true}",,,,,f,,{},info,12,2,49
+93,2019-11-15 18:02:44.10563,"{""human"":true}",,,,,f,,{},info,14,2,42
+94,2019-11-15 18:02:46.106136,"{""human"":true}",,,,,f,,{},info,15,2,42
+96,2019-11-15 18:02:53.313862,"{""human"":true}",,,,,f,,{},info,15,2,Xenon
+97,2019-11-15 18:02:53.440454,"{""human"":true}",,,,,f,,{},info,12,2,Xenon
+98,2019-11-15 18:02:54.156854,"{""human"":true}",,,,,f,,{},info,14,2,Xenon
+99,2019-11-15 18:02:56.364551,"{""human"":true}",,,,,f,,{},info,13,2,Uranium
+101,2019-11-15 18:03:03.303677,"{""human"":true}",,,,,f,,{},info,13,2,India
+102,2019-11-15 18:03:03.622017,"{""human"":true}",,,,,f,,{},info,14,2,United States of America
+103,2019-11-15 18:03:04.571341,"{""human"":true}",,,,,f,,{},info,12,2,United States of America
+104,2019-11-15 18:03:04.717898,"{""human"":true}",,,,,f,,{},info,15,2,Russia
+106,2019-11-15 18:03:18.509326,"{""human"":true}",,,,,f,,{},info,13,2,Older
+107,2019-11-15 18:03:19.776792,"{""human"":true}",,,,,f,,{},info,12,2,Younger
+108,2019-11-15 18:03:21.300671,"{""human"":false}",,,,,f,,{},info,15,2,Older
+109,2019-11-15 18:03:22.684939,"{""human"":false}",,,,,f,,{},info,14,2,Older
+111,2019-11-15 18:03:27.611252,"{""human"":true}",,,,,f,,{},info,14,2,$0.10
+112,2019-11-15 18:03:29.437127,"{""human"":true}",,,,,f,,{},info,13,2,$0.05
+113,2019-11-15 18:03:30.708349,"{""human"":true}",,,,,f,,{},info,15,2,$0.05
+114,2019-11-15 18:03:31.985727,"{""human"":true}",,,,,f,,{},info,12,2,$0.05
+128,2019-11-15 18:04:02.156583,"{""human"":true}",,,,,f,,{},info,13,2,Romeo and Juiliet
+129,2019-11-15 18:04:05.604059,"{""human"":true}",,,,,f,,{},info,15,2,Macbeth
+134,2019-11-15 18:04:07.39091,"{""human"":false}",,,,,f,,{},info,13,2,Quiz Finished
+120,2019-11-15 18:03:42.133615,,,,,,t,2019-11-15 18:04:07.528696,{},info,3,2,"{""question"": ""I am facing West. If I turn 90 degrees right, 180 degrees left then 90 degrees right. Which direction am I facing?"", ""number"": 9, ""Wwer1"": ""West"", ""Wwer2"": ""North"", ""Rwer"": ""East""}"
+125,2019-11-15 18:03:55.610298,,,,,,t,2019-11-15 18:04:07.535533,{},info,3,2,"{""question"": ""Which of these Shakespeare plays was written FIRST?"", ""number"": 10, ""Wwer1"": ""Macbeth"", ""Wwer2"": ""Romeo and Juiliet"", ""Rwer"": ""The Comedy of Errors""}"
+80,2019-11-15 18:01:56.305212,,,,,,t,2019-11-15 18:04:07.542426,{},info,3,2,"{""question"": ""What is the hottest planet in the solar system?"", ""number"": 1, ""Wwer1"": ""Mercury"", ""Wwer2"": ""Jupiter"", ""Rwer"": ""Venus""}"
+85,2019-11-15 18:02:13.718455,,,,,,t,2019-11-15 18:04:07.549074,{},info,3,2,"{""question"": ""Rearrange the anagram \""KENOMY\"" and select the category to which it fits"", ""number"": 2, ""Wwer1"": ""Place"", ""Wwer2"": ""Food"", ""Rwer"": ""Animal""}"
+90,2019-11-15 18:02:30.611447,,,,,,t,2019-11-15 18:04:07.556924,{},info,3,2,"{""question"": ""What is the next number in this sequence: 1,4,9,16,25,36..."", ""number"": 3, ""Wwer1"": ""42"", ""Wwer2"": ""45"", ""Rwer"": ""49""}"
+95,2019-11-15 18:02:46.164331,,,,,,t,2019-11-15 18:04:07.563985,{},info,3,2,"{""question"": ""Which of these chemical elements is a Halogen?"", ""number"": 4, ""Wwer1"": ""Xenon"", ""Wwer2"": ""Uranium"", ""Rwer"": ""Iodine""}"
+100,2019-11-15 18:02:56.423409,,,,,,t,2019-11-15 18:04:07.570992,{},info,3,2,"{""question"": ""Which of these countries has the SMALLEST population?"", ""number"": 5, ""Wwer1"": ""India"", ""Wwer2"": ""United States of America"", ""Rwer"": ""Russia""}"
+105,2019-11-15 18:03:04.778085,,,,,,t,2019-11-15 18:04:07.577606,{},info,3,2,"{""question"": ""If Tanya is older than Eric and Cliff is older than Tanya. Then is Eric older or younger than Chris?"", ""number"": 6, ""Wwer1"": ""Older"", ""Wwer2"": ""Not enough information"", ""Rwer"": ""Younger""}"
+110,2019-11-15 18:03:22.744839,,,,,,t,2019-11-15 18:04:07.584229,{},info,3,2,"{""question"": ""A bat and a ball cost $1.10 in total. The bat cost $1.00 more than the ball. How much did the ball cost?"", ""number"": 7, ""Wwer1"": ""$0.01"", ""Wwer2"": ""$0.10"", ""Rwer"": ""$0.05""}"
+115,2019-11-15 18:03:32.056008,,,,,,t,2019-11-15 18:04:07.591659,{},info,3,2,"{""question"": ""In which continent is Mt. Everest located?"", ""number"": 8, ""Wwer1"": ""Austrailia (Oceania)"", ""Wwer2"": ""Europe"", ""Rwer"": ""Asia""}"
+130,2019-11-15 18:04:05.667605,,,,,,t,2019-11-15 18:04:07.598288,{},info,3,2,"{""question"": ""This is a dummy question"", ""number"": 11, ""Wwer1"": ""Quiz Finished"", ""Wwer2"": ""Quiz Finished"", ""Rwer"": ""Quiz Finished""}"
+138,2019-11-15 18:05:56.95956,"{""human"":true}",,,,,f,,{},info,14,2,1
+143,2019-11-15 18:06:24.05648,"{""human"":true}",,,,,f,,{},info,15,2,10
+131,2019-11-15 18:04:06.095855,"{""human"":false}",,,,,f,,{},info,15,2,Quiz Finished
+135,2019-11-15 18:04:57.865436,"{""human"":true}",,,,,f,,{},info,13,2,5
+132,2019-11-15 18:04:06.33169,"{""human"":false}",,,,,f,,{},info,12,2,Quiz Finished
+133,2019-11-15 18:04:06.632207,"{""human"":false}",,,,,f,,{},info,14,2,Quiz Finished
+136,2019-11-15 18:05:33.313401,"{""human"":true}",,,,,f,,{},info,12,2,5
+137,2019-11-15 18:05:40.141865,"{""human"":true}",,,,,f,,{},info,15,2,10
+140,2019-11-15 18:06:11.147569,"{""human"":true}",,,,,f,,{},info,12,2,5
+146,2019-11-15 18:06:27.432393,"{""human"":true}",,,,,f,,{},info,13,2,1
+147,2019-11-15 18:06:39.622195,"{""human"":true}",,,,,f,,{},info,15,2,0
+148,2019-11-15 18:06:40.411644,"{""human"":true}",,,,,f,,{},info,12,2,7
+149,2019-11-15 18:06:40.985376,"{""human"":true}",,,,,f,,{},info,13,2,0
+150,2019-11-15 18:06:41.664689,"{""human"":true}",,,,,f,,{},info,14,2,1
+151,2019-11-15 18:06:53.535301,"{""human"":true}",,,,,f,,{},info,15,2,0
+152,2019-11-15 18:06:54.158255,"{""human"":true}",,,,,f,,{},info,13,2,0
+153,2019-11-15 18:06:54.734655,"{""human"":true}",,,,,f,,{},info,12,2,5
+154,2019-11-15 18:06:55.790667,"{""human"":true}",,,,,f,,{},info,14,2,0
+155,2019-11-15 18:07:08.277521,"{""human"":true}",,,,,f,,{},info,15,2,0
+156,2019-11-15 18:07:08.865453,"{""human"":true}",,,,,f,,{},info,14,2,2
+157,2019-11-15 18:07:09.102397,"{""human"":true}",,,,,f,,{},info,13,2,2
+158,2019-11-15 18:07:10.110971,"{""human"":true}",,,,,f,,{},info,12,2,6

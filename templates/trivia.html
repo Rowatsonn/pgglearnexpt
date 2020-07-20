@@ -50,9 +50,9 @@
     <div>
         <div class="container">
             <div class="row">                
-                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-a').html());disable_answer_buttons();" id="submit-a" style="background-color: rgb(250,128,114);width: 281px;height: 126px;color: Black;">A</button></div>
-                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-b').html());disable_answer_buttons();" id="submit-b" style="background-color: rgb(115,194,251);width: 281px;height: 126px;color: Black;">B</button></div>
-                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-c').html());disable_answer_buttons();" id="submit-c" style="background-color: rgb(152,251,152);width: 281px;height: 126px;color: Black;">C</button></div>
+                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-a').html());disable_answer_buttons();" id="submit-a" style="background-color: rgb(250,128,114);color: Black; width: 281px; height:auto; text-align: center; white-space: normal;">A</button></div>
+                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-b').html());disable_answer_buttons();" id="submit-b" style="background-color: rgb(115,194,251);color: Black; width: 281px; height:auto; text-align: center; white-space: normal;">B</button></div>
+                <div class="col-lg-4 col-md-4 col-sm-4"><button class="btn btn-default" type="button" onClick="submit_response($('#submit-c').html());disable_answer_buttons();" id="submit-c" style="background-color: rgb(152,251,152);color: Black; width: 281px; height:auto; text-align: center; white-space: normal;">C</button></div>
             </div>
         </div>
     </div>
@@ -61,7 +61,7 @@
         <button id="play-alert" type="button" class="btn btn-primary" onClick="playSound();">Play Alert</button>
         <button id="toggle-alert" type="button" class="btn btn-primary" onClick="toggleSound();">Disable alert</button> 
        </div>
-       <div class="col-md-6 col-sm-6 col-xs-6">
+       <div class="col-md-3 col-sm-3 col-xs-3">
           <p> Alert is currently <span id="alert-text">enabled</span></p>
        </div>
        <div class="col-md-3 col-sm-3 col-xs-3">
