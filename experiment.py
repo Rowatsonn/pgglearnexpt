@@ -48,7 +48,7 @@ class pgglearn(Experiment):
 
     def create_network(self):
         """Return a new network."""
-        return self.models.RNetwork(max_size=6) #Change this to change the sample size. N + 2. N + 2 because the network already has PoG and quiz source
+        return self.models.RNetwork(max_size=6) # Change this to change the sample size. N + 2. N + 2 because the network already has PoG and quiz source
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -80,7 +80,8 @@ class pgglearn(Experiment):
         """Calculate a participants bonus."""
         node = participant.nodes()[0]
         score = node.score_in_pgg
-        bonus = round(score * 0.025, 2) # This can be changed to what you like, but right now every point in the game is worth 0.025 cents
+        bonus = round(score * 0.017, 2) # This can be changed to what you like, but right now every point in the game is worth 0.017 cents
+        bonus = min(bonus,3.00)
         return bonus
         
     def node_post_request(self, participant, node):
@@ -161,12 +162,19 @@ class pgglearn(Experiment):
         # Define the pog
         pog = node.network.nodes(type=self.models.PogBot)[0]
 
+	# Check that the donation is between 0 and 10. If it isn't (implying some javascript tomfoolery) correct it. 
+        donation = int(info.contents)
+        if donation < 0:
+            donation = 0 
+        elif donation > 10:
+            donation = 10
+        pog_info = self.models.Info(origin = node, contents = donation) # Make a new info to send to the POG. This is NOT saved to the database.
+
         # send their choice to the pog
-        transmission = node.transmit(what=info, to_whom=self.models.PogBot)[0]
+        transmission = node.transmit(what=pog_info, to_whom=self.models.PogBot)[0]
         self.save()
 
         # update their score
-        donation = int(info.contents)
         node.donation = donation 
         node.leftovers = 10 - donation
         node.score_in_pgg += node.leftovers
