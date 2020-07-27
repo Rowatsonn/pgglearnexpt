@@ -186,6 +186,7 @@ var parse_question = function(question) {
 
 
 // Display the question 
+// Note the assigning of the answers to letters. This handles interference from browser extensions in the submission of answers
 var display_question = function() {
     $("#question").html(question_text);
     $("#question_number").html(number);
@@ -194,30 +195,45 @@ var display_question = function() {
   
      if (num <0.33) {
        $("#submit-a").html(Rwer);
+       a = Rwer;
        if (Math.random() <0.5 ){
            $("#submit-b").html(Wwer1);
+	   b = Wwer1;
            $("#submit-c").html(Wwer2);
+	   c = Wwer2;
            } else {
              $("#submit-b").html(Wwer2);
-             $("#submit-c").html(Wwer1); 
+             b = Wwer2;
+             $("#submit-c").html(Wwer1);
+             c = Wwer1 ;
            }
      } else if (num >0.33 && num <0.66 ) {
        $("#submit-b").html(Rwer);
+       b = Rwer;
        if (Math.random() <0.5 ){
-           $("#submit-a").html(Wwer1); 
+           $("#submit-a").html(Wwer1);
+ 	   a = Wwer1; 
            $("#submit-c").html(Wwer2);
+	   c = Wwer2;
            } else {
-           $("#submit-a").html(Wwer2); 
+           $("#submit-a").html(Wwer2);
+	   a = Wwer2 ;
            $("#submit-c").html(Wwer1);
+           c = Wwer1;
            }
      } else {
        $("#submit-c").html(Rwer); 
+       c = Rwer;
        if (Math.random() <0.5){
          $("#submit-a").html(Wwer1);
+	 a = Wwer1;
          $("#submit-b").html(Wwer2);
+	 b = Wwer2;
        } else {
          $("#submit-a").html(Wwer2);
+	 a = Wwer2;
          $("#submit-b").html(Wwer1);
+         b = Wwer1;
        }
  }; // End of the if else statement 
     enable_answer_buttons(); // Calls another two functions below
@@ -264,9 +280,16 @@ var disable_answer_buttons = function() {
 }
 
 // Submit the answer for this question as an info. Human defaults to true but is passed false if it was chosen by the timer 
-var submit_response = function(value, human=true) {
+var submit_response = function(answer, human=true) {
     clearTimeout(answer_timeout); // This is to stop some bug where it would double submit answers. This stops the timeout.
     $("#countdown").hide()
+    // Determine what the participant answered
+    if (answer == "A") {
+      value = a
+    } else if (answer == "B") {
+      value = b
+    } else {
+      value = c}
     dallinger.createInfo(my_node_id, {
       contents: value,
       property1: JSON.stringify({
@@ -498,7 +521,7 @@ var show_experiment = function() {
   force_choice = Math.floor(Math.random() * 10) + 0;
   round += 1
   $("#instructions").show();
-  countdown = 10; // Set the desired countdown number here  
+  countdown = 16; // Set the desired countdown number here  
   start_experiment_timeout(); 
 }
 

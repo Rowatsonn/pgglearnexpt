@@ -13,8 +13,8 @@ contact_email_on_error = robin.o.watson@durham.ac.uk
 browser_exclude_rule = MSIE, mobile, tablet
 us_only = false
 approve_requirement = 95
-group_name = 
-assign_qualifications = false 
+group_name = pgglearntest
+assign_qualifications = true
 qualification_blacklist = 
 
 [Database]
