@@ -556,6 +556,7 @@ var start_experiment_timeout = function () {
 //Submits the participants choice. Human defaults to true, unless the choice is random. 
 var submit_choice = function(value, human=true) {
   if(submission_ready == 1) { // function only runs if the participant hasn't already submit a choice
+    submission_ready = 0; // No more submissions allowed
     clearTimeout(experiment_timeout);
     hide_experiment();
       dallinger.createInfo(my_node_id, {
