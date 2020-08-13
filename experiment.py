@@ -21,7 +21,7 @@ class pgglearn(Experiment):
         from . import models 
         self.models = models
         self.experiment_repeats = 1 # Change this to the number of runs you want. 
-        self.initial_recruitment_size = 4 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
+        self.initial_recruitment_size = 5 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
         self.known_classes = {
             "PogBot": models.PogBot,
             "QuizSource": models.QuizSource,
