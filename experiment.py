@@ -91,6 +91,9 @@ class pgglearn(Experiment):
 
     def transmission_get_request(self, node, transmissions):
         """All this does is update the last_request property for use in the AFK functions"""
+        if node.failed:
+            raise ValueError("Node {} is failed, it should not be requesting transmissions".format(node.id))
+
         node.last_request = datetime.now()
         self.stiller_remover(node)
          # fix for hanging issue.
@@ -110,11 +113,17 @@ class pgglearn(Experiment):
 
     def node_get_request(self, node, nodes):
         """Runs when neighbors is requested and also updates last request for use in AFK"""
+        if node.failed:
+            raise ValueError("Node {} is failed, it should not be requesting nodes".format(node.id))
+
         node.last_request = datetime.now()
         self.stiller_remover(node)
 
     def info_get_request(self, node, infos):
         """Runs on the instructions page automatically and also when the popup comes up"""
+        if node.failed:
+            raise ValueError("Node {} is failed, it should not be requesting infos".format(node.id))
+
         node.last_request = datetime.now()
     
     def info_post_request(self, node, info):
@@ -122,6 +131,9 @@ class pgglearn(Experiment):
         the score in the quiz and assigning prestige to the winner.
         Then finally for the PGG, it will transmit choices to the POG
         """
+        if node.failed:
+            raise ValueError("Node {} is failed, it should not be making infos".format(node.id))
+
         node.last_request = datetime.now()
         my_infos = node.infos()
         n_infos = len(my_infos)
