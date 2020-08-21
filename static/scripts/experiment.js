@@ -167,8 +167,9 @@ var get_info = function(info_id) {
 var process_info = function(info) {
     parse_question(info);
     if (number == 11) {
-       // console.log("number identified as 11")
-        submit_response(Wwer1, human=false); // Creates an info just to signal Q is done. To not break the network again later.
+       //console.log("number identified as 11");
+       //console.log(Wwer1);
+       submit_response("Done", human=false); // Creates an info just to signal Q is done. To not break the network again later.
     } else {
         display_question(); // This is another function call 
         }
@@ -251,7 +252,13 @@ var start_answer_timeout = function() {
             disable_answer_buttons(); // Calls another function
             $("#countdown").hide();
             $("#countdown").html("");
-            submit_response(Wwer1, human=false);
+            if (a = Wwer1){
+                submit_response("A", human = false)
+            } else if (b = Wwer1) {
+                submit_response("B", human=false);
+            } else {
+                submit_response("C", human = false)
+        }
         } else {
             start_answer_timeout();
         }
@@ -283,13 +290,19 @@ var disable_answer_buttons = function() {
 var submit_response = function(answer, human=true) {
     clearTimeout(answer_timeout); // This is to stop some bug where it would double submit answers. This stops the timeout.
     $("#countdown").hide()
+    //console.log(answer)
+    if (answer == "Done") { // The quiz is finished, so submit "quiz finished"
+       value = "Quiz Finished"
+    }
     // Determine what the participant answered
     if (answer == "A") {
       value = a
     } else if (answer == "B") {
       value = b
-    } else {
-      value = c}
+    } else if (answer == "C") {
+      value = c }
+    //console.log("I am submitting this to the create Info")
+    //console.log(value)
     dallinger.createInfo(my_node_id, {
       contents: value,
       property1: JSON.stringify({
@@ -297,6 +310,7 @@ var submit_response = function(answer, human=true) {
       })
     }).done(function (resp) {
        if (number == 11) {
+        console.log("Number is 11")
         dallinger.allowExit();
         dallinger.goToPage('score');
         } else {
@@ -643,7 +657,7 @@ var check_nodes = function(neighbors) {
 // Show the participant their results
 var display_results = function(round_earnings) {
 //  console.log("display_results was called"); 
-  result_countdown = 10; // How long can participants view this?
+  result_countdown = 13; // How long can participants view this?
   $("#waiting").hide();
   $("#earnings").show();
   $("#points").show(); 
@@ -707,12 +721,15 @@ var full_info = function(neighbors){
   }
 }
 
-// In the extra_info condition. Participants see the same information as in the full_info, only they also get a column specifying each participants current score. 
+// In the extra_info condition. Participants see the same information as in the full_info, only they also get a column specifying each participants current score + the conformity information. 
 var extra_info = function(neighbors){
 //  console.log("extra info was called")
   winning_score = 0
   $("#table").show(); // Displays the sentence above the table
   $("#extra").show(); // Displays the table with total score
+  $("#conformity").show()
+  $("#donate").html(last_conformity)
+  $("#donate").show()
   neighbors.forEach(function(node) {
     node_score = JSON.parse(node.property3).score_in_pgg
     if (node_score > winning_score){
@@ -729,6 +746,7 @@ var extra_info = function(neighbors){
     score = JSON.parse(node.property3).score_in_pgg;
     if (prestige == 1){
       ID = "***" + ID + "***"
+      donation = "***" + donation + "***"
     }
     if (score == winning_score){
       donation = donation + " (This participant currently has the highest score)"

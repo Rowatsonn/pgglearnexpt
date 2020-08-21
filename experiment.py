@@ -20,8 +20,8 @@ class pgglearn(Experiment):
         super(pgglearn, self).__init__(session)
         from . import models 
         self.models = models
-        self.experiment_repeats = 1 # Change this to the number of runs you want. 
-        self.initial_recruitment_size = 5 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
+        self.experiment_repeats = 1 # Change this to the number of groups you want. 
+        self.initial_recruitment_size = 4 # Change this to = the number of probe nodes across ALL networks. Although over recruiting is wise
         self.known_classes = {
             "PogBot": models.PogBot,
             "QuizSource": models.QuizSource,
@@ -48,7 +48,7 @@ class pgglearn(Experiment):
 
     def create_network(self):
         """Return a new network."""
-        return self.models.RNetwork(max_size=6) # Change this to change the sample size. N + 2. N + 2 because the network already has PoG and quiz source
+        return self.models.RNetwork(max_size=6) # Change this to change the group size. N + 2. N + 2 because the network already has PoG and quiz source
         
     def create_node(self, participant, network):
         """Create a node for the participant. Hopefully a ProbeNode"""
@@ -67,7 +67,7 @@ class pgglearn(Experiment):
         node.property4 = json.dumps({
             'leftovers' : 0,
             'donation' : 0,
-            'info_choice' : "BB" # To manually set the social learning, change this. To either conformity / prestige / payoff / regular (a regular public goods game with a table of donations) / full (regular, plus the prestigious and winning node are labelled / extra (all the information of full + their overall scores) BB (Black box, although do type BB). See below to change to / from a snowdrift.
+            'info_choice' : "extra" # To manually set the social learning, change this. To either conformity / prestige / payoff / regular (a regular public goods game with a table of donations) / full (regular, plus the prestigious and winning node are labelled / extra (all the information of full + their overall scores and conformity) BB (Black box, although do type BB). See below to change to / from a snowdrift.
         })
         node.property5 = json.dumps({
             'prestige_list' : [],
@@ -197,7 +197,10 @@ class pgglearn(Experiment):
     # Function to manage the removal of stillers
     def stiller_remover(self, node):
         nodes = node.network.nodes(type=self.models.ProbeNode)
-        bad_nodes = [n for n in nodes if (node.last_request - n.last_request).total_seconds() > 60]
+        if node.network.infos(): # We are anywhere but the very start of the game
+            bad_nodes = [n for n in nodes if (node.last_request - n.last_request).total_seconds() > 60]
+        else: # The game hasn't started yet (still waiting for 4 people) so there are no infos
+            bad_nodes = [n for n in nodes if (node.last_request - n.last_request).total_seconds() > 10] # Kicking out is much more harsh, to allow new people to join
         good_nodes = [n for n in nodes if n not in bad_nodes]
         if bad_nodes and node.id == max(good_nodes, key=attrgetter("id")).id:
             for n in bad_nodes:
