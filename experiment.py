@@ -125,6 +125,7 @@ class pgglearn(Experiment):
             raise ValueError("Node {} is failed, it should not be requesting infos".format(node.id))
 
         node.last_request = datetime.now()
+        self.stiller_remover(node)
     
     def info_post_request(self, node, info):
         """This will handle the source transmitting, calculating

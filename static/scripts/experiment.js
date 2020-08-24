@@ -27,13 +27,14 @@ var start_AFK_timeout = function(){
   } 
 }
   
-// Timer for the popup of the AFK modal on the instructions pages. Timer resets on the HTML code.
+// Timer for the afk countdown on the PGG instructions page. Timer resets on the HTML code.
+// So named because this used to be a modal. Changed for compatability concerns. 
 var start_modal_timeout = function(afkounter){
   modal_timeout = setTimeout(function(){
     afkounter = afkounter - 1
-    if (afkounter == 10) {
-      jQuery.noConflict();
-      $('#reading').modal('show');
+    $('#AFK').html(afkounter)
+    if (afkounter == 11) {
+      $('#AFK').css('color', 'Red')
       start_modal_timeout(afkounter);
     } else if (afkounter == 0) {
       dallinger.allowExit();
@@ -474,6 +475,7 @@ var ping_server = function(){
  // console.log("Server Pinged");
   my_node_id = dallinger.storage.get("my_node");
   dallinger.getInfos(my_node_id)
+  $('#AFK').css('color', 'Black')
 }
 
 // This calls on every pgg instructions page. A cookie saved before which stores whether or not the game is a snowdrift
@@ -578,7 +580,8 @@ var submit_choice = function(value, human=true) {
       property1: JSON.stringify({
         "human": human
       })
-    }).done(get_pog()); // It's like above, only this time it starts checking its neighbors
+    }).done(
+      get_pog()); // It's like above, only this time it starts checking its neighbors
   }
 }
 
@@ -745,8 +748,8 @@ var extra_info = function(neighbors){
     prestige = JSON.parse(node.property2).prestige;
     score = JSON.parse(node.property3).score_in_pgg;
     if (prestige == 1){
-      ID = "***" + ID + "***"
-      donation = "***" + donation + "***"
+      ID = "*** " + ID + " ***"
+      donation = donation + " (This participant scored the highest in the quiz)"
     }
     if (score == winning_score){
       donation = donation + " (This participant currently has the highest score)"
@@ -758,6 +761,7 @@ var extra_info = function(neighbors){
     donation_name = "#edonation" + (i+1);
     $(donation_name).html(donation);
     total_score_name = "#etotalscore" + (i+1)
+    score = Math.round(score) // Round it so it appears nicer on the table. DOES NOT affect the database record.
     $(total_score_name).html(score)
   }
 }
